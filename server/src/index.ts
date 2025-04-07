@@ -47,11 +47,7 @@ async function detectAndProcessImage<T>(
 
 async function main() {
   // Example usage
-  const exampleImagePath = path.resolve(
-    __dirname,
-    "images",
-    "small_test_receipt.jpg"
-  );
+  const exampleImagePath = path.resolve(__dirname, "images", "big_size.jpg");
 
   // Check if the example image exists
   if (!fs.existsSync(exampleImagePath)) {
@@ -69,14 +65,19 @@ async function main() {
 
   // example grocery store receipt prompt
   const exampleGroceryPrompt =
-    "Please analyze this paper store receipt and return a JSON object " +
-    'containing an array of line items. The array key is "items". Each line ' +
-    "item should be an object with two properties: 'name' for the item's name " +
-    "and 'price' for its price. The price should be the raw value as shown " +
-    "on the receipt. Filter out any non-product entries like card numbers, " +
-    "transaction IDs, or payment method details. Only include actual product " +
-    "items with valid prices. Only respond with a raw JSON string, no markdown " +
-    "and do not escape '\"'.";
+    "[STRICT JSON ONLY RESPONSE REQUIRED] " +
+    "Parse this receipt and output a JSON object containing ALL items found. " +
+    "Return a JSON object matching this exact schema, with no additional text or explanation: " +
+    '{"items": Array<{name: string, price: string, related_data: string[]}>}. ' +
+    "IMPORTANT: Include EVERY SINGLE item and transaction found on the receipt. " +
+    "Each distinct price or charge should be a separate item in the array. " +
+    "For duplicate company names, include them as separate items if they have different prices. " +
+    "Your entire response must be parseable by JSON.parse() with no modifications. " +
+    "DO NOT include any natural language before or after the JSON. " +
+    "DO NOT explain what you found. " +
+    "DO NOT wrap the JSON in backticks. " +
+    "Example of valid response: " +
+    '{"items":[{"name":"Milk","price":"3.99","related_data":["1L","Organic"]},{"name":"Bread","price":"2.99","related_data":["Wheat","500g"]}]}';
   // example schema, for our grocery store receipt:
   const ExampleGroceryStoreReceiptSchema = z.object({
     items: z.array(
@@ -84,6 +85,7 @@ async function main() {
         .object({
           name: z.string(),
           price: z.string(), // Changed from z.number() to accept string prices
+          related_data: z.array(z.string()),
         })
         .required()
     ),
@@ -99,7 +101,7 @@ async function main() {
   );
 
   console.group("Output Details");
-  console.log("Result:", output?.result);
+  console.log("Result:", JSON.stringify(output?.result, null, 2));
   console.log("Message ID:", output?.id);
   console.log("Message Role:", output?.role);
   console.log("Message Usage:", output?.usage);

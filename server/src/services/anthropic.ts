@@ -10,7 +10,8 @@ interface TextContent {
 
 const MAX_TOKENS = 1024;
 const DEFAULT_TEMPERATURE = 0;
-const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
+// const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
+const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-7-sonnet-20250219";
 
 export class AnthropicService implements IAIService {
   private aiService: Anthropic;
@@ -68,6 +69,15 @@ export class AnthropicService implements IAIService {
     return this.formatResponse<T>(msg, schema);
   }
 
+  private extractJSON(text: string): string {
+    // Try to find JSON-like content using regex
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return jsonMatch[0];
+    }
+    throw new Error("No JSON object found in response");
+  }
+
   /**
    *
    * @param msg
@@ -85,12 +95,14 @@ export class AnthropicService implements IAIService {
     }
 
     try {
-      // Try to parse the text content as JSON
+      // Try to extract and parse JSON from the response
       let jsonData;
       try {
-        jsonData = JSON.parse(content.text);
+        const jsonText = this.extractJSON(content.text);
+        jsonData = JSON.parse(jsonText);
       } catch (error) {
         console.error("Failed to parse JSON response:", error);
+        console.error("Raw response:", content.text);
         throw new Error("Invalid JSON response from LLM");
       }
 
