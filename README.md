@@ -3,12 +3,14 @@
 # client folder
 
 ```cli
+ cd client
  npm run install
 ```
 
 # server folder
 
 ```cli
+ cd server
  npm run install
 ```
 
