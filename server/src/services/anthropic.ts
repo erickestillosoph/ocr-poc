@@ -2,9 +2,15 @@ import Anthropic from "@anthropic-ai/sdk";
 import { LLMResponse, IAIService, ImageMediaType } from "../types.js";
 import { z } from "zod";
 
+// Add type for text content block
+interface TextContent {
+  type: "text";
+  text: string;
+}
+
 const MAX_TOKENS = 1024;
 const DEFAULT_TEMPERATURE = 0;
-const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-sonnet-20240229";
+const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
 
 export class AnthropicService implements IAIService {
   private aiService: Anthropic;
@@ -72,8 +78,14 @@ export class AnthropicService implements IAIService {
     msg: Anthropic.Messages.Message,
     schema: z.ZodType<T>
   ): LLMResponse<T> {
-    // Implementation similar to the one in LLMService
-    const result = schema.parse(JSON.parse(msg.content[0].type));
+    // Get the text content from the message
+    const content = msg.content[0];
+    if (content.type !== "text") {
+      throw new Error("Expected text content in the response");
+    }
+
+    // Parse the text content as JSON
+    const result = schema.parse(JSON.parse(content.text));
     return {
       result,
       id: msg.id,
