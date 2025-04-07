@@ -72,13 +72,20 @@ async function main() {
     "Please analyze this paper store receipt and return a JSON object " +
     'containing an array of line items. The array key is "items". Each line ' +
     "item should be an object with two properties: 'name' for the item's name " +
-    "and 'price' for its price. Exclude categories and only include specific " +
-    "item entries. Only respond with a raw JSON string, no markdown and do not " +
-    "escape '\"'.";
+    "and 'price' for its price. The price should be the raw value as shown " +
+    "on the receipt. Filter out any non-product entries like card numbers, " +
+    "transaction IDs, or payment method details. Only include actual product " +
+    "items with valid prices. Only respond with a raw JSON string, no markdown " +
+    "and do not escape '\"'.";
   // example schema, for our grocery store receipt:
   const ExampleGroceryStoreReceiptSchema = z.object({
     items: z.array(
-      z.object({ name: z.string(), price: z.number() }).required()
+      z
+        .object({
+          name: z.string(),
+          price: z.string(), // Changed from z.number() to accept string prices
+        })
+        .required()
     ),
   });
 

@@ -84,16 +84,35 @@ export class AnthropicService implements IAIService {
       throw new Error("Expected text content in the response");
     }
 
-    // Parse the text content as JSON
-    const result = schema.parse(JSON.parse(content.text));
-    return {
-      result,
-      id: msg.id,
-      role: msg.role,
-      usage: {
-        input_tokens: msg.usage?.input_tokens,
-        output_tokens: msg.usage?.output_tokens,
-      },
-    };
+    try {
+      // Try to parse the text content as JSON
+      let jsonData;
+      try {
+        jsonData = JSON.parse(content.text);
+      } catch (error) {
+        console.error("Failed to parse JSON response:", error);
+        throw new Error("Invalid JSON response from LLM");
+      }
+
+      // Validate the parsed data against the schema
+      try {
+        const result = schema.parse(jsonData);
+        return {
+          result,
+          id: msg.id,
+          role: msg.role,
+          usage: {
+            input_tokens: msg.usage?.input_tokens,
+            output_tokens: msg.usage?.output_tokens,
+          },
+        };
+      } catch (error) {
+        console.error("Schema validation failed:", error);
+        throw new Error("Response does not match expected schema");
+      }
+    } catch (error) {
+      console.error("Error processing LLM response:", error);
+      throw error;
+    }
   }
 }
