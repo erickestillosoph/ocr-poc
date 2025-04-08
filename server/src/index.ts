@@ -1,30 +1,20 @@
+import express from "express";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { LLMService } from "./services/llm.js";
 import { RekognitionService } from "./services/rekognition.js";
 import { ImageUtil } from "./utils/image.js";
 import { createAIService } from "./factories/aiService.js";
 import { z } from "zod";
 import { IAIService } from "./types.js";
+import imageRoute from "./routes/imageRoute";
 
 // This is a Node.js script, so we can use the fileURLToPath function to get the directory name
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const rekognitionService = new RekognitionService();
-
-// Use the factory function to create the aiService instance
 const aiService: IAIService = createAIService();
-
 const llmService = new LLMService(aiService);
 
-/**
- *
- * @param imageData
- * @param prompt
- * @param schema
- * @returns
- */
 async function detectAndProcessImage<T>(
   imageData: string,
   prompt: string,
@@ -45,25 +35,31 @@ async function detectAndProcessImage<T>(
   }
 }
 
-async function main() {
-  // Example usage
-  const exampleImagePath = path.resolve(__dirname, "images", "big_size.jpg");
+// Example schema for the grocery store receipt
+const ExampleGroceryStoreReceiptSchema = z.object({
+  items: z.array(
+    z
+      .object({
+        name: z.string(),
+        price: z.string(), // Changed from z.number() to accept string prices
+        related_data: z.array(z.string()),
+      })
+      .required()
+  ),
+});
 
-  // Check if the example image exists
-  if (!fs.existsSync(exampleImagePath)) {
-    console.log(`The test image does not exist at path: ${exampleImagePath}`);
-    console.log("You need to add a test receipt image to run this example.");
-    console.log(
-      "Please add a JPEG image named 'small_test_receipt.jpg' to the src/images directory."
-    );
-    return;
+// Function that returns the result from main
+export async function processImage(imageFile: Express.Multer.File) {
+  // const exampleImagePath = path.resolve(__dirname, "images", "big_size.jpg");
+
+  if (!fs.existsSync(imageFile.path)) {
+    throw new Error("The test image does not exist at the specified path.");
   }
 
-  const exampleImageFileData = fs
-    .readFileSync(exampleImagePath)
-    .toString("base64");
+  const imageBuffer = fs.readFileSync(imageFile.path);
 
-  // example grocery store receipt prompt
+  const exampleImageFileData = imageBuffer.toString("base64");
+
   const exampleGroceryPrompt =
     "[STRICT JSON ONLY RESPONSE REQUIRED] " +
     "Parse this receipt and output a JSON object containing ALL items found. " +
@@ -78,20 +74,7 @@ async function main() {
     "DO NOT wrap the JSON in backticks. " +
     "Example of valid response: " +
     '{"items":[{"name":"Milk","price":"3.99","related_data":["1L","Organic"]},{"name":"Bread","price":"2.99","related_data":["Wheat","500g"]}]}';
-  // example schema, for our grocery store receipt:
-  const ExampleGroceryStoreReceiptSchema = z.object({
-    items: z.array(
-      z
-        .object({
-          name: z.string(),
-          price: z.string(), // Changed from z.number() to accept string prices
-          related_data: z.array(z.string()),
-        })
-        .required()
-    ),
-  });
 
-  // pass example image data, prompt, and schema to the detectAndProcessImage function
   const output = await detectAndProcessImage<
     z.infer<typeof ExampleGroceryStoreReceiptSchema>
   >(
@@ -100,16 +83,18 @@ async function main() {
     ExampleGroceryStoreReceiptSchema
   );
 
-  console.group("Output Details");
-  console.log("Result:", JSON.stringify(output?.result, null, 2));
-  console.log("Message ID:", output?.id);
-  console.log("Message Role:", output?.role);
-  console.log("Message Usage:", output?.usage);
-  console.groupEnd();
+  return output?.result;
 }
 
-try {
-  main();
-} catch (error) {
-  console.error("Error in main:", error);
-}
+// Initialize Express
+const app = express();
+app.use(express.json()); // Middleware to parse JSON bodies
+
+// ImageRoute
+app.use(imageRoute);
+
+// Start the server
+const port = 3001;
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
