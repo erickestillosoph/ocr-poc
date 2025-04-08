@@ -1,5 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { LLMResponse, IAIService, ImageMediaType } from "../types.js";
+import {
+  LLMResponse,
+  IAIService,
+  ImageMediaType,
+  DocumentMediaType,
+} from "../types.js";
 import { z } from "zod";
 
 // Add type for text content block
@@ -66,6 +71,47 @@ export class AnthropicService implements IAIService {
     });
 
     // Assuming a similar formatResponse method exists or is adapted for this class
+    return this.formatResponse<T>(msg, schema);
+  }
+
+  /**
+   *s
+   * @param pdfBase64
+   * @param prompt
+   * @param schema
+   * @returns
+   */
+  async pdfToJSON<T>(
+    pdfBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>
+  ): Promise<LLMResponse<T>> {
+    const msg = await this.aiService.messages.create({
+      model: this.modelName,
+      max_tokens: MAX_TOKENS,
+      temperature: DEFAULT_TEMPERATURE,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: DocumentMediaType.PDF,
+                data: pdfBase64,
+              },
+              cache_control: { type: "ephemeral" },
+            },
+            {
+              type: "text",
+              text: prompt,
+            },
+          ],
+        },
+      ],
+    });
+
     return this.formatResponse<T>(msg, schema);
   }
 
