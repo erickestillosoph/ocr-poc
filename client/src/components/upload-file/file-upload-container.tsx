@@ -41,20 +41,23 @@ export const FileUploadContainer = () => {
     fileInputRef.current?.click();
   };
 
-  const handleUploadFiles = () => {
-    const updatedFiles = uploadedFiles.map((file) => ({
-      ...file,
-      progress: 100,
-    }));
+  const handleUploadFiles = (filesToUpload?: FileUploaderType[]) => {
+    const targetFiles = filesToUpload || uploadedFiles;
+  
+    const updatedFiles = uploadedFiles.map((file) =>
+      targetFiles.some((f) => f.id === file.id)
+        ? { ...file, progress: 100 }
+        : file
+    );
+  
     setUploadedFiles(updatedFiles);
-
     setShowUploadViewer(true);
   };
 
   return (
     <Flex mx="auto" mt={10} p={6} gap={6} >
         <Flex>
-          <FileUploader 
+        <FileUploader 
             uploadedFiles={uploadedFiles}
             handleFiles={handleFiles}
             fileInputRef={fileInputRef as React.RefObject<HTMLInputElement>} 

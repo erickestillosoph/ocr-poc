@@ -29,7 +29,7 @@ export const FileViewer = ({ uploadedFiles }: Props) => (
             borderColor="gray.300"
           >
             <Text fontWeight="medium">{file.name}</Text>
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" color="gray.500" textAlign="left">
               {formatBytes(file.size)} • {file.type} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione fugiat non facilis modi officia? Possimus, iure. Atque deserunt ab repellendus quisquam, fuga tempore eaque necessitatibus eveniet eius quidem vero. Eius? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Delectus velit doloribus possimus autem voluptas, unde ab harum, ratione nobis repellendus molestias quidem aliquam dolores consequuntur rem minus ipsam commodi? Deleniti.
             </Text>
           </Box>
