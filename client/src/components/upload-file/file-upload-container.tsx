@@ -14,6 +14,7 @@ type FileUploaderType = {
 
 export const FileUploadContainer = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileUploaderType[]>([]);
+  const [uploadedFilesToShow, setUploadedFilesToShow] = useState<FileUploaderType[]>([]);
   const [showUploadViewer, setShowUploadViewer] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +52,13 @@ export const FileUploadContainer = () => {
     );
   
     setUploadedFiles(updatedFiles);
+
+    const filesToShow =
+      filesToUpload && filesToUpload.length > 0
+        ? targetFiles.map((f) => ({ ...f, progress: 100 }))
+        : updatedFiles;
+  
+    setUploadedFilesToShow(filesToShow);
     setShowUploadViewer(true);
   };
 
@@ -68,7 +76,7 @@ export const FileUploadContainer = () => {
         </Flex>
         <Flex>
           {showUploadViewer && (
-            <FileViewer uploadedFiles={uploadedFiles} />
+            <FileViewer uploadedFiles={uploadedFilesToShow} />
           )}
         </Flex>
     </Flex>

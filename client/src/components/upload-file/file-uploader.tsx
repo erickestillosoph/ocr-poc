@@ -35,7 +35,7 @@ type Props = {
   fileInputRef: React.RefObject<HTMLInputElement>;
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
   onBrowseClick: () => void;
-  handleUploadFiles: (filesToUpload: FileType[]) => void; // changed
+  handleUploadFiles: (filesToUpload: FileType[]) => void; 
 };
 
 export const FileUploader = ({
@@ -52,13 +52,13 @@ export const FileUploader = ({
     setSelectedFileName(event.target.value);
   };
   const handleUploadClick = () => {
-    if (!selectedFileName) return handleUploadFiles(uploadedFiles); // upload all
+    if (!selectedFileName) return handleUploadFiles(uploadedFiles); 
 
     const selectedFile = uploadedFiles.find(
       (file) => file.name === selectedFileName
     );
     if (selectedFile) {
-      handleUploadFiles([selectedFile]); // upload only selected
+      handleUploadFiles([selectedFile]); 
       return;
     }
   };
@@ -77,7 +77,6 @@ export const FileUploader = ({
       display="flex"
       flexDirection="column"
     >
-      {/* Top Section: Drop Zone + File List */}
       <Box flex="1">
 
         <Box
