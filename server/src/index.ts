@@ -4,6 +4,7 @@ import { LLMService } from "./services/llm.js";
 import { RekognitionService } from "./services/rekognition.js";
 import { ImageUtil } from "./utils/image.js";
 import { createAIService } from "./factories/aiService.js";
+import cors from "cors";
 import { z } from "zod";
 import { IAIService } from "./types.js";
 import imageRoute from "./routes/imageRoute";
@@ -86,9 +87,11 @@ export async function processImage(imageFile: Express.Multer.File) {
   return output?.result;
 }
 
-// Initialize Express
 const app = express();
-app.use(express.json()); // Middleware to parse JSON bodies
+
+app.use(cors());
+
+app.use(express.json());
 
 // ImageRoute
 app.use(imageRoute);
