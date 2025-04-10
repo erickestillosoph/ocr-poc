@@ -13,6 +13,10 @@ export enum ImageMediaType {
   WEBP = "image/webp",
 }
 
+export enum DocumentMediaType {
+  PDF = "application/pdf",
+}
+
 export type LLMResponse<T> = {
   result: T;
   id: string;
@@ -32,5 +36,12 @@ export type IAIService = {
     prompt: string,
     schema: z.ZodType<T>,
     imageMediaType: ImageMediaType
+  ): Promise<LLMResponse<T>>;
+
+  pdfToJSON<T>(
+    pdfBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>,
+    documentMediaType: DocumentMediaType
   ): Promise<LLMResponse<T>>;
 };

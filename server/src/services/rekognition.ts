@@ -6,7 +6,7 @@ import { AreaOfInterest } from "../types.js";
 
 const TEXT_AND_DOCUMENTS_CATEGORY = "Text and Documents";
 const MAX_LABELS = 10;
-const MIN_CONFIDENCE = 70;
+const MIN_CONFIDENCE = 90;
 
 export class RekognitionService {
   private rekognition: RekognitionClient;
