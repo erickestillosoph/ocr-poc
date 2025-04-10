@@ -1,83 +1,103 @@
+import express from "express";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { ImageFeature } from "./functions/image/imageFile.js";
-import PDFFeature from "./functions/pdf/pdfFile.js";
-import readline from "readline";
+import { LLMService } from "./services/llm.js";
+import { RekognitionService } from "./services/rekognition.js";
+import { ImageUtil } from "./utils/image.js";
+import { createAIService } from "./factories/aiService.js";
+import cors from "cors";
+import { z } from "zod";
+import { IAIService } from "./types.js";
+import imageRoute from "./routes/imageRoute";
 
 // This is a Node.js script, so we can use the fileURLToPath function to get the directory name
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Create readline interface for user input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+const rekognitionService = new RekognitionService();
+const aiService: IAIService = createAIService();
+const llmService = new LLMService(aiService);
+
+async function detectAndProcessImage<T>(
+  imageData: string,
+  prompt: string,
+  schema: z.ZodType<T>
+) {
+  try {
+    const imageBuffer = Buffer.from(imageData, "base64");
+    const areaOfInterest = await rekognitionService.findTextAreaOfInterest(
+      imageBuffer
+    );
+    const processedImage = await ImageUtil.extractAndProcessImage(
+      areaOfInterest,
+      imageBuffer
+    );
+    return llmService.imageToJSON<T>(processedImage, prompt, schema);
+  } catch (error) {
+    console.error("Error detecting labels:", error);
+  }
+}
+
+// Example schema for the grocery store receipt
+const ExampleGroceryStoreReceiptSchema = z.object({
+  items: z.array(
+    z
+      .object({
+        name: z.string(),
+        price: z.string(), // Changed from z.number() to accept string prices
+        related_data: z.array(z.string()),
+      })
+      .required()
+  ),
 });
 
-// Promisify readline question
-const question = (query: string): Promise<string> => {
-  return new Promise((resolve) => {
-    rl.question(query, resolve);
-  });
-};
+// Function that returns the result from main
+export async function processImage(imageFile: Express.Multer.File) {
+  // const exampleImagePath = path.resolve(__dirname, "images", "big_size.jpg");
 
-// Example usage
-async function main() {
-  const exampleImagePath = path.resolve(__dirname, "images", "big_size.jpg");
-  const examplePdfPath = path.resolve(__dirname, "pdf", "small_size.pdf");
-
-  console.log("\nWelcome to the OCR Processing Tool!");
-  console.log("----------------------------------");
-  console.log("1. Process Image");
-  console.log("2. Process PDF");
-
-  const choice = await question("\nPlease choose an option (1 or 2): ");
-
-  let output;
-
-  switch (choice.trim()) {
-    case "1":
-      if (!fs.existsSync(exampleImagePath)) {
-        console.log(
-          `The test image does not exist at path: ${exampleImagePath}`
-        );
-        console.log(
-          "You need to add a test receipt image to run this example."
-        );
-        break;
-      }
-      output = await ImageFeature.imageFeature(exampleImagePath);
-      break;
-
-    case "2":
-      if (!fs.existsSync(examplePdfPath)) {
-        console.log(`The test PDF does not exist at path: ${examplePdfPath}`);
-        console.log("You need to add a test receipt PDF to run this example.");
-        break;
-      }
-      output = await PDFFeature.pdfFeature(examplePdfPath);
-      break;
-
-    default:
-      console.log("Invalid option selected. Please choose 1 or 2.");
-      break;
+  if (!fs.existsSync(imageFile.path)) {
+    throw new Error("The test image does not exist at the specified path.");
   }
 
-  if (output) {
-    console.group("Output Details");
-    console.log("Result:", JSON.stringify(output?.result, null, 2));
-    console.log("Message ID:", output?.id);
-    console.log("Message Role:", output?.role);
-    console.log("Message Usage:", output?.usage);
-    console.groupEnd();
-  }
+  const imageBuffer = fs.readFileSync(imageFile.path);
 
-  rl.close();
+  const exampleImageFileData = imageBuffer.toString("base64");
+
+  const exampleGroceryPrompt =
+    "[STRICT JSON ONLY RESPONSE REQUIRED] " +
+    "Parse this receipt and output a JSON object containing ALL items found. " +
+    "Return a JSON object matching this exact schema, with no additional text or explanation: " +
+    '{"items": Array<{name: string, price: string, related_data: string[]}>}. ' +
+    "IMPORTANT: Include EVERY SINGLE item and transaction found on the receipt. " +
+    "Each distinct price or charge should be a separate item in the array. " +
+    "For duplicate company names, include them as separate items if they have different prices. " +
+    "Your entire response must be parseable by JSON.parse() with no modifications. " +
+    "DO NOT include any natural language before or after the JSON. " +
+    "DO NOT explain what you found. " +
+    "DO NOT wrap the JSON in backticks. " +
+    "Example of valid response: " +
+    '{"items":[{"name":"Milk","price":"3.99","related_data":["1L","Organic"]},{"name":"Bread","price":"2.99","related_data":["Wheat","500g"]}]}';
+
+  const output = await detectAndProcessImage<
+    z.infer<typeof ExampleGroceryStoreReceiptSchema>
+  >(
+    exampleImageFileData,
+    exampleGroceryPrompt,
+    ExampleGroceryStoreReceiptSchema
+  );
+
+  return output?.result;
 }
 
-try {
-  main();
-} catch (error) {
-  console.error("Error in main:", error);
-  rl.close();
-}
+const app = express();
+
+app.use(cors());
+
+app.use(express.json());
+
+// ImageRoute
+app.use(imageRoute);
+
+// Start the server
+const port = 3001;
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
