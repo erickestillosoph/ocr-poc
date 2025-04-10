@@ -1,4 +1,3 @@
-import { formatBytes } from "../utility/format-bytes";
 import { Box, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
@@ -30,7 +29,7 @@ export const FileViewer = ({ uploadedFiles }: Props) => (
           >
             <Text fontWeight="medium">{file.name}</Text>
             <Text fontSize="sm" color="gray.500" textAlign="left">
-              {formatBytes(file.size)} • {file.type} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione fugiat non facilis modi officia? Possimus, iure. Atque deserunt ab repellendus quisquam, fuga tempore eaque necessitatibus eveniet eius quidem vero. Eius? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Delectus velit doloribus possimus autem voluptas, unde ab harum, ratione nobis repellendus molestias quidem aliquam dolores consequuntur rem minus ipsam commodi? Deleniti.
+            {JSON.stringify(file.responseData)}
             </Text>
           </Box>
         ))}

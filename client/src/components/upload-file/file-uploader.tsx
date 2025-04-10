@@ -27,6 +27,7 @@ type FileType = {
   type: string;
   uploadedAt: Date;
   progress: number;
+  file: File;
 };
 
 type Props = {
