@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { processImage } from "../index";
+import { processPdf } from "../index";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -18,19 +18,15 @@ const upload = multer({ storage });
 
 const router = Router();
 
-router.post(
-  "/api/v1/process-image",
-  upload.single("image"),
-  async (req, res) => {
-    try {
-      const imageFile = req.file as Express.Multer.File;
-      const result = await processImage(imageFile);
-      res.json({ result });
-    } catch (error) {
-      console.error("Error in processing image:", error);
-      res.status(500).json({ error: "Failed to process the image" });
-    }
+router.post("/api/v1/process-pdf", upload.single("pdf"), async (req, res) => {
+  try {
+    const pdfFile = req.file as Express.Multer.File;
+    const result = await processPdf(pdfFile);
+    res.json({ result });
+  } catch (error) {
+    console.error("Error in processing pdf:", error);
+    res.status(500).json({ error: "Failed to process the pdf" });
   }
-);
+});
 
 export default router;
