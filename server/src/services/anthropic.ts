@@ -60,6 +60,7 @@ export class AnthropicService implements IAIService {
                 media_type: imageMediaType,
                 data: imageBase64,
               },
+              cache_control: { type: "ephemeral" },
             },
             {
               type: "text",
@@ -125,7 +126,7 @@ export class AnthropicService implements IAIService {
   }
 
   /**
-   *
+   *s
    * @param msg
    * @param schema
    * @returns
