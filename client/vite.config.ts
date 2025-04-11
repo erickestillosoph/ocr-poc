@@ -8,35 +8,36 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/",
   build: {
     outDir: "./dist",
     rollupOptions: {
       output: {
         format: "es",
+        manualChunks: {
+          vendor: [
+            "react",
+            "react-dom",
+            "@chakra-ui/react",
+            "@emotion/react",
+            "@emotion/styled",
+            "axios",
+            "react-dropzone",
+            "react-error-boundary",
+            "react-hook-form",
+            "react-icons",
+            "react-router-dom",
+            "react-webcam",
+            "zod",
+            "jotai",
+            "jotai-effect",
+            "next-themes",
+            "framer-motion",
+          ],
+        },
       },
-      external: [
-        "react",
-        "react-dom",
-        "@chakra-ui/react",
-        "@emotion/react",
-        "@emotion/styled",
-        "axios",
-        "react-dropzone",
-        "react-error-boundary",
-        "react-hook-form",
-        "react-icons",
-        "react-router-dom",
-        "react-webcam",
-        "zod",
-        "jotai",
-        "jotai-effect",
-        "next-themes",
-        "framer-motion",
-        "tanstack-query",
-        "tanstack-query-devtools",
-      ],
     },
+    assetsDir: "assets",
+    emptyOutDir: true,
   },
   resolve: {
     alias: {
