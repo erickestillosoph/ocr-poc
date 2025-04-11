@@ -1,0 +1,8 @@
+# mutation UpsertViewResultsPage(
+#             $object: ViewResultsPageInsertInput!
+#             $onConflict: ViewResultsPageOnConflict
+#           ) {
+#             insertViewResultsPageOne(object: $object, onConflict: $onConflict) {
+#               ...ViewResultsPage
+#             }
+#           }

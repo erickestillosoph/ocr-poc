@@ -1,16 +1,19 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import './App.css'
-import { FileUploadContainer } from './components/upload-file/file-upload-container'
+import { ChakraProvider } from "@chakra-ui/react";
+import "./App.css";
+import { AppProvider, AppRoute, JotaiProvider } from "./providers";
 
 function App() {
-
   return (
     <>
-      <ChakraProvider>
-        <FileUploadContainer />
-      </ChakraProvider>
+      <AppProvider>
+        <JotaiProvider>
+          <ChakraProvider>
+            <AppRoute />
+          </ChakraProvider>
+        </JotaiProvider>
+      </AppProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
