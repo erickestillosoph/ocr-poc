@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { api } from "@/shared";
+import { api, setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
@@ -91,7 +91,9 @@ export const usePdfMutation = () => {
   });
 
   openPDFRef.current = open;
-
+  if (isSuccess) {
+    setLocalStorage("pdfResults", pdfData?.data);
+  }
   return {
     getRootProps,
     getInputProps,

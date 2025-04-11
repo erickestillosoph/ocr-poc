@@ -39,35 +39,39 @@ export const ViewResultsPageUI = () => {
         </TabList>
 
         <TabPanels>
-          <TabPanel>
-            <Code
-              backgroundColor={theme.colors.gray[50]}
-              fontSize="sm"
-              w="full"
-              textAlign="left"
-              appearance="auto"
-              variant="subtle"
-              overflow="auto"
-              maxH="50vh"
-            >
-              {imageResultsArray}
-            </Code>
-          </TabPanel>
+          {imageResults && (
+            <TabPanel>
+              <Code
+                backgroundColor={theme.colors.gray[50]}
+                fontSize="sm"
+                w="full"
+                textAlign="left"
+                appearance="auto"
+                variant="subtle"
+                overflow="auto"
+                maxH="50vh"
+              >
+                {imageResultsArray}
+              </Code>
+            </TabPanel>
+          )}
 
-          <TabPanel>
-            <Code
-              backgroundColor={theme.colors.gray[50]}
-              fontSize="sm"
-              w="full"
-              textAlign="left"
-              appearance="auto"
-              variant="subtle"
-              overflow="auto"
-              maxH="50vh"
-            >
-              {pdfResultsArray}
-            </Code>
-          </TabPanel>
+          {pdfResults && (
+            <TabPanel>
+              <Code
+                backgroundColor={theme.colors.gray[50]}
+                fontSize="sm"
+                w="full"
+                textAlign="left"
+                appearance="auto"
+                variant="subtle"
+                overflow="auto"
+                maxH="50vh"
+              >
+                {pdfResultsArray}
+              </Code>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </VStack>
