@@ -1,17 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { api, paths } from "@/shared";
+import { api, resultsAtom } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
-import { useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useRef } from "react";
+import { useAtom } from "jotai";
 const API_URL = import.meta.env.VITE_API_URL;
 const API_VERSION = import.meta.env.VITE_API_VERSION;
 
 export const useImageMutation = () => {
   const toast = useToast();
   const IMAGE_PATH = api.uploadImage;
-  const navigate = useNavigate();
+  const [, setResults] = useAtom(resultsAtom);
 
   const openImageRef = useRef<() => void | null>(null);
   const {
@@ -39,7 +39,6 @@ export const useImageMutation = () => {
         isClosable: true,
         position: "top",
       });
-      navigate(paths.viewResultsPage);
     },
     onError: () => {
       toast({
@@ -83,6 +82,12 @@ export const useImageMutation = () => {
   });
 
   openImageRef.current = open;
+
+  useEffect(() => {
+    if (imageData) {
+      setResults(imageData.data);
+    }
+  }, [imageData, setResults]);
 
   return {
     getRootProps,
