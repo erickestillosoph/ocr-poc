@@ -9,7 +9,33 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: "../dist",
+    outDir: "./dist",
+    rollupOptions: {
+      output: {
+        format: "es",
+      },
+      external: [
+        "react",
+        "react-dom",
+        "@chakra-ui/react",
+        "@emotion/react",
+        "@emotion/styled",
+        "axios",
+        "react-dropzone",
+        "react-error-boundary",
+        "react-hook-form",
+        "react-icons",
+        "react-router-dom",
+        "react-webcam",
+        "zod",
+        "jotai",
+        "jotai-effect",
+        "next-themes",
+        "framer-motion",
+        "tanstack-query",
+        "tanstack-query-devtools",
+      ],
+    },
   },
   resolve: {
     alias: {
