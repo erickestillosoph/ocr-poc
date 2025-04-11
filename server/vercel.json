@@ -16,7 +16,10 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "dist/index.js" },
+    { "source": "/api/:path*", "destination": "dist/index.js" },
+    { "source": "/api/v1/:path*", "destination": "dist/index.js" },
+    { "source": "/app/:path*", "destination": "dist/index.js" },
+    { "source": "/app/v1/:path*", "destination": "dist/index.js" },
     { "source": "/(.*)", "destination": "dist/index.js" }
   ],
   "headers": [
