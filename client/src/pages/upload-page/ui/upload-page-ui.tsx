@@ -43,16 +43,9 @@ export const UploadPagePage = () => {
   };
 
   useEffect(() => {
-    if (pdfResults) {
-      setLocalStorage("pdfResults", pdfResults);
-    }
-  }, [pdfResults]);
-
-  useEffect(() => {
-    if (imageResults) {
-      setLocalStorage("imageResults", imageResults);
-    }
-  }, [imageResults]);
+    setLocalStorage("imageResults", imageResults);
+    setLocalStorage("pdfResults", pdfResults);
+  }, [imageResults, pdfResults]);
   return (
     <>
       <VStack
