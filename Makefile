@@ -6,7 +6,7 @@ client-start:
 .PHONY: server-start
 server-start:
 	@echo "🌱 Starting server..."
-	cd server && npm start
+	cd server && npm run start:dev
 
 .PHONY: server-install
 server-install:

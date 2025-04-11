@@ -21,6 +21,8 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -29,9 +31,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "baseUrl": "."
   },
   "include": ["src/**/*"]
 }
