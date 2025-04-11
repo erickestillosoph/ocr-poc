@@ -32,22 +32,20 @@ export const UploadPagePage = () => {
     setIsHidden(true);
   };
 
-  const handleRegiserFile = (fileType: "image" | "pdf") => {
-    if (fileType === "image") {
-      openImageRef.current?.();
-      setIsHidden(false);
-    }
-    if (fileType === "pdf") {
-      openPDFRef.current?.();
-      setIsHidden(false);
-    }
+  const handleImageUpload = () => {
+    openImageRef.current?.();
+    setIsHidden(false);
+  };
+
+  const handlePDFUpload = () => {
+    openPDFRef.current?.();
+    setIsHidden(false);
   };
 
   useEffect(() => {
     if (imageResults) {
       setLocalStorage("imageResults", imageResults);
-    }
-    if (pdfResults) {
+    } else if (pdfResults) {
       setLocalStorage("pdfResults", pdfResults);
     }
   }, [imageResults, pdfResults]);
@@ -131,7 +129,7 @@ export const UploadPagePage = () => {
                   borderColor: "transparent",
                   backgroundColor: "blue.50",
                 }}
-                onClick={() => handleRegiserFile("image")}
+                onClick={handleImageUpload}
               >
                 <span style={{ fontSize: "10px" }}>写真ライブラリ</span>
                 <FaImage color={theme.colors.blue[500]} size="14px" />
@@ -149,7 +147,7 @@ export const UploadPagePage = () => {
                   borderColor: "transparent",
                   backgroundColor: "blue.50",
                 }}
-                onClick={() => handleRegiserFile("pdf")}
+                onClick={handlePDFUpload}
               >
                 <span style={{ fontSize: "10px" }}>ファイルを選択</span>
                 <FaFilePdf color={theme.colors.blue[500]} size="14px" />
