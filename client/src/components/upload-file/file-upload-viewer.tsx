@@ -1,6 +1,7 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   uploadedFiles: any[];
 };
 
@@ -19,17 +20,12 @@ export const FileViewer = ({ uploadedFiles }: Props) => (
     {uploadedFiles.length === 0 ? (
       <Text color="gray.400">No files uploaded.</Text>
     ) : (
-      <VStack align="stretch" spacing={4}>
+      <VStack align="stretch" gap={4}>
         {uploadedFiles.map((file) => (
-          <Box
-            key={file.id}
-            p={4}
-            borderRadius="8px"
-            borderColor="gray.300"
-          >
+          <Box key={file.id} p={4} borderRadius="8px" borderColor="gray.300">
             <Text fontWeight="medium">{file.name}</Text>
             <Text fontSize="sm" color="gray.500" textAlign="left">
-            {JSON.stringify(file.responseData)}
+              {JSON.stringify(file.responseData)}
             </Text>
           </Box>
         ))}
@@ -37,4 +33,3 @@ export const FileViewer = ({ uploadedFiles }: Props) => (
     )}
   </Box>
 );
-

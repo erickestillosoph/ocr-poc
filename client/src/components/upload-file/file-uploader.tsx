@@ -36,7 +36,7 @@ type Props = {
   fileInputRef: React.RefObject<HTMLInputElement>;
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
   onBrowseClick: () => void;
-  handleUploadFiles: (filesToUpload: FileType[]) => void; 
+  handleUploadFiles: (filesToUpload: FileType[]) => void;
 };
 
 export const FileUploader = ({
@@ -53,13 +53,13 @@ export const FileUploader = ({
     setSelectedFileName(event.target.value);
   };
   const handleUploadClick = () => {
-    if (!selectedFileName) return handleUploadFiles(uploadedFiles); 
+    if (!selectedFileName) return handleUploadFiles(uploadedFiles);
 
     const selectedFile = uploadedFiles.find(
       (file) => file.name === selectedFileName
     );
     if (selectedFile) {
-      handleUploadFiles([selectedFile]); 
+      handleUploadFiles([selectedFile]);
       return;
     }
   };
@@ -79,7 +79,6 @@ export const FileUploader = ({
       flexDirection="column"
     >
       <Box flex="1">
-
         <Box
           border="2px dashed"
           borderColor="gray.300"

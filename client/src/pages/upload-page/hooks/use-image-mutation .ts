@@ -1,0 +1,102 @@
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { api, resultsAtom } from "@/shared";
+import { useDropzone } from "react-dropzone";
+import { useToast } from "@chakra-ui/react";
+import { useCallback, useEffect, useRef } from "react";
+import { useAtom } from "jotai";
+const API_URL = import.meta.env.VITE_API_URL;
+const API_VERSION = import.meta.env.VITE_API_VERSION;
+
+export const useImageMutation = () => {
+  const toast = useToast();
+  const IMAGE_PATH = api.uploadImage;
+  const [, setResults] = useAtom(resultsAtom);
+
+  const openImageRef = useRef<() => void | null>(null);
+  const {
+    mutate,
+    isPending,
+    isError,
+    isSuccess,
+    data: imageData,
+  } = useMutation({
+    mutationFn: (files: File[]) => {
+      const data = new FormData();
+      files.forEach((file) => data.append("image", file));
+      return axios.post(`${API_URL}/${API_VERSION}${IMAGE_PATH}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Upload successful",
+        description: `Your image has been uploaded successfully.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Upload failed",
+        description: `There was an error uploading your image.`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    },
+    mutationKey: ["image"],
+  });
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      acceptedFiles.forEach((file) => {
+        toast({
+          title: "File uploaded",
+          description: file.name,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      });
+
+      mutate(acceptedFiles);
+    },
+    [toast, mutate]
+  );
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    onDrop,
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+      "image/jpg": [],
+    },
+    maxFiles: 3,
+  });
+
+  openImageRef.current = open;
+
+  useEffect(() => {
+    if (imageData) {
+      setResults(imageData.data);
+    }
+  }, [imageData, setResults]);
+
+  return {
+    getRootProps,
+    getInputProps,
+    mutate,
+    isPending,
+    isError,
+    isSuccess,
+    openImageRef,
+    imageResults: imageData?.data,
+  };
+};
