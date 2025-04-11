@@ -12,33 +12,13 @@ export default defineConfig({
     outDir: "./dist",
     rollupOptions: {
       output: {
-        format: "es",
-        manualChunks: {
-          vendor: [
-            "react",
-            "react-dom",
-            "@chakra-ui/react",
-            "@emotion/react",
-            "@emotion/styled",
-            "axios",
-            "react-dropzone",
-            "react-error-boundary",
-            "react-hook-form",
-            "react-icons",
-            "react-router-dom",
-            "react-webcam",
-            "zod",
-            "jotai",
-            "jotai-effect",
-            "next-themes",
-            "framer-motion",
-          ],
-        },
+        format: "iife",
       },
     },
     assetsDir: "assets",
     emptyOutDir: true,
   },
+  base: "/",
   resolve: {
     alias: {
       "@/shared": resolve(__dirname, "src/shared"),
