@@ -22,7 +22,7 @@ const resultsAtom = atom(getLocalStorage("resultsKey") || "default value");
 
 resultsAtom.onMount = (setAtom) => {
   const callback = (newValue: string) => {
-    setLocalStorage("resultsKey", newValue);
+    setLocalStorage("resultsKey", newValue || "default value");
   };
   setAtom(callback);
 };

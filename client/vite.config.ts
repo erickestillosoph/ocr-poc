@@ -1,10 +1,45 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import { resolve } from "path";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/",
+  build: {
+    outDir: "./dist",
+    rollupOptions: {
+      output: {
+        format: "es",
+        manualChunks: {
+          vendor: [
+            "react",
+            "react-dom",
+            "@chakra-ui/react",
+            "@emotion/react",
+            "@emotion/styled",
+            "axios",
+            "react-dropzone",
+            "react-error-boundary",
+            "react-hook-form",
+            "react-icons",
+            "react-router-dom",
+            "react-webcam",
+            "zod",
+            "jotai",
+            "jotai-effect",
+            "next-themes",
+            "framer-motion",
+          ],
+        },
+      },
+    },
+    assetsDir: "assets",
+    emptyOutDir: true,
+  },
   resolve: {
     alias: {
       "@/shared": resolve(__dirname, "src/shared"),
@@ -18,6 +53,7 @@ export default defineConfig({
       "@/services": resolve(__dirname, "src/services"),
       "@/routes": resolve(__dirname, "src/routes"),
       "@/features": resolve(__dirname, "src/features"),
+      "@/providers": resolve(__dirname, "src/providers"),
     },
   },
 });

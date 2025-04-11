@@ -34,12 +34,12 @@ export const ViewResultsPageUI = () => {
         colorScheme={theme.colors.blue[100]}
       >
         <TabList gap={2}>
-          {imageResults !== null && <Tab>Image</Tab>}
-          {pdfResults !== null && <Tab>Pdf</Tab>}
+          <Tab>Image</Tab>
+          <Tab>Pdf</Tab>
         </TabList>
 
         <TabPanels>
-          {imageResults !== null && (
+          {imageResults && (
             <TabPanel>
               <Code
                 backgroundColor={theme.colors.gray[50]}
@@ -55,7 +55,8 @@ export const ViewResultsPageUI = () => {
               </Code>
             </TabPanel>
           )}
-          {pdfResults !== null && (
+
+          {pdfResults && (
             <TabPanel>
               <Code
                 backgroundColor={theme.colors.gray[50]}
