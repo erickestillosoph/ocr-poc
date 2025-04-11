@@ -53,6 +53,7 @@ export default defineConfig({
       "@/services": resolve(__dirname, "src/services"),
       "@/routes": resolve(__dirname, "src/routes"),
       "@/features": resolve(__dirname, "src/features"),
+      "@/providers": resolve(__dirname, "src/providers"),
     },
   },
 });
