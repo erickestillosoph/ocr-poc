@@ -1,7 +1,8 @@
 import { Box, Button, VStack } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
 import Webcam from "react-webcam";
-import React, { useRef, useState } from "react";
+import { useState } from "react";
+import { useCameraAccess } from "../hooks/use-camera-access-2";
 
 const videoConstraints = {
   width: 1280,
@@ -12,13 +13,7 @@ const videoConstraints = {
 export const CameraAccessPage = () => {
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const webcamRef = useRef<Webcam>(null);
-  const capture = React.useCallback(() => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      console.log(imageSrc);
-    }
-  }, [webcamRef]);
+  const { capture, webcamRef } = useCameraAccess();
 
   const handleOpenCamera = () => setIsCameraOpen(true);
 
@@ -54,7 +49,7 @@ export const CameraAccessPage = () => {
             zIndex="1"
             onClick={handleOpenCamera}
           >
-            <span>open camera</span>
+            <span>写真を撮影</span>
           </Button>
         )}
       </VStack>

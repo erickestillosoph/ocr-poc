@@ -5,7 +5,7 @@ import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
 export const driverNavigationItems = [
   {
     label: PAGE_BOTTOM_TITLES.HOME,
-    path: paths.cameraAccess,
+    path: paths.cameraAccessUploadFile,
     icon: BiHome,
   },
   {

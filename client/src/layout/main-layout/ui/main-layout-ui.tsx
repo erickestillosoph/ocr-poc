@@ -1,4 +1,5 @@
 import { BottomNavigatorContainer } from "@/layout/bottom-navigator";
+import { useAppTheme } from "@/shared/theme";
 import { VStack } from "@chakra-ui/react";
 
 type MainLayoutPageProps = {
@@ -6,9 +7,16 @@ type MainLayoutPageProps = {
 };
 
 export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
+  const { theme } = useAppTheme();
   return (
-    <VStack height="full">
-      <VStack spacing="16px" w="full" h="full" position="relative">
+    <VStack height="100svh" backgroundColor={theme.colors.white}>
+      <VStack
+        spacing="16px"
+        w="full"
+        h="full"
+        position="relative"
+        backgroundColor={theme.colors.white}
+      >
         {children}
         <BottomNavigatorContainer />
       </VStack>

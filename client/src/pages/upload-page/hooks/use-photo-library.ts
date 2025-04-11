@@ -27,7 +27,7 @@
 //                 }
 
 //                 await inserUploadPageMutation({
-//                   variables: {s
+//                   variables: {
 //                     object: {
 //                       prefecture: input.prefecture,
 //                       city: input.city,

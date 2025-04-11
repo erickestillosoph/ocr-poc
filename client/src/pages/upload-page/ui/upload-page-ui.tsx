@@ -1,46 +1,41 @@
-// import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
-// import { BaseSyntheticEvent } from 'react';
-// import { Control } from 'react-hook-form';
-// import { UploadPage } from '@shared/api';
-// import { UploadPageSchema } from '@shared/lib';
-// import { useAppTheme } from '@shared/ui';
+import { useState } from "react";
+import { useAppTheme } from "@/shared/theme";
+import { Button, VStack } from "@chakra-ui/react";
 
-// type UploadPageType = {
-//   control: Control<UploadPageSchema>;
-//   handleSubmit: (e?: BaseSyntheticEvent) => void;
-//   loading: boolean;
-//   initialValues: UploadPage;
-//   isValid: boolean;
-// };
+export const UploadPagePage = () => {
+  const { theme } = useAppTheme();
+  const [showFileInput, setShowFileInput] = useState(false);
 
-// export const UploadPagePage = ({
-//   handleSubmit,
-//   control,
-//   loading,
-//   initialValues,
-//   isValid,
-// }: UploadPageType) => {
-//   const { theme } = useAppTheme();
+  const handleRegiserFile = () => setShowFileInput(!showFileInput);
 
-//   return (
-//     <form onSubmit={handleSubmit} style={{ height: '100%', marginTop: '20px' }}>
-//       <VStack display="grid" alignContent="space-between" height="full">
-//         <VStack alignItems="flex-start" spacing="16px">
-//         <Button
-//           isDisabled={loading || !isValid}
-//           color={theme.colors.white}
-//           backgroundColor={theme.colors.primary}
-//           w="full"
-//           position="relative"
-//           zIndex="1"
-//           rounded="full"
-//           px="3"
-//           py="4"
-//           onClick={handleSubmit}
-//         >
-//           <span>登録する</span>
-//         </Button>
-//       </VStack>
-//     </form>
-//   );
-// };
+  return (
+    <form style={{ height: "100%", marginTop: "20px" }}>
+      <VStack display="grid" alignContent="space-between" height="full">
+        <VStack alignItems="flex-start" spacing="16px">
+          <Button
+            color={theme.colors.white}
+            backgroundColor={theme.colors.blue}
+            w="full"
+            position="relative"
+            zIndex="1"
+            px="3"
+            py="4"
+            onClick={handleRegiserFile}
+          >
+            <span>ファイルを登録</span>
+          </Button>
+          {showFileInput && (
+            <VStack mt="16px" w="fit-content" height="fit-content">
+              <Button size="sm" variant="outline">
+                写真ライブラリ
+              </Button>
+              <Button size="sm" variant="outline">
+                ファイルを選択
+              </Button>
+            </VStack>
+          )}
+        </VStack>
+      </VStack>
+    </form>
+  );
+};
