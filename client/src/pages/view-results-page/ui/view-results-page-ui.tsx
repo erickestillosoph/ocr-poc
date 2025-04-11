@@ -34,43 +34,40 @@ export const ViewResultsPageUI = () => {
         colorScheme={theme.colors.blue[100]}
       >
         <TabList gap={2}>
-          {imageResults !== null && <Tab>Image</Tab>}
-          {pdfResults !== null && <Tab>Pdf</Tab>}
+          <Tab>Image</Tab>
+          <Tab>Pdf</Tab>
         </TabList>
 
         <TabPanels>
-          {imageResults !== null && (
-            <TabPanel>
-              <Code
-                backgroundColor={theme.colors.gray[50]}
-                fontSize="sm"
-                w="full"
-                textAlign="left"
-                appearance="auto"
-                variant="subtle"
-                overflow="auto"
-                maxH="50vh"
-              >
-                {imageResultsArray}
-              </Code>
-            </TabPanel>
-          )}
-          {pdfResults !== null && (
-            <TabPanel>
-              <Code
-                backgroundColor={theme.colors.gray[50]}
-                fontSize="sm"
-                w="full"
-                textAlign="left"
-                appearance="auto"
-                variant="subtle"
-                overflow="auto"
-                maxH="50vh"
-              >
-                {pdfResultsArray}
-              </Code>
-            </TabPanel>
-          )}
+          <TabPanel>
+            <Code
+              backgroundColor={theme.colors.gray[50]}
+              fontSize="sm"
+              w="full"
+              textAlign="left"
+              appearance="auto"
+              variant="subtle"
+              overflow="auto"
+              maxH="50vh"
+            >
+              {imageResultsArray}
+            </Code>
+          </TabPanel>
+
+          <TabPanel>
+            <Code
+              backgroundColor={theme.colors.gray[50]}
+              fontSize="sm"
+              w="full"
+              textAlign="left"
+              appearance="auto"
+              variant="subtle"
+              overflow="auto"
+              maxH="50vh"
+            >
+              {pdfResultsArray}
+            </Code>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </VStack>
