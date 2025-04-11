@@ -29,10 +29,10 @@ export const BottomNavigationBar = ({ navigationItems }: Props) => {
       justifyContent="space-between"
       bottom="0"
       width="100%"
-      height="64px"
       boxShadow="md"
       zIndex="1000"
       borderTop="1px"
+      padding="0px"
       borderColor={theme.colors.gray[200]}
     >
       <HStack
@@ -40,17 +40,24 @@ export const BottomNavigationBar = ({ navigationItems }: Props) => {
         justifyContent="space-evenly"
         margin="0 auto"
         width="100%"
-        maxWidth="375px"
+        padding="0px"
       >
         {navigationItems.map((item, index) => (
           <VStack
             key={index}
             onClick={() => navigate(item.path)}
             color={
-              isActive(item.path) ? theme.colors.blue : theme.colors.gray[400]
+              isActive(item.path) ? theme.colors.white : theme.colors.gray[400]
             }
+            height="64px"
+            alignItems="center"
+            justifyContent="center"
             gap="5px"
             position="relative"
+            padding="0px"
+            margin="0px"
+            backgroundColor={isActive(item.path) ? "#1681BC" : "white"}
+            flex="1"
           >
             <Icon as={item.icon} boxSize="20px" />
             <Text fontSize="xs">{item.label}</Text>
