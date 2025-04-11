@@ -18,19 +18,15 @@ const upload = multer({ storage });
 
 const router = Router();
 
-router.post(
-  "/api/v1/process-image",
-  upload.single("image"),
-  async (req, res) => {
-    try {
-      const imageFile = req.file as Express.Multer.File;
-      const result = await processImage(imageFile);
-      res.json({ result });
-    } catch (error) {
-      console.error("Error in processing image:", error);
-      res.status(500).json({ error: "Failed to process the image" });
-    }
+router.post("/process-image", upload.single("image"), async (req, res) => {
+  try {
+    const imageFile = req.file as Express.Multer.File;
+    const result = await processImage(imageFile);
+    res.json({ result });
+  } catch (error) {
+    console.error("Error in processing image:", error);
+    res.status(500).json({ error: "Failed to process the image" });
   }
-);
+});
 
 export default router;

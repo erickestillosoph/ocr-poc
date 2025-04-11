@@ -18,7 +18,7 @@ const upload = multer({ storage });
 
 const router = Router();
 
-router.post("/api/v1/process-pdf", upload.single("pdf"), async (req, res) => {
+router.post("/process-pdf", upload.single("pdf"), async (req, res) => {
   try {
     const pdfFile = req.file as Express.Multer.File;
     const result = await processPdf(pdfFile);
