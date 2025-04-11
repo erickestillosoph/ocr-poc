@@ -1,5 +1,9 @@
 import { MainLayoutPage } from "./ui/main-layout-ui";
 
-export const MainLayoutContainer = () => {
-  return <MainLayoutPage />;
+type MainLayoutContainerProps = {
+  children: React.ReactNode;
+};
+
+export const MainLayoutContainer = ({ children }: MainLayoutContainerProps) => {
+  return <MainLayoutPage children={children} />;
 };

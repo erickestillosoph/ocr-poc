@@ -1,8 +1,0 @@
-# mutation UpsertCameraAccess(
-#             $object: CameraAccessInsertInput!
-#             $onConflict: CameraAccessOnConflict
-#           ) {
-#             insertCameraAccessOne(object: $object, onConflict: $onConflict) {
-#               ...CameraAccess
-#             }
-#           }

@@ -1,14 +1,17 @@
 import { BottomNavigatorContainer } from "@/layout/bottom-navigator";
-import { CameraAccessContainer } from "@/pages";
 import { VStack } from "@chakra-ui/react";
 
-export const MainLayoutPage = () => {
+type MainLayoutPageProps = {
+  children: React.ReactNode;
+};
+
+export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
   return (
-    <VStack display="grid" alignContent="space-between" height="full">
-      <VStack alignItems="flex-start" spacing="16px">
-        <CameraAccessContainer />
+    <VStack height="full">
+      <VStack spacing="16px" w="full" h="full" position="relative">
+        {children}
+        <BottomNavigatorContainer />
       </VStack>
-      <BottomNavigatorContainer />
     </VStack>
   );
 };

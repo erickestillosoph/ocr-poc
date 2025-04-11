@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import "./App.css";
 import { AppProvider, AppRoute, JotaiProvider } from "./providers";
+import { MainLayoutContainer } from "./layout";
 
 function App() {
   return (
@@ -8,7 +9,9 @@ function App() {
       <AppProvider>
         <JotaiProvider>
           <ChakraProvider>
-            <AppRoute />
+            <MainLayoutContainer>
+              <AppRoute />
+            </MainLayoutContainer>
           </ChakraProvider>
         </JotaiProvider>
       </AppProvider>
