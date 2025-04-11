@@ -5,6 +5,7 @@ import imageRoute from "./routes/imageRoute";
 import pdfRoute from "./routes/pdfRoute";
 import ImageFeature from "./functions/image/imageFile.js";
 import PDFFeature from "./functions/pdf/pdfFile.js";
+import serverless from "serverless-http";
 
 // Function that returns the result from main
 export async function processImage(imageFile: Express.Multer.File) {
@@ -35,8 +36,5 @@ app.use(imageRoute);
 // PdfRoute
 app.use(pdfRoute);
 
-// Start the server
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+export default app;
+export const handler = serverless(app);
