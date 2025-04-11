@@ -9,7 +9,7 @@ export const colors = {
     icon: {
       secondary: "#A0AEC0",
     },
-    blue: "#0070F3",
+    blue: "#1681BC",
     danger: "#F56565",
     border: "#E2E8F0",
     gray: {

@@ -1,15 +1,29 @@
 import { useState } from "react";
 import { useAppTheme } from "@/shared/theme";
-import { Button, Divider, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
+
+import { useImageMutation } from "../hooks/use-image-mutation ";
+import { usePdfMutation } from "../hooks/use-pdf-mutation";
+
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
   const [showFileInput, setShowFileInput] = useState(false);
+  const {
+    getRootProps: getImageRootProps,
+    getInputProps: getImageInputProps,
+    openImageRef,
+  } = useImageMutation();
+  const {
+    getRootProps: getPDFRootProps,
+    getInputProps: getPDFInputProps,
+    openPDFRef,
+  } = usePdfMutation();
 
   const handleRegiserFile = () => setShowFileInput(!showFileInput);
 
   return (
-    <form style={{ height: "100%", marginTop: "20px" }}>
+    <>
       <VStack
         display="grid"
         alignContent="space-between"
@@ -29,6 +43,7 @@ export const UploadPagePage = () => {
             variant="solid"
             w="full"
             zIndex="1"
+            mt="12px"
             px="3"
             py="4"
             _hover={{
@@ -50,6 +65,28 @@ export const UploadPagePage = () => {
               top="12"
               right="0"
             >
+              <Box
+                p={6}
+                display="none"
+                border="2px dashed"
+                borderRadius="lg"
+                textAlign="center"
+                {...getImageRootProps()}
+                cursor="pointer"
+              >
+                <Input display="none" {...getImageInputProps()} size="md" />
+              </Box>
+              <Box
+                p={6}
+                display="none"
+                border="2px dashed"
+                borderRadius="lg"
+                textAlign="center"
+                {...getPDFRootProps()}
+                cursor="pointer"
+              >
+                <Input display="none" {...getPDFInputProps()} size="md" />
+              </Box>
               <Button
                 size="xs"
                 variant="ghost"
@@ -62,7 +99,7 @@ export const UploadPagePage = () => {
                   borderColor: "transparent",
                   backgroundColor: "blue.50",
                 }}
-                onClick={() => setShowFileInput(false)}
+                onClick={() => openImageRef.current?.()}
               >
                 <span style={{ fontSize: "10px" }}>写真ライブラリ</span>
                 <FaImage color={theme.colors.blue[500]} size="14px" />
@@ -80,7 +117,7 @@ export const UploadPagePage = () => {
                   borderColor: "transparent",
                   backgroundColor: "blue.50",
                 }}
-                onClick={() => setShowFileInput(false)}
+                onClick={() => openPDFRef.current?.()}
               >
                 <span style={{ fontSize: "10px" }}>ファイルを選択</span>
                 <FaFilePdf color={theme.colors.blue[500]} size="14px" />
@@ -89,6 +126,6 @@ export const UploadPagePage = () => {
           )}
         </VStack>
       </VStack>
-    </form>
+    </>
   );
 };
