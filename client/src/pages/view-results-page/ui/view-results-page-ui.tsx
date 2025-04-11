@@ -1,46 +1,78 @@
-// import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
-// import { BaseSyntheticEvent } from 'react';
-// import { Control } from 'react-hook-form';
-// import { ViewResultsPage } from '@shared/api';
-// import { ViewResultsPageSchema } from '@shared/lib';
-// import { useAppTheme } from '@shared/ui';
+import { useAppTheme } from "@/shared/theme";
+import {
+  Code,
+  VStack,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from "@chakra-ui/react";
+import { getLocalStorage } from "@/shared";
 
-// type ViewResultsPageType = {
-//   control: Control<ViewResultsPageSchema>;
-//   handleSubmit: (e?: BaseSyntheticEvent) => void;
-//   loading: boolean;
-//   initialValues: ViewResultsPage;
-//   isValid: boolean;
-// };
+export const ViewResultsPageUI = () => {
+  const { theme } = useAppTheme();
+  const imageResults = getLocalStorage("imageResults");
+  const pdfResults = getLocalStorage("pdfResults");
 
-// export const ViewResultsPagePage = ({
-//   handleSubmit,
-//   control,
-//   loading,
-//   initialValues,
-//   isValid,
-// }: ViewResultsPageType) => {
-//   const { theme } = useAppTheme();
+  const imageResultsArray = JSON.stringify(imageResults, null, 1);
+  const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
 
-//   return (
-//     <form onSubmit={handleSubmit} style={{ height: '100%', marginTop: '20px' }}>
-//       <VStack display="grid" alignContent="space-between" height="full">
-//         <VStack alignItems="flex-start" spacing="16px">
-//         <Button
-//           isDisabled={loading || !isValid}
-//           color={theme.colors.white}
-//           backgroundColor={theme.colors.primary}
-//           w="full"
-//           position="relative"
-//           zIndex="1"
-//           rounded="full"
-//           px="3"
-//           py="4"
-//           onClick={handleSubmit}
-//         >
-//           <span>登録する</span>
-//         </Button>
-//       </VStack>
-//     </form>
-//   );
-// };
+  return (
+    <VStack
+      mt="20px"
+      width="100%"
+      display="grid"
+      alignContent="space-between"
+      height="full"
+      w="full"
+    >
+      <Tabs
+        variant="soft-rounded"
+        size="sm"
+        w="full"
+        colorScheme={theme.colors.blue[100]}
+      >
+        <TabList gap={2}>
+          {imageResults !== null && <Tab>Image</Tab>}
+          {pdfResults !== null && <Tab>Pdf</Tab>}
+        </TabList>
+
+        <TabPanels>
+          {imageResults !== null && (
+            <TabPanel>
+              <Code
+                backgroundColor={theme.colors.gray[50]}
+                fontSize="sm"
+                w="full"
+                textAlign="left"
+                appearance="auto"
+                variant="subtle"
+                overflow="auto"
+                maxH="50vh"
+              >
+                {imageResultsArray}
+              </Code>
+            </TabPanel>
+          )}
+          {pdfResults !== null && (
+            <TabPanel>
+              <Code
+                backgroundColor={theme.colors.gray[50]}
+                fontSize="sm"
+                w="full"
+                textAlign="left"
+                appearance="auto"
+                variant="subtle"
+                overflow="auto"
+                maxH="50vh"
+              >
+                {pdfResultsArray}
+              </Code>
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Tabs>
+    </VStack>
+  );
+};

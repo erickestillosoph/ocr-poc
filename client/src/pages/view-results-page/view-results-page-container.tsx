@@ -1,3 +1,5 @@
+import { ViewResultsPageUI } from "./ui/view-results-page-ui";
+
 export const ViewResultsPageContainer = () => {
-  return <div>View Results Page Container</div>;
+  return <ViewResultsPageUI />;
 };
