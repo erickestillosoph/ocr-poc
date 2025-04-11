@@ -7,6 +7,13 @@ import ImageFeature from "./functions/image/imageFile.js";
 import PDFFeature from "./functions/pdf/pdfFile.js";
 import serverless from "serverless-http";
 
+// Environment detection
+const NODE_ENV = process.env.NODE_ENV || "development";
+const isProduction = NODE_ENV === "production";
+const environment = isProduction ? "production" : "local";
+
+console.log(`[Server] Running in ${environment} environment`);
+
 // Function that returns the result from main
 export async function processImage(imageFile: Express.Multer.File) {
   if (!fs.existsSync(imageFile.path)) {
@@ -37,6 +44,12 @@ app.use(
 
 app.use(express.json());
 
+// Add environment info to response locals
+app.use((req, res, next) => {
+  res.locals.environment = environment;
+  next();
+});
+
 // ImageRoute
 app.use(imageRoute);
 
@@ -45,3 +58,4 @@ app.use(pdfRoute);
 
 export default app;
 export const handler = serverless(app);
+export { environment, isProduction };

@@ -14,6 +14,12 @@ export const useImageMutation = () => {
   const IMAGE_PATH = api.uploadImage;
 
   const openImageRef = useRef<() => void | null>(null);
+
+  // Determine the base API URL based on environment
+  const isProduction = window.location.hostname !== "localhost";
+  const baseApiUrl = isProduction ? "" : API_URL;
+  const baseApiVersion = isProduction ? "" : API_VERSION;
+
   const {
     mutate,
     isPending,
@@ -24,7 +30,7 @@ export const useImageMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("image", file));
-      return axios.post(`${API_URL}/${API_VERSION}${IMAGE_PATH}`, data, {
+      return axios.post(`${baseApiUrl}${baseApiVersion}${IMAGE_PATH}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -15,6 +15,12 @@ export const usePdfMutation = () => {
   const navigate = useNavigate();
   const PDF_PATH = api.uploadPdf;
   const openPDFRef = useRef<() => void>(null);
+
+  // Determine the base API URL based on environment
+  const isProduction = window.location.hostname !== "localhost";
+  const baseApiUrl = isProduction ? "" : API_URL;
+  const baseApiVersion = isProduction ? "" : API_VERSION;
+
   const {
     mutate,
     isPending,
@@ -25,7 +31,7 @@ export const usePdfMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("pdf", file));
-      return axios.post(`${API_URL}/${API_VERSION}${PDF_PATH}`, data, {
+      return axios.post(`${baseApiUrl}${baseApiVersion}${PDF_PATH}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

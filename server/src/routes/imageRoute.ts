@@ -1,11 +1,24 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { processImage } from "../index";
+import { processImage, environment } from "../index";
+import fs from "fs";
+import { isProduction } from "./pdfRoute";
+const API_VERSION = process.env.API_VERSION || "";
+const baseApiVersion = isProduction ? "" : API_VERSION;
+
+const uploadsDir = path.join(process.cwd(), "uploads");
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.error("Error creating uploads directory:", err);
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -18,15 +31,22 @@ const upload = multer({ storage });
 
 const router = Router();
 
-router.post("/process-image", upload.single("image"), async (req, res) => {
-  try {
-    const imageFile = req.file as Express.Multer.File;
-    const result = await processImage(imageFile);
-    res.json({ result });
-  } catch (error) {
-    console.error("Error in processing image:", error);
-    res.status(500).json({ error: "Failed to process the image" });
+router.post(
+  `${baseApiVersion}/process-image`,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const imageFile = req.file as Express.Multer.File;
+      const result = await processImage(imageFile);
+      res.json({
+        result,
+        environment,
+      });
+    } catch (error) {
+      console.error("Error in processing image:", error);
+      res.status(500).json({ error: "Failed to process the image" });
+    }
   }
-});
+);
 
 export default router;
