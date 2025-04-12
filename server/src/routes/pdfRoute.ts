@@ -1,8 +1,9 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { processPdf } from "../index";
+
 import fs from "fs";
+import { processPdf } from "../index.js";
 
 const API_VERSION = process.env.API_VERSION;
 const NODE_ENV = process.env.NODE_ENV || "development";

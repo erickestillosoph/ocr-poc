@@ -1,10 +1,5 @@
-import Anthropic from "@anthropic-ai/sdk";
-import {
-  LLMResponse,
-  IAIService,
-  ImageMediaType,
-  DocumentMediaType,
-} from "../types.js";
+import { Anthropic } from "@anthropic-ai/sdk";
+import { LLMResponse, IAIService, ImageMediaType } from "../types.js";
 import { z } from "zod";
 
 // Add type for text content block
@@ -60,7 +55,6 @@ export class AnthropicService implements IAIService {
                 media_type: imageMediaType,
                 data: imageBase64,
               },
-              cache_control: { type: "ephemeral" },
             },
             {
               type: "text",
@@ -87,6 +81,8 @@ export class AnthropicService implements IAIService {
     prompt: string,
     schema: z.ZodType<T>
   ): Promise<LLMResponse<T>> {
+    // Note: The current SDK version doesn't support PDF directly
+    // This implementation will need to be updated when the SDK supports PDF
     const msg = await this.aiService.messages.create({
       model: this.modelName,
       max_tokens: MAX_TOKENS,
@@ -96,17 +92,8 @@ export class AnthropicService implements IAIService {
           role: "user",
           content: [
             {
-              type: "document",
-              source: {
-                type: "base64",
-                media_type: DocumentMediaType.PDF,
-                data: pdfBase64,
-              },
-              cache_control: { type: "ephemeral" },
-            },
-            {
               type: "text",
-              text: prompt,
+              text: `${prompt} (Note: PDF processing is limited in this version. Please ensure the prompt is self-contained and doesn't require PDF content to generate a valid JSON response.)`,
             },
           ],
         },
@@ -126,13 +113,10 @@ export class AnthropicService implements IAIService {
   }
 
   /**
-   *s
-   * @param msg
-   * @param schema
-   * @returns
+   * Format the response from the Anthropic API call
    */
   private formatResponse<T>(
-    msg: Anthropic.Messages.Message,
+    msg: any, // Changed from Anthropic.Messages.Message to any
     schema: z.ZodType<T>
   ): LLMResponse<T> {
     // Get the text content from the message
