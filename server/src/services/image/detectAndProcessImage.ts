@@ -1,9 +1,9 @@
 import { createAIService } from "../../factories/aiService.js";
 import { LLMService } from "../../services/llm.js";
 import { RekognitionService } from "../../services/rekognition.js";
+import { IAIService } from "../../types.js";
 import { ImageUtil } from "../../utils/image.js";
 import { z } from "zod";
-import { IAIService } from "src/types.js";
 
 const aiService: IAIService = createAIService();
 const rekognitionService = new RekognitionService();
