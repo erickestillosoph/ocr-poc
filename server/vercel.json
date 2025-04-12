@@ -6,5 +6,5 @@
       "maxDuration": 10
     }
   },
-  "routes": [{ "src": "/(.*)", "dest": "/api/pages/index.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "/dist/api/pages/index.js" }]
 }

@@ -38,10 +38,10 @@ dist-ssr
 .sst
 
 # api
-api
+/api
 
 # dist
-dist
+/dist
 
 #apia
-apia
+/apia

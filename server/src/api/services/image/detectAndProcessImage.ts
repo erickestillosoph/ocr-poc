@@ -1,6 +1,6 @@
 import { createAIService } from "../../factories/aiService.js";
-import { LLMService } from "../../services/llm.js";
-import { RekognitionService } from "../../services/rekognition.js";
+import { LLMService } from "../llm.js";
+import { RekognitionService } from "../rekognition.js";
 import { IAIService } from "../../types.js";
 import { ImageUtil } from "../../utils/image.js";
 import { z } from "zod";

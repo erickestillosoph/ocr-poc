@@ -1,5 +1,5 @@
 import { createAIService } from "../../factories/aiService.js";
-import { LLMService } from "../../services/llm.js";
+import { LLMService } from "../llm.js";
 import { IAIService } from "../../types.js";
 import { ExmaplePdfSchema } from "./pdfSchema.js";
 import { z } from "zod";

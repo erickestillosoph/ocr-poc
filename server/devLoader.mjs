@@ -20,9 +20,9 @@ try {
   });
 
   // Import the main application
-  const { default: app } = await import("./src/pages/index.ts");
+  const { default: app } = await import("./src/api/pages/index.ts");
 
-  // Start the development server
+  // Start the development servers
   const port = 3002;
   app.listen(port, () => {
     console.log(`🚀 Server running locally at http://localhost:${port}`);
