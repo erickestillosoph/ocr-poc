@@ -2,14 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Express.js OCR API server",
-  "main": "dist/index.js",
+  "main": "api/index.js",
   "type": "module",
   "scripts": {
-    "dev": "ts-node --esm src/index.ts",
-    "build": "tsc",
-    "postbuild": "mkdir -p dist/uploads",
-    "start": "node dist/index.js",
-    "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs"
+    "dev": "node api/index.js",
+    "build": "echo 'No build step needed'",
+    "start": "node api/index.js"
   },
   "engines": {
     "node": ">=18.x"
@@ -22,24 +20,9 @@
   ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
-    "@types/multer": "^1.4.12",
-    "@types/node": "^22.14.0",
-    "typescript": "^5.8.3"
-  },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
-    "@aws-sdk/client-rekognition": "^3.658.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "esm": "^3.2.25",
     "express": "^5.1.0",
-    "multer": "^1.4.5-lts.2",
-    "serverless-http": "^3.2.0",
-    "sharp": "^0.33.5",
-    "ts-node": "^10.9.2",
-    "zod": "^3.24.2"
+    "serverless-http": "^3.2.0"
   }
 }
