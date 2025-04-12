@@ -53,5 +53,15 @@ app.use(imageRoute);
 // PdfRoute
 app.use(pdfRoute);
 
+// Add root route
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
+});
+
+// Start server if not in production (serverless) environment
+if (process.env.NODE_ENV !== "production") {
+  app.listen(3000, () => console.log("Server ready on port 3000."));
+}
+
 export default app;
 export const handler = serverless(app);
