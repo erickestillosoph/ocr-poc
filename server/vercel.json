@@ -2,9 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "loader.mjs",
-      "use": "@vercel/node"
+      "src": "api/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["dist/**", "package.json"]
+      }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "loader.mjs" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index.js" }]
 }
