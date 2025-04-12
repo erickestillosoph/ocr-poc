@@ -2,12 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Express.js minimal API server",
-  "main": "dist/pages/api/index.js",
+  "main": "api/pages/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc && node dist/pages/api/index.js",
-    "start": "node dist/pages/api/index.js",
+    "dev": "tsc && node api/pages/index.js",
+    "start": "node api/pages/index.js",
     "start:loader": "node --experimental-specifier-resolution=node ./loader.mjs",
     "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs"
   },

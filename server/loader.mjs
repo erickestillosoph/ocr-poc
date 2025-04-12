@@ -34,7 +34,7 @@ let handler;
 
 try {
   // Import the Express application
-  const { handler: appHandler } = await import("./src/pages/api/index.ts");
+  const { handler: appHandler } = await import("./src/pages/index.ts");
   handler = appHandler;
   console.log("Express application handler loaded successfully");
 } catch (err) {
