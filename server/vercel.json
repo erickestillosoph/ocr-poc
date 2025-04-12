@@ -1,10 +1,11 @@
 {
   "version": 2,
+  "framework": "express",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "loader.mjs",
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "50mb"
@@ -15,12 +16,10 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "dist/index.js" },
-    { "source": "/api/v1/:path*", "destination": "dist/index.js" },
-    { "source": "/app/:path*", "destination": "dist/index.js" },
-    { "source": "/app/v1/:path*", "destination": "dist/index.js" },
-    { "source": "/(.*)", "destination": "dist/index.js" }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "loader.mjs" },
+    { "src": "/app/(.*)", "dest": "loader.mjs" },
+    { "src": "/(.*)", "dest": "loader.mjs" }
   ],
   "headers": [
     {

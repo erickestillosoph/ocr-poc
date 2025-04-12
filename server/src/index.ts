@@ -7,11 +7,8 @@ import ImageFeature from "./functions/image/imageFile.js";
 import PDFFeature from "./functions/pdf/pdfFile.js";
 import serverless from "serverless-http";
 
-// Environment detection
-const NODE_ENV = process.env.NODE_ENV || "development";
-const isProduction = NODE_ENV === "production";
-const environment = isProduction ? "production" : "local";
-
+// Log environment from route files
+import { environment } from "./routes/imageRoute";
 console.log(`[Server] Running in ${environment} environment`);
 
 // Function that returns the result from main
@@ -58,4 +55,3 @@ app.use(pdfRoute);
 
 export default app;
 export const handler = serverless(app);
-export { environment, isProduction };

@@ -1,16 +1,25 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Express.js OCR server",
+  "main": "loader.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "mkdir -p uploads",
+    "prebuild": "mkdir -p uploads && mkdir -p dist",
     "build": "tsc",
+    "postbuild": "cp loader.mjs dist/ && cp -r uploads dist/",
     "start": "node --experimental-specifier-resolution=node ./loader.mjs",
-    "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs"
+    "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs",
+    "vercel-build": "npm run build"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [
+    "express",
+    "ocr",
+    "serverless"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
