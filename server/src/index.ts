@@ -60,8 +60,11 @@ app.get("/", (req, res) => {
 
 // Start server if not in production (serverless) environment
 if (process.env.NODE_ENV !== "production") {
-  app.listen(3000, () => console.log("Server ready on port 3000."));
+  const port = process.env.PORT || 3001;
+  app.listen(port, () => console.log(`Server ready on port ${port}`));
 }
 
+// Export the Express app and serverless handler
+module.exports = app;
+module.exports.handler = serverless(app);
 export default app;
-export const handler = serverless(app);

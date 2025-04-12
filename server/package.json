@@ -2,13 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Express.js OCR server",
-  "main": "loader.mjs",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node --esm src/index.ts",
     "prebuild": "mkdir -p uploads && mkdir -p dist",
     "build": "tsc",
     "postbuild": "cp loader.mjs dist/ && cp -r uploads dist/",
-    "start": "node --experimental-specifier-resolution=node ./loader.mjs",
+    "start": "node dist/index.js",
     "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs",
     "vercel-build": "npm run build"
   },
