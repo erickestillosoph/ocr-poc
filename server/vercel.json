@@ -13,12 +13,7 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/index.js"
-    }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "dist/index.js" }],
   "headers": [
     {
       "source": "/(.*)",
