@@ -1,9 +1,9 @@
-import { createAIService } from "../../factories/aiService.js";
-import { LLMService } from "../../services/llm.js";
-import { RekognitionService } from "../../services/rekognition.js";
-import { ImageUtil } from "../../utils/image.js";
-import { z } from "zod";
-import { IAIService } from "src/types.js";
+import { createAIService } from '../../factories/aiService';
+import { LLMService } from '../../services/llm';
+import { RekognitionService } from '../../services/rekognition';
+import { ImageUtil } from '../../utils/image';
+import { z } from 'zod';
+import { IAIService } from '../../types';
 
 const aiService: IAIService = createAIService();
 const rekognitionService = new RekognitionService();
@@ -22,7 +22,7 @@ async function detectAndProcessImage<T>(
   schema: z.ZodType<T>
 ) {
   try {
-    const imageBuffer = Buffer.from(imageData, "base64");
+    const imageBuffer = Buffer.from(imageData, 'base64');
     const areaOfInterest = await rekognitionService.findTextAreaOfInterest(
       imageBuffer
     );
@@ -32,7 +32,7 @@ async function detectAndProcessImage<T>(
     );
     return llmService.imageToJSON<T>(processedImage, prompt, schema);
   } catch (error) {
-    console.error("Error detecting labels:", error);
+    console.error('Error detecting labels:', error);
   }
 }
 export default detectAndProcessImage;
