@@ -1,61 +1,43 @@
-// Vercel Serverless Function Export
+// Vercel Serverless Function - Optimized for quick startup
 import express from "express";
 import cors from "cors";
 import serverless from "serverless-http";
 
-// Define environment
-const NODE_ENV = process.env.NODE_ENV || "development";
-const isProduction = NODE_ENV === "production";
-const environment = isProduction ? "production" : "local";
-
-console.log(`[Server] Running in ${environment} environment (API handler)`);
-
-// Create Express app
+// Lightweight Express app
 const app = express();
 
-// Configure CORS
-app.use(cors());
+// Configure CORS with the package
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
-// Health check route
+// Environment info (kept simple)
+const environment =
+  process.env.NODE_ENV === "production" ? "production" : "local";
+
+// Fast response health check
 app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-    environment,
-    timestamp: new Date().toISOString(),
-  });
+  res.status(200).send(`OK - ${environment}`);
 });
 
-// Sample API route
+// Simplified API route
 app.get("/api/info", (req, res) => {
   res.json({
-    version: "1.0.0",
+    status: "ok",
     environment,
-    description: "OCR API Service",
-    endpoints: [
-      { path: "/", method: "GET", description: "Health check" },
-      { path: "/api/info", method: "GET", description: "API information" },
-    ],
   });
 });
 
-// Create handler with specific Vercel configuration
+// Efficient serverless handler
 const handler = serverless(app);
 
-// Export handler for Vercel
+// Export optimized handler for Vercel
 export default async function (req, res) {
-  try {
-    // Process the serverless request
-    return await handler(req, res);
-  } catch (error) {
-    console.error("Serverless function error:", error);
-
-    // Provide a fallback response for errors
-    res.status(500).json({
-      error: "Internal Server Error",
-      message:
-        "The server encountered an unexpected condition that prevented it from fulfilling the request.",
-      timestamp: new Date().toISOString(),
-    });
-  }
+  return handler(req, res);
 }
