@@ -24,18 +24,29 @@ if (process.env.NODE_ENV !== "production") {
   }
 }
 
+// Setup TS compiler
+register("ts-node/esm", pathToFileURL("./"), {
+  project: "./tsconfig.json",
+});
+
+// This is a workaround to handle both ESM and CJS in Vercel
+let handler;
+
 try {
-  // Register ts-node for TypeScript support
-  register("ts-node/esm", pathToFileURL("./"), {
-    project: "./tsconfig.json",
-  });
-
-  // Import the main application
-  const { default: app } = await import("./src/index.ts");
-
-  // In production, we don't start a server as serverless functions are used
-  console.log("Application imported successfully for serverless environment");
+  // Import the Express application
+  const { handler: appHandler } = await import("./src/index.ts");
+  handler = appHandler;
+  console.log("Express application handler loaded successfully");
 } catch (err) {
   console.error("Failed to import application:", err);
-  process.exit(1);
+
+  // Provide a fallback handler that returns an error
+  handler = (req, res) => {
+    res
+      .status(500)
+      .send("Server failed to initialize: " + (err.message || "Unknown error"));
+  };
 }
+
+// Export the handler for Vercel
+export default handler;

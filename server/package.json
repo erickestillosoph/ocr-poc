@@ -1,28 +1,28 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Express.js OCR server",
-  "main": "dist/index.js",
+  "description": "Express.js OCR API server",
+  "main": "loader.mjs",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --exec ts-node --esm src/index.ts",
+    "dev": "nodemon --exec node --experimental-specifier-resolution=node ./devLoader.mjs",
     "prebuild": "mkdir -p uploads && mkdir -p dist",
     "build": "tsc",
-    "postbuild": "cp loader.mjs dist/ && cp -r uploads dist/",
-    "start": "node dist/index.js",
-    "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs",
-    "vercel-build": "npm run build"
+    "postbuild": "cp -r uploads dist/ && mkdir -p dist/functions",
+    "start": "node --experimental-specifier-resolution=node ./loader.mjs",
+    "start:dev": "node --experimental-specifier-resolution=node ./devLoader.mjs"
   },
   "engines": {
     "node": ">=18.x"
   },
   "keywords": [
     "express",
+    "serverless",
     "ocr",
-    "serverless"
+    "api"
   ],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",

@@ -28,6 +28,7 @@ export async function processPdf(pdfFile: Express.Multer.File) {
   return output?.result;
 }
 
+// Create the Express app
 const app = express();
 
 // Configure CORS to allow requests from any origin
@@ -47,24 +48,25 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add root route - important for health checks
+app.get("/", (req, res) => {
+  res.status(200).send("Express OCR API is running!");
+});
+
 // ImageRoute
 app.use(imageRoute);
 
 // PdfRoute
 app.use(pdfRoute);
 
-// Add root route
-app.get("/", (req, res) => {
-  res.send("Express on Vercel");
-});
-
 // Start server if not in production (serverless) environment
 if (process.env.NODE_ENV !== "production") {
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3000;
   app.listen(port, () => console.log(`Server ready on port ${port}`));
 }
 
-// Export the Express app and serverless handler
-module.exports = app;
-module.exports.handler = serverless(app);
+// Create serverless handler
+export const handler = serverless(app);
+
+// Default export for ESM
 export default app;
