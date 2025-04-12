@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 
 import fs from "fs";
-import { processImage } from "../api/index.js";
+import { processImage } from "../pages/api/index.js";
 
 const API_VERSION = process.env.API_VERSION || "";
 const NODE_ENV = process.env.NODE_ENV || "development";

@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
 import serverless from "serverless-http";
-import ImageFeature from "../services/image/imageFile.js";
-import PDFFeature from "../services/pdf/pdfFile.js";
+import ImageFeature from "../../services/image/imageFile.js";
+import PDFFeature from "../../services/pdf/pdfFile.js";
 import fs from "fs";
-import imageRoute from "../routes/imageRoute.js";
-import pdfRoute from "../routes/pdfRoute.js";
+import imageRoute from "../../routes/imageRoute.js";
+import pdfRoute from "../../routes/pdfRoute.js";
 // Define environment
 const NODE_ENV = process.env.NODE_ENV || "development";
 const isProduction = NODE_ENV === "production";
