@@ -11,7 +11,7 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 // Environment detection
 export const isProduction = NODE_ENV === "production";
 export const environment = isProduction ? "production" : "local";
-export const baseApiVersion = isProduction ? "" : API_VERSION;
+// export const baseApiVersion = isProduction ? "" : API_VERSION;
 
 const uploadsDir = path.join(process.cwd(), "uploads");
 try {
@@ -38,7 +38,7 @@ const upload = multer({ storage });
 const router = Router();
 
 router.post(
-  `${baseApiVersion}/process-image`,
+  `/${API_VERSION}/process-image`,
   upload.single("image"),
   async (req, res) => {
     try {
