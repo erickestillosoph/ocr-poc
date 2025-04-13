@@ -1,23 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { api, paths, setLocalStorage } from "@/shared";
+import { paths, setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-const API_URL = import.meta.env.VITE_API_URL;
-const API_VERSION = import.meta.env.VITE_API_VERSION;
+import { apiClient, apiPaths } from "@/shared/config/api-config";
 
 export const useImageMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const IMAGE_PATH = api.uploadImage;
+  const IMAGE_PATH = apiPaths.uploadImage;
 
   const openImageRef = useRef<() => void | null>(null);
-
-  // Determine the base API URL based on environment
-  const isProduction = window.location.hostname !== "localhost";
-  const baseApiUrl = isProduction ? "" : API_URL;
 
   const {
     mutate,
@@ -29,7 +23,7 @@ export const useImageMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("image", file));
-      return axios.post(`${baseApiUrl}${API_VERSION}${IMAGE_PATH}`, data, {
+      return apiClient.post(IMAGE_PATH, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -46,7 +40,8 @@ export const useImageMutation = () => {
       });
       navigate(paths.viewResultsPage);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Upload error:", error);
       toast({
         title: "Upload failed",
         description: `There was an error uploading your image.`,
