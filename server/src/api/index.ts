@@ -6,10 +6,7 @@ import PDFFeature from "../services/pdf/pdfFile.js";
 import fs from "fs";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
-// Define environment
-const NODE_ENV = process.env.NODE_ENV || "development";
-const isProduction = NODE_ENV === "production";
-const environment = isProduction ? "production" : "local";
+import { API_PREFIXES, environment } from "../config/api-config.js";
 
 console.log(`[Server] Running in ${environment} environment`);
 
@@ -36,6 +33,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Add security headers including CSP
+app.use((req, res, next) => {
+  // Set CSP header to allow Vercel scripts
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' https://vercel.live; connect-src 'self';"
+  );
+  next();
+});
+
 // Health check route
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -46,15 +53,21 @@ app.get("/", (req, res) => {
 });
 
 // Sample API route
-app.get("/api/info", (req, res) => {
-  res.json({
-    version: "1.0.0",
-    environment,
-    description: "OCR API Service",
-    endpoints: [
-      { path: "/", method: "GET", description: "Health check" },
-      { path: "/api/info", method: "GET", description: "API information" },
-    ],
+API_PREFIXES.forEach((prefix) => {
+  app.get(`${prefix}/info`, (req, res) => {
+    res.json({
+      version: "1.0.0",
+      environment,
+      description: "OCR API Service",
+      endpoints: [
+        { path: "/", method: "GET", description: "Health check" },
+        {
+          path: `${prefix}/info`,
+          method: "GET",
+          description: "API information",
+        },
+      ],
+    });
   });
 });
 
@@ -67,8 +80,6 @@ if (process.env.NODE_ENV !== "production") {
   app.listen(port, () => console.log(`Server ready on port ${port}`));
 }
 
-// Export the serverless handler
 export const handler = serverless(app);
 
-// Default export
 export default app;

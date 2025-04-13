@@ -4,14 +4,11 @@ import path from "path";
 
 import fs from "fs";
 import { processImage } from "../api/index.js";
-
-const API_VERSION = process.env.API_VERSION || "";
-const NODE_ENV = process.env.NODE_ENV || "development";
-
-// Environment detection
-export const isProduction = NODE_ENV === "production";
-export const environment = isProduction ? "production" : "local";
-// export const baseApiVersion = isProduction ? "" : API_VERSION;
+import {
+  API_PREFIXES,
+  environment,
+  baseApiVersion,
+} from "../config/api-config.js";
 
 const uploadsDir = path.join(process.cwd(), "uploads");
 try {
@@ -37,8 +34,29 @@ const upload = multer({ storage });
 
 const router = Router();
 
+// Create routes for each API prefix
+API_PREFIXES.forEach((prefix) => {
+  router.post(
+    `${prefix}/process-image`,
+    upload.single("image"),
+    async (req, res) => {
+      try {
+        const imageFile = req.file as Express.Multer.File;
+        const result = await processImage(imageFile);
+        res.json({
+          result,
+          environment,
+        });
+      } catch (error) {
+        console.error("Error in processing image:", error);
+        res.status(500).json({ error: "Failed to process the image" });
+      }
+    }
+  );
+});
+
 router.post(
-  `/${API_VERSION}/process-image`,
+  `${baseApiVersion}/process-image`,
   upload.single("image"),
   async (req, res) => {
     try {

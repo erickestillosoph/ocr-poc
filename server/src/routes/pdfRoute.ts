@@ -4,14 +4,11 @@ import path from "path";
 
 import fs from "fs";
 import { processPdf } from "../api/index.js";
-
-const API_VERSION = process.env.API_VERSION;
-const NODE_ENV = process.env.NODE_ENV || "development";
-
-// Environment detection
-export const isProduction = NODE_ENV === "production";
-export const environment = isProduction ? "production" : "local";
-// export const baseApiVersion = isProduction ? "" : API_VERSION;
+import {
+  API_PREFIXES,
+  environment,
+  baseApiVersion,
+} from "../config/api-config.js";
 
 console.log(`Server running in ${environment} environment`);
 
@@ -39,15 +36,36 @@ const upload = multer({ storage });
 
 const router = Router();
 
+// Create routes for each API prefix
+API_PREFIXES.forEach((prefix) => {
+  router.post(
+    `${prefix}/process-pdf`,
+    upload.single("pdf"),
+    async (req, res) => {
+      try {
+        const pdfFile = req.file as Express.Multer.File;
+        const result = await processPdf(pdfFile);
+
+        res.json({
+          result,
+          environment,
+        });
+      } catch (error) {
+        console.error("Error in processing pdf:", error);
+        res.status(500).json({ error: "Failed to process the pdf" });
+      }
+    }
+  );
+});
+
 router.post(
-  `/${API_VERSION}/process-pdf`,
+  `${baseApiVersion}/process-pdf`,
   upload.single("pdf"),
   async (req, res) => {
     try {
       const pdfFile = req.file as Express.Multer.File;
       const result = await processPdf(pdfFile);
 
-      // Include environment information in the response
       res.json({
         result,
         environment,
