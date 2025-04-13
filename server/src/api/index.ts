@@ -58,7 +58,7 @@ app.use((req, res, next) => {
   // Set CSP header to allow Vercel scripts and more connections
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self' * data: blob: filesystem:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; connect-src 'self' *;"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live *.vercel.app vercel.app; connect-src 'self' https://vercel.live *.vercel.app; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'self';"
   );
   next();
 });
