@@ -1,24 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { api, setLocalStorage } from "@/shared";
+import { setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/shared";
-
-const API_URL = import.meta.env.VITE_API_URL;
-const API_VERSION = import.meta.env.VITE_API_VERSION;
+import { apiClient, apiPaths } from "@/shared/config/api-config";
 
 export const usePdfMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const PDF_PATH = api.uploadPdf;
+  const PDF_PATH = apiPaths.uploadPdf;
   const openPDFRef = useRef<() => void>(null);
-
-  // Determine the base API URL based on environment
-  const isProduction = window.location.hostname !== "localhost";
-  const baseApiUrl = isProduction ? "" : API_URL;
 
   const {
     mutate,
@@ -30,7 +23,7 @@ export const usePdfMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("pdf", file));
-      return axios.post(`${baseApiUrl}${API_VERSION}${PDF_PATH}`, data, {
+      return apiClient.post(PDF_PATH, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -46,7 +39,8 @@ export const usePdfMutation = () => {
       });
       navigate(paths.viewResultsPage);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Upload error:", error);
       toast({
         title: "Upload failed",
         description: `There was an error uploading your pdf.`,
