@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { AreaOfInterest } from "../types.js";
+import { AreaOfInterest } from "../types/types.js";
 
 export class ImageUtil {
   /**

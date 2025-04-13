@@ -4,10 +4,10 @@ echo "Starting build process..."
 npm run build
 
 echo "Checking for existence of key files..."
-if [ -f "dist/index.js" ]; then
-  echo "✅ dist/index.js exists"
+if [ -f "api/pages/index.js" ]; then
+  echo "✅ api/pages/index.js exists"
 else
-  echo "❌ dist/index.js not found"
+  echo "❌ api/pages/index.js not found"
 fi
 
 if [ -f "loader.mjs" ]; then
@@ -16,10 +16,10 @@ else
   echo "❌ loader.mjs not found"
 fi
 
-if [ -d "dist/routes" ]; then
-  echo "✅ dist/routes directory exists"
+if [ -d "api/pages" ]; then
+  echo "✅ api/pages directory exists"
 else
-  echo "❌ dist/routes directory not found"
+  echo "❌ api/pages directory not found"
 fi
 
-echo "Build process complete!" 
+echo "Build process complete!"

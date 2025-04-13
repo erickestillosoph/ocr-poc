@@ -1,5 +1,5 @@
 import { Anthropic } from "@anthropic-ai/sdk";
-import { LLMResponse, IAIService, ImageMediaType } from "../types.js";
+import { LLMResponse, IAIService, ImageMediaType } from "../types/types.js";
 import { z } from "zod";
 
 // Add type for text content block
