@@ -1,10 +1,15 @@
 {
   "version": 2,
-  "functions": {
-    "api/pages/index.js": {
-      "memory": 1024,
-      "maxDuration": 10
+  "builds": [
+    {
+      "src": "src/api/index.ts",
+      "use": "@vercel/node"
     }
-  },
-  "routes": [{ "src": "/(.*)", "dest": "/dist/api/pages/index.js" }]
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/api/index.ts"
+    }
+  ]
 }

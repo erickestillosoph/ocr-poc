@@ -3,15 +3,17 @@ import multer from "multer";
 import path from "path";
 
 import fs from "fs";
-import { processImage } from "../pages/index.js";
+import { processPdf } from "../api/index.js";
 
-const API_VERSION = process.env.API_VERSION || "";
+const API_VERSION = process.env.API_VERSION;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
 // Environment detection
 export const isProduction = NODE_ENV === "production";
 export const environment = isProduction ? "production" : "local";
 export const baseApiVersion = isProduction ? "" : API_VERSION;
+
+console.log(`Server running in ${environment} environment`);
 
 const uploadsDir = path.join(process.cwd(), "uploads");
 try {
@@ -38,19 +40,21 @@ const upload = multer({ storage });
 const router = Router();
 
 router.post(
-  `${baseApiVersion}/process-image`,
-  upload.single("image"),
+  `${baseApiVersion}/process-pdf`,
+  upload.single("pdf"),
   async (req, res) => {
     try {
-      const imageFile = req.file as Express.Multer.File;
-      const result = await processImage(imageFile);
+      const pdfFile = req.file as Express.Multer.File;
+      const result = await processPdf(pdfFile);
+
+      // Include environment information in the response
       res.json({
         result,
         environment,
       });
     } catch (error) {
-      console.error("Error in processing image:", error);
-      res.status(500).json({ error: "Failed to process the image" });
+      console.error("Error in processing pdf:", error);
+      res.status(500).json({ error: "Failed to process the pdf" });
     }
   }
 );

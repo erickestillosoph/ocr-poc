@@ -1,4 +1,8 @@
-import { ImageMediaType, IAIService, DocumentMediaType } from "../types.js";
+import {
+  ImageMediaType,
+  IAIService,
+  DocumentMediaType,
+} from "../types/types.js";
 import { z } from "zod";
 
 export class LLMService {

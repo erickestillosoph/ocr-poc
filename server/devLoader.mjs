@@ -20,7 +20,7 @@ try {
   });
 
   // Import the main application
-  const { default: app } = await import("./src/api/pages/index.ts");
+  const { default: app } = await import("./src/api/index.ts");
 
   // Start the development servers
   const port = 3002;

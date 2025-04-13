@@ -2,7 +2,7 @@ import {
   RekognitionClient,
   DetectLabelsCommand,
 } from "@aws-sdk/client-rekognition";
-import { AreaOfInterest } from "../types.js";
+import { AreaOfInterest } from "../types/types.js";
 
 const TEXT_AND_DOCUMENTS_CATEGORY = "Text and Documents";
 const MAX_LABELS = 10;

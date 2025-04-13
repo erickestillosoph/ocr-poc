@@ -1,6 +1,6 @@
 import { createAIService } from "../../factories/aiService.js";
 import { LLMService } from "../llm.js";
-import { IAIService } from "../../types.js";
+import { IAIService } from "../../types/types.js";
 import { ExmaplePdfSchema } from "./pdfSchema.js";
 import { z } from "zod";
 import { PdfUtil } from "../../utils/document.js";
