@@ -11,7 +11,7 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 // Environment detection
 export const isProduction = NODE_ENV === "production";
 export const environment = isProduction ? "production" : "local";
-export const baseApiVersion = isProduction ? "" : API_VERSION;
+// export const baseApiVersion = isProduction ? "" : API_VERSION;
 
 console.log(`Server running in ${environment} environment`);
 
@@ -40,7 +40,7 @@ const upload = multer({ storage });
 const router = Router();
 
 router.post(
-  `${baseApiVersion}/process-pdf`,
+  `/${API_VERSION}/process-pdf`,
   upload.single("pdf"),
   async (req, res) => {
     try {
