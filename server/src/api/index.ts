@@ -63,20 +63,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Simple API key authentication for protected routes
-// Check if the request path includes 'process-' and requires authentication
 app.use((req, res, next) => {
   // Skip auth for non-protected routes
   if (!req.path.includes("process-")) {
     return next();
   }
 
-  // Get API key from multiple possible sources:
-  // 1. Header: x-api-key
-  // 2. Header: X-API-Key (different case)
-  // 3. Query parameter: apiKey
-  // 4. Query parameter: api_key
-  // 5. Body parameter for POST requests
   const apiKey =
     req.headers["x-api-key"] ||
     req.headers["X-API-Key"] ||

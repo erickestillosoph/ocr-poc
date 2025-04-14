@@ -1,5 +1,4 @@
-// Define supported API prefixes
-export const API_PREFIXES = ["/api", "/app"];
+export const API_PREFIXES = ["/api/v1"];
 
 // Define environment
 export const NODE_ENV = process.env.NODE_ENV || "development";

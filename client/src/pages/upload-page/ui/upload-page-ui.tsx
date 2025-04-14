@@ -3,7 +3,7 @@ import { useAppTheme } from "@/shared/theme";
 import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
 
-import { useImageMutation } from "../hooks/use-image-mutation ";
+import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
 
