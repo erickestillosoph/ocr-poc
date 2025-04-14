@@ -16,14 +16,14 @@ export const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use((config) => {
-  if (!config.params) {
-    config.params = {};
-  }
-  config.params.apiKey = API_KEY;
+// apiClient.interceptors.request.use((config) => {
+//   if (!config.params) {
+//     config.params = {};
+//   }
+//   config.params.apiKey = API_KEY;
 
-  return config;
-});
+//   return config;
+// });
 
 // Export API paths
 export const apiPaths = {

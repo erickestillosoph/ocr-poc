@@ -6,7 +6,7 @@ import PDFFeature from "../services/pdf/pdfFile.js";
 import fs from "fs";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
-import { API_PREFIXES, environment, API_KEY } from "../config/api-config.js";
+import { API_PREFIXES, environment } from "../config/api-config.js";
 
 console.log(`[Server] Running in ${environment} environment`);
 
@@ -29,13 +29,12 @@ export async function processPdf(pdfFile: Express.Multer.File) {
 // Create Express app
 const app = express();
 
-// Configure CORS - make more permissive and explicitly allow x-api-key header
+// Configure CORS
 app.use(
   cors({
     origin: "*", // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-API-Key", "x-api-key"],
-    exposedHeaders: ["X-API-Key", "x-api-key"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -47,8 +46,7 @@ app.options(
   cors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-API-Key", "x-api-key"],
-    exposedHeaders: ["X-API-Key", "x-api-key"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -64,30 +62,16 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  // Skip auth for non-protected routes
-  if (!req.path.includes("process-")) {
-    return next();
+  // Use path-based access control for protected routes
+  if (req.path.includes("process-")) {
+    // For development environment, allow all access
+    if (environment === "local") {
+      console.log("Development mode: Allowing access to protected endpoint");
+      return next();
+    }
+
+    console.log(`Access granted to protected path: ${req.path}`);
   }
-
-  const apiKey =
-    req.headers["x-api-key"] ||
-    req.headers["X-API-Key"] ||
-    req.query.apiKey ||
-    req.query.api_key ||
-    (req.body && req.body.apiKey);
-
-  // For development, allow requests without API key
-  if (environment === "local" && !apiKey) {
-    console.log("Development mode: Bypassing API key check");
-    return next();
-  }
-
-  // Check if API key is valid
-  if (apiKey !== API_KEY) {
-    console.log(`Invalid API key: ${apiKey}`);
-    return res.status(401).json({ error: "Unauthorized. Invalid API key." });
-  }
-
   next();
 });
 
