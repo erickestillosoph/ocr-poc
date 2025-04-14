@@ -7,7 +7,7 @@ import { useCameraAccess } from "../hooks/use-camera-access-2";
 const videoConstraints = {
   width: 365,
   height: 500,
-  facingMode: "user",
+  facingMode: { exact: "environment" },
 };
 
 export type CameraAccessPageProps = {
