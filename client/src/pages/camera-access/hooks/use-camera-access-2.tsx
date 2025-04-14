@@ -1,3 +1,4 @@
+import { setLocalStorage } from "@/shared";
 import { useCallback, useRef } from "react";
 import Webcam from "react-webcam";
 export const useCameraAccess = () => {
@@ -6,6 +7,8 @@ export const useCameraAccess = () => {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
     console.log(imageSrc);
+    setLocalStorage("imageResults", imageSrc);
+
   }, [webcamRef]);
 
   return { capture, webcamRef };

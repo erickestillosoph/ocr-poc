@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useAppTheme } from "@/shared/theme";
-import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Icon, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
 
 import { useImageMutation } from "../hooks/use-image-mutation ";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
+import { AiOutlineFile } from "react-icons/ai";
 
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
@@ -139,7 +140,10 @@ export const UploadPagePage = () => {
                   backgroundColor: "blue.50",
                 }}
                 onClick={handlePDFUpload}
+                gap="8px"
               >
+                <Icon as={AiOutlineFile} boxSize="24px" color="white" />
+
                 <span style={{ fontSize: "10px" }}>ファイルを選択</span>
                 <FaFilePdf color={theme.colors.blue[500]} size="14px" />
               </Button>

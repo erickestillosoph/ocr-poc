@@ -22,7 +22,7 @@ export const routes: RouteObject[] = [
           },
           {
             element: <UploadCameraContainer />,
-            path: paths.cameraAccessUploadFile,
+            path: paths.read,
           },
           {
             element: <UploadPageContainer />,
@@ -30,7 +30,7 @@ export const routes: RouteObject[] = [
           },
           {
             element: <ViewResultsPageContainer />,
-            path: paths.viewResultsPage,
+            path: paths.myPage,
           },
           {
             element: <FileUploadContainer />,
