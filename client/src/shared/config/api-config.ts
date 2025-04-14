@@ -1,6 +1,7 @@
 import axios from "axios";
 
 // API configuration
+
 const API_URL = import.meta.env.VITE_API_URL;
 const API_URL_PROD = import.meta.env.VITE_API_URL_PROD;
 
@@ -18,7 +19,6 @@ export const apiClient = axios.create({
 });
 
 // apiClient.interceptors.request.use((config) => {
-
 //   if (!config.params) {
 //     config.params = {};
 //   }
