@@ -22,10 +22,16 @@ const uploadsDir =
     ? path.join("/tmp", "uploads")
     : path.join(__dirname, "..", "uploads");
 
-const srcUploadsDir = path.join(__dirname, "..", "uploads");
+// Only use src/uploads in development environment
+const srcUploadsDir =
+  isVercel || process.env.NODE_ENV === "production"
+    ? null // Don't use src/uploads in production/Vercel
+    : path.join(__dirname, "..", "uploads");
 
 console.log(`Image route: Uploads directory set to: ${uploadsDir}`);
-console.log(`Image route: Src uploads directory set to: ${srcUploadsDir}`);
+if (srcUploadsDir) {
+  console.log(`Image route: Src uploads directory set to: ${srcUploadsDir}`);
+}
 
 try {
   if (!fs.existsSync(uploadsDir)) {
@@ -34,7 +40,8 @@ try {
     console.log(`Successfully created uploads directory at: ${uploadsDir}`);
   }
 
-  if (!fs.existsSync(srcUploadsDir)) {
+  // Only create src/uploads in dev environment
+  if (srcUploadsDir && !isVercel && process.env.NODE_ENV !== "production") {
     console.log(`Creating src uploads directory at: ${srcUploadsDir}`);
     fs.mkdirSync(srcUploadsDir, { recursive: true });
     console.log(
