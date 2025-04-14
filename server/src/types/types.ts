@@ -44,4 +44,10 @@ export type IAIService = {
     schema: z.ZodType<T>,
     documentMediaType: DocumentMediaType
   ): Promise<LLMResponse<T>>;
+
+  cameraImageToJSON<T>(
+    imageBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>
+  ): Promise<LLMResponse<T>>;
 };

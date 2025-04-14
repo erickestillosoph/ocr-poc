@@ -3,11 +3,13 @@ import cors from "cors";
 import serverless from "serverless-http";
 import ImageFeature from "../services/image/imageFile.js";
 import PDFFeature from "../services/pdf/pdfFile.js";
+import CameraImageFeature from "../services/image/cameraImage.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
+import cameraImageRoute from "../routes/cameraImageRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
 import {
   uploadsDir,
@@ -15,7 +17,7 @@ import {
 } from "../config/upload-config.js";
 
 // Add timeout configuration
-const PROCESS_TIMEOUT = 25000; // 25 seconds (slightly below Vercel's 30s limit)
+const PROCESS_TIMEOUT = 25000;
 
 console.log(`[Server] Running in ${environment} environment`);
 
@@ -135,6 +137,24 @@ export async function processPdf(pdfFile: Express.Multer.File) {
   }
 }
 
+export async function processCameraImage(cameraImageStringBase64: string) {
+  try {
+    // Race the processing against the timeout
+    const result = (await Promise.race([
+      CameraImageFeature.cameraImageFeature(cameraImageStringBase64),
+    ])) as { result?: any } | undefined;
+    return result?.result;
+  } catch (error) {
+    if ((error as Error).message === "Processing timeout exceeded") {
+      console.error("String base64 image processing timeout exceeded");
+      throw new Error(
+        "Processing timeout. The request is taking too long to complete."
+      );
+    }
+    throw error;
+  }
+}
+
 // Create Express app
 const app = express();
 
@@ -213,7 +233,7 @@ API_PREFIXES.forEach((prefix) => {
 });
 
 app.use(imageRoute);
-
+app.use(cameraImageRoute);
 app.use(pdfRoute);
 // Start server if not in production (serverless) environment
 if (process.env.NODE_ENV !== "production") {

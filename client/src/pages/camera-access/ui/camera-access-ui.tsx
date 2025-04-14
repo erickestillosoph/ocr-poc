@@ -7,7 +7,7 @@ import { IoMdCamera } from "react-icons/io";
 const videoConstraints = {
   width: 365,
   height: 500,
-  facingMode: { exact: "environment" },
+  facingMode: "user",
   // back camera phone
 };
 
