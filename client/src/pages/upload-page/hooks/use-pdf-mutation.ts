@@ -23,11 +23,7 @@ export const usePdfMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("pdf", file));
-      return apiClient.post(PDF_PATH, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      return apiClient.post(PDF_PATH, data);
     },
     onSuccess: () => {
       toast({

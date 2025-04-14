@@ -23,11 +23,7 @@ export const useImageMutation = () => {
     mutationFn: (files: File[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("image", file));
-      return apiClient.post(IMAGE_PATH, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      return apiClient.post(IMAGE_PATH, data);
     },
     onSuccess: () => {
       toast({

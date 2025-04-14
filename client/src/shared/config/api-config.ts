@@ -14,7 +14,7 @@ export const baseApiUrl = isProduction ? API_URL_PROD : API_URL;
 
 export const apiClient = axios.create({
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
 });
 
