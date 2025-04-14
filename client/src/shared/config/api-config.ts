@@ -2,13 +2,20 @@ import axios from "axios";
 
 // API configuration
 const API_URL = import.meta.env.VITE_API_URL;
+const API_URL_PROD = import.meta.env.VITE_API_URL_PROD;
+
 const API_VERSION = import.meta.env.VITE_API_VERSION;
 export const API_KEY = import.meta.env.VITE_API_KEY || "dev-api-key-1234";
 
 // Determine the base API URL based on environment
 const isProduction = window.location.hostname !== "localhost";
+<<<<<<< Updated upstream
 export const baseApiUrl = isProduction ? "" : API_URL;
 export const baseApiVersion = isProduction ? "" : API_VERSION;
+=======
+export const baseApiUrl = isProduction ? API_URL_PROD : API_URL;
+// export const baseApiVersion = isProduction ? "" : API_VERSION;
+>>>>>>> Stashed changes
 
 // Create axios instance with default configuration
 export const apiClient = axios.create({
