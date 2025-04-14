@@ -36,6 +36,17 @@ const router = Router();
 
 // Create routes for each API prefix
 API_PREFIXES.forEach((prefix) => {
+  // Add GET handler for testing and debugging
+  router.get(`${prefix}/process-image`, (req, res) => {
+    res.json({
+      status: "ready",
+      message:
+        "Image processing endpoint is available. Please send a POST request with an image file.",
+      environment,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
   router.post(
     `${prefix}/process-image`,
     upload.single("image"),
@@ -53,6 +64,16 @@ API_PREFIXES.forEach((prefix) => {
       }
     }
   );
+});
+
+router.get(`${baseApiVersion}/process-image`, (req, res) => {
+  res.json({
+    status: "ready",
+    message:
+      "Image processing endpoint is available. Please send a POST request with an image file.",
+    environment,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 router.post(

@@ -38,6 +38,17 @@ const router = Router();
 
 // Create routes for each API prefix
 API_PREFIXES.forEach((prefix) => {
+  // Add GET handler for testing and debugging
+  router.get(`${prefix}/process-pdf`, (req, res) => {
+    res.json({
+      status: "ready",
+      message:
+        "PDF processing endpoint is available. Please send a POST request with an pdf file.",
+      environment,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
   router.post(
     `${prefix}/process-pdf`,
     upload.single("pdf"),
@@ -56,6 +67,16 @@ API_PREFIXES.forEach((prefix) => {
       }
     }
   );
+});
+
+router.get(`${baseApiVersion}/process-pdf`, (req, res) => {
+  res.json({
+    status: "ready",
+    message:
+      "PDF processing endpoint is available. Please send a POST request with an pdf file.",
+    environment,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 router.post(
