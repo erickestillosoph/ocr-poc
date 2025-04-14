@@ -9,11 +9,18 @@ import { fileURLToPath } from "url";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
+import {
+  uploadsDir,
+  initializeUploadDirectories,
+} from "../config/upload-config.js";
 
 // Add timeout configuration
 const PROCESS_TIMEOUT = 25000; // 25 seconds (slightly below Vercel's 30s limit)
 
 console.log(`[Server] Running in ${environment} environment`);
+
+// Initialize upload directories with API prefix
+initializeUploadDirectories("API: ");
 
 // Create __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -21,63 +28,6 @@ const __dirname = path.dirname(__filename);
 
 // Determine if running on Vercel
 const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
-
-// Set uploads directory inside src folder for better Vercel compatibility
-const uploadsDir =
-  isVercel || process.env.NODE_ENV === "production"
-    ? path.join("/tmp", "uploads")
-    : path.join(__dirname, "..", "uploads");
-
-// Only create src/uploads in development environment
-const srcUploadsDir =
-  isVercel || process.env.NODE_ENV === "production"
-    ? null // Don't use src/uploads in production/Vercel
-    : path.join(__dirname, "..", "uploads");
-
-console.log(`API: Uploads directory set to: ${uploadsDir}`);
-if (srcUploadsDir) {
-  console.log(`API: Src uploads directory set to: ${srcUploadsDir}`);
-}
-
-// Ensure uploads directory exists
-if (!fs.existsSync(uploadsDir)) {
-  console.log(`Creating uploads directory at: ${uploadsDir}`);
-  try {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log(`Successfully created uploads directory at: ${uploadsDir}`);
-  } catch (err) {
-    console.error(`Error creating uploads directory at ${uploadsDir}:`, err);
-    // If /tmp/uploads fails, try alternate location
-    if (uploadsDir.startsWith("/tmp")) {
-      const altDir = "/tmp";
-      console.log(`Attempting to create alternate directory at: ${altDir}`);
-      try {
-        if (!fs.existsSync(altDir)) {
-          fs.mkdirSync(altDir, { recursive: true });
-        }
-        console.log(`Successfully created alternate directory at: ${altDir}`);
-      } catch (altErr) {
-        console.error(`Error creating alternate directory:`, altErr);
-      }
-    }
-  }
-}
-
-// Only create src/uploads directory in development environment
-if (srcUploadsDir && !isVercel && process.env.NODE_ENV !== "production") {
-  console.log(`Creating src uploads directory at: ${srcUploadsDir}`);
-  try {
-    fs.mkdirSync(srcUploadsDir, { recursive: true });
-    console.log(
-      `Successfully created src uploads directory at: ${srcUploadsDir}`
-    );
-  } catch (srcErr) {
-    console.error(
-      `Error creating src uploads directory at ${srcUploadsDir}:`,
-      srcErr
-    );
-  }
-}
 
 export async function processImage(imageFile: Express.Multer.File) {
   // Get the filename from the original path
@@ -88,7 +38,7 @@ export async function processImage(imageFile: Express.Multer.File) {
 
   // For Vercel/production environments, ensure the file is in /tmp
   if (
-    (isVercel || process.env.NODE_ENV === "production") &&
+    (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") &&
     !fs.existsSync(filePath)
   ) {
     filePath = path.join(uploadsDir, filename);
@@ -141,7 +91,7 @@ export async function processPdf(pdfFile: Express.Multer.File) {
 
   // For Vercel/production environments, ensure the file is in /tmp
   if (
-    (isVercel || process.env.NODE_ENV === "production") &&
+    (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") &&
     !fs.existsSync(filePath)
   ) {
     filePath = path.join(uploadsDir, filename);

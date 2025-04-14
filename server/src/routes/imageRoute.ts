@@ -1,7 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
 import fs from "fs";
 import { processImage } from "../api/index.js";
 import {
@@ -9,61 +8,13 @@ import {
   environment,
   baseApiVersion,
 } from "../config/api-config.js";
+import {
+  uploadsDir,
+  initializeUploadDirectories,
+} from "../config/upload-config.js";
 
-// Create __dirname equivalent for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Determine if running on Vercel
-const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
-
-const uploadsDir =
-  isVercel || process.env.NODE_ENV === "production"
-    ? path.join("/tmp", "uploads")
-    : path.join(__dirname, "..", "uploads");
-
-// Only use src/uploads in development environment
-const srcUploadsDir =
-  isVercel || process.env.NODE_ENV === "production"
-    ? null // Don't use src/uploads in production/Vercel
-    : path.join(__dirname, "..", "uploads");
-
-console.log(`Image route: Uploads directory set to: ${uploadsDir}`);
-if (srcUploadsDir) {
-  console.log(`Image route: Src uploads directory set to: ${srcUploadsDir}`);
-}
-
-try {
-  if (!fs.existsSync(uploadsDir)) {
-    console.log(`Creating uploads directory at: ${uploadsDir}`);
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log(`Successfully created uploads directory at: ${uploadsDir}`);
-  }
-
-  // Only create src/uploads in dev environment
-  if (srcUploadsDir && !isVercel && process.env.NODE_ENV !== "production") {
-    console.log(`Creating src uploads directory at: ${srcUploadsDir}`);
-    fs.mkdirSync(srcUploadsDir, { recursive: true });
-    console.log(
-      `Successfully created src uploads directory at: ${srcUploadsDir}`
-    );
-  }
-} catch (err) {
-  console.error("Error creating uploads directory:", err);
-
-  if (uploadsDir.startsWith("/tmp")) {
-    const altDir = "/tmp";
-    console.log(`Attempting to create alternate directory at: ${altDir}`);
-    try {
-      if (!fs.existsSync(altDir)) {
-        fs.mkdirSync(altDir, { recursive: true });
-      }
-      console.log(`Successfully created alternate directory at: ${altDir}`);
-    } catch (altErr) {
-      console.error(`Error creating alternate directory:`, altErr);
-    }
-  }
-}
+// Initialize upload directories with Image route prefix
+initializeUploadDirectories("Image route: ");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
