@@ -5,65 +5,130 @@ import ImageFeature from "../services/image/imageFile.js";
 import PDFFeature from "../services/pdf/pdfFile.js";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
 
 console.log(`[Server] Running in ${environment} environment`);
 
-// Ensure uploads directory exists
-const uploadsDir =
-  process.env.NODE_ENV === "production"
-    ? path.join("/tmp", "uploads")
-    : path.join(process.cwd(), "uploads");
+// Create __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Determine if running on Vercel
+const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+
+// Set uploads directory inside src folder for better Vercel compatibility
+const uploadsDir =
+  isVercel || process.env.NODE_ENV === "production"
+    ? path.join("/tmp", "uploads")
+    : path.join(__dirname, "..", "uploads");
+
+// Always create a src/uploads directory regardless of environment
+const srcUploadsDir = path.join(__dirname, "..", "uploads");
+
+console.log(`API: Uploads directory set to: ${uploadsDir}`);
+console.log(`API: Src uploads directory set to: ${srcUploadsDir}`);
+
+// Ensure both uploads directories exist
 if (!fs.existsSync(uploadsDir)) {
   console.log(`Creating uploads directory at: ${uploadsDir}`);
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log(`Successfully created uploads directory at: ${uploadsDir}`);
+  } catch (err) {
+    console.error(`Error creating uploads directory at ${uploadsDir}:`, err);
+    // If /tmp/uploads fails, try alternate location
+    if (uploadsDir.startsWith("/tmp")) {
+      const altDir = "/tmp";
+      console.log(`Attempting to create alternate directory at: ${altDir}`);
+      try {
+        if (!fs.existsSync(altDir)) {
+          fs.mkdirSync(altDir, { recursive: true });
+        }
+        console.log(`Successfully created alternate directory at: ${altDir}`);
+      } catch (altErr) {
+        console.error(`Error creating alternate directory:`, altErr);
+      }
+    }
+  }
+}
+
+// Always create src/uploads directory regardless of environment
+if (!fs.existsSync(srcUploadsDir)) {
+  console.log(`Creating src uploads directory at: ${srcUploadsDir}`);
+  try {
+    fs.mkdirSync(srcUploadsDir, { recursive: true });
+    console.log(
+      `Successfully created src uploads directory at: ${srcUploadsDir}`
+    );
+  } catch (srcErr) {
+    console.error(
+      `Error creating src uploads directory at ${srcUploadsDir}:`,
+      srcErr
+    );
+  }
 }
 
 export async function processImage(imageFile: Express.Multer.File) {
-  // In production environment, copy the file to the /tmp directory if needed
+  // Get the filename from the original path
+  const filename = path.basename(imageFile.path);
+
+  // Determine the appropriate path based on environment
   let filePath = imageFile.path;
-  if (process.env.NODE_ENV === "production" && !fs.existsSync(filePath)) {
-    const filename = path.basename(filePath);
-    const tmpPath = path.join(uploadsDir, filename);
-    // If original file exists but in wrong location, copy it
-    const originalPath = path.join(process.cwd(), "uploads", filename);
-    if (fs.existsSync(originalPath)) {
-      fs.copyFileSync(originalPath, tmpPath);
-      filePath = tmpPath;
-    }
+
+  // For Vercel/production environments, ensure the file is in /tmp
+  if (
+    (isVercel || process.env.NODE_ENV === "production") &&
+    !fs.existsSync(filePath)
+  ) {
+    filePath = path.join(uploadsDir, filename);
+    console.log(`Adjusting path for serverless environment: ${filePath}`);
   }
 
+  // Log file existence check
+  console.log(`Checking for file at: ${filePath}`);
+
   if (!fs.existsSync(filePath)) {
+    console.error(`Image file not found at: ${filePath}`);
     throw new Error(
       `Image file does not exist at the specified path: ${filePath}`
     );
   }
+
+  console.log(`Processing image at: ${filePath}`);
   const output = await ImageFeature.imageFeature(filePath);
   return output?.result;
 }
 
 export async function processPdf(pdfFile: Express.Multer.File) {
-  // In production environment, copy the file to the /tmp directory if needed
+  // Get the filename from the original path
+  const filename = path.basename(pdfFile.path);
+
+  // Determine the appropriate path based on environment
   let filePath = pdfFile.path;
-  if (process.env.NODE_ENV === "production" && !fs.existsSync(filePath)) {
-    const filename = path.basename(filePath);
-    const tmpPath = path.join(uploadsDir, filename);
-    // If original file exists but in wrong location, copy it
-    const originalPath = path.join(process.cwd(), "uploads", filename);
-    if (fs.existsSync(originalPath)) {
-      fs.copyFileSync(originalPath, tmpPath);
-      filePath = tmpPath;
-    }
+
+  // For Vercel/production environments, ensure the file is in /tmp
+  if (
+    (isVercel || process.env.NODE_ENV === "production") &&
+    !fs.existsSync(filePath)
+  ) {
+    filePath = path.join(uploadsDir, filename);
+    console.log(`Adjusting path for serverless environment: ${filePath}`);
   }
 
+  // Log file existence check
+  console.log(`Checking for file at: ${filePath}`);
+
   if (!fs.existsSync(filePath)) {
+    console.error(`PDF file not found at: ${filePath}`);
     throw new Error(
       `PDF file does not exist at the specified path: ${filePath}`
     );
   }
+
+  console.log(`Processing PDF at: ${filePath}`);
   const output = await PDFFeature.pdfFeature(filePath);
   return output?.result;
 }
