@@ -32,10 +32,8 @@ const __dirname = path.dirname(__filename);
 const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 
 export async function processImage(imageFile: Express.Multer.File) {
-  // Get the filename from the original path
   const filename = path.basename(imageFile.path);
 
-  // Determine the appropriate path based on environment
   let filePath = imageFile.path;
 
   // For Vercel/production environments, ensure the file is in /tmp
@@ -191,9 +189,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  // Use path-based access control for protected routes
   if (req.path.includes("process-")) {
-    // For development environment, allow all access
     if (environment === "local") {
       console.log("Development mode: Allowing access to protected endpoint");
       return next();
