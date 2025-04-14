@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ExmaplePdfSchema = z.object({
+export const ExampleGroceryStoreReceiptSchema = z.object({
   results: z.array(
     z.object({
       id: z.string(),
@@ -24,7 +24,6 @@ export const ExmaplePdfSchema = z.object({
         })
       ),
       all_datas: z.array(z.string()),
-      related_data: z.array(z.string()),
     })
   ),
 });

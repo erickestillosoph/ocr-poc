@@ -1,5 +1,10 @@
 import { Anthropic } from "@anthropic-ai/sdk";
-import { LLMResponse, IAIService, ImageMediaType } from "../types/types.js";
+import {
+  LLMResponse,
+  IAIService,
+  ImageMediaType,
+  DocumentMediaType,
+} from "../types/types.js";
 import { z } from "zod";
 
 // Add type for text content block
@@ -71,7 +76,6 @@ export class AnthropicService implements IAIService {
       ],
     });
 
-    // Assuming a similar formatResponse method exists or is adapted for this class
     return this.formatResponse<T>(msg, schema);
   }
 
@@ -85,10 +89,52 @@ export class AnthropicService implements IAIService {
   async pdfToJSON<T>(
     pdfBase64: string,
     prompt: string,
-    schema: z.ZodType<T>
+    schema: z.ZodType<T>,
+    documentMediaType: DocumentMediaType
   ): Promise<LLMResponse<T>> {
     // Note: The current SDK version doesn't support PDF directly
     // This implementation will need to be updated when the SDK supports PDF
+    const msg = await this.aiService.messages.create({
+      model: this.modelName,
+      max_tokens: MAX_TOKENS,
+      temperature: DEFAULT_TEMPERATURE,
+      messages: [
+        {
+          content: [
+            {
+              type: "document",
+              source: {
+                media_type: DocumentMediaType.PDF,
+                type: "base64",
+                data: pdfBase64,
+              },
+              cache_control: { type: "ephemeral" },
+            },
+            {
+              type: "text",
+              text: prompt,
+            },
+          ],
+          role: "user",
+        },
+      ],
+    });
+
+    return this.formatResponse<T>(msg, schema);
+  }
+
+  /**
+   *s
+   * @param pdfBase64
+   * @param prompt
+   * @param schema
+   * @returns
+   */
+  async cameraImageToJSON<T>(
+    cameraImageStringBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>
+  ): Promise<LLMResponse<T>> {
     const msg = await this.aiService.messages.create({
       model: this.modelName,
       max_tokens: MAX_TOKENS,
@@ -99,7 +145,7 @@ export class AnthropicService implements IAIService {
           content: [
             {
               type: "text",
-              text: `${prompt} (Note: PDF processing is limited in this version. Please ensure the prompt is self-contained and doesn't require PDF content to generate a valid JSON response.)`,
+              text: `${cameraImageStringBase64} is the string base64 image file please process it. ${prompt} follow this prompt`,
             },
           ],
         },
@@ -132,7 +178,6 @@ export class AnthropicService implements IAIService {
     }
 
     try {
-      // Try to extract and parse JSON from the response
       let jsonData;
       try {
         const jsonText = this.extractJSON(content.text);
@@ -143,7 +188,6 @@ export class AnthropicService implements IAIService {
         throw new Error("Invalid JSON response from LLM");
       }
 
-      // Validate the parsed data against the schema
       try {
         const result = schema.parse(jsonData);
         return {

@@ -1,14 +1,16 @@
 import { Box, Button, VStack } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
 import Webcam from "react-webcam";
-import { useCallback, useState } from "react";
-import { useCameraAccess } from "../hooks/use-camera-access-2";
+import { useCallback, useState, useEffect } from "react";
+import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
+import { useCameraImageMutation } from "../hooks/use-camera-mutation";
+import { CenterSpinner } from "@/shared";
+const isMobile = window.innerWidth < 768;
 const videoConstraints = {
   width: 365,
   height: 500,
-  facingMode: { exact: "environment" },
-  // back camera phone
+  facingMode: isMobile ? { exact: "environment" } : "user",
 };
 
 export type CameraAccessPageProps = {
@@ -21,15 +23,22 @@ export const CameraAccessPage = ({
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
 
-  const { capture, webcamRef } = useCameraAccess();
-
+  const { capture, webcamRef, imageSrc } = useCameraAccess();
+  const { mutate, isPending } = useCameraImageMutation();
   const handleOpenCamera = useCallback(() => {
     setIsCameraOpen(true);
     isHandleCameraOpen(true);
-  }, [isHandleCameraOpen]);
+  }, [isHandleCameraOpen, setIsCameraOpen]);
+
+  useEffect(() => {
+    if (imageSrc) {
+      mutate(imageSrc);
+    }
+  }, [imageSrc, mutate, capture]);
 
   return (
     <VStack height="full" w="full">
+      <CenterSpinner loading={isPending} />
       {isCameraOpen ? (
         <Box>
           <Webcam

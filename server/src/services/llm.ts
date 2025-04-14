@@ -39,4 +39,16 @@ export class LLMService {
       documentMediaType
     );
   }
+
+  async cameraImageToJSON<T>(
+    cameraImageStringBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>
+  ) {
+    return this.aiService.cameraImageToJSON(
+      cameraImageStringBase64,
+      prompt,
+      schema
+    );
+  }
 }

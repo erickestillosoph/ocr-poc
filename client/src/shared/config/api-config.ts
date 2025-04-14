@@ -31,5 +31,6 @@ export const apiClient = axios.create({
 export const apiPaths = {
   uploadPdf: `${baseApiUrl}${API_VERSION}/process-pdf`,
   uploadImage: `${baseApiUrl}${API_VERSION}/process-image`,
+  uploadCameraImage: `${baseApiUrl}${API_VERSION}/process-camera-image`,
   info: `${baseApiUrl}/app/info`,
 };
