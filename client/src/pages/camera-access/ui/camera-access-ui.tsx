@@ -6,30 +6,7 @@ import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { useCameraImageMutation } from "../hooks/use-camera-mutation";
 import { CenterSpinner } from "@/shared";
-const isMobile = window.innerWidth < 768;
-const isTablet = window.innerWidth < 1024;
-const isDesktop = window.innerWidth > 1024;
-
-const phoneScreenWidth = window.innerWidth - 50;
-const phoneScreenHeight = window.innerHeight - 50;
-const tabletScreenWidth = window.innerWidth - 100;
-const tabletScreenHeight = window.innerHeight - 100;
-const desktopScreenWidth = window.innerWidth - 100;
-const desktopScreenHeight = window.innerHeight - 100;
-const videoConstraints = {
-  width: isMobile
-    ? phoneScreenWidth
-    : isTablet
-    ? tabletScreenWidth
-    : desktopScreenWidth,
-  height: isMobile
-    ? phoneScreenHeight
-    : isTablet
-    ? tabletScreenHeight
-    : desktopScreenHeight,
-  aspectRatio: 1,
-  facingMode: isDesktop ? "user" : { exact: "environment" },
-};
+import { useDetectDevice } from "@/shared/utils/use-detect-device";
 
 export type CameraAccessPageProps = {
   isHandleCameraOpen: (isCameraOpen: boolean) => void;
@@ -40,6 +17,15 @@ export const CameraAccessPage = ({
 }: CameraAccessPageProps) => {
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const isDesktop = window.innerWidth > 1024;
+  const device = useDetectDevice();
+
+  const videoConstraints = {
+    width: device.width,
+    height: device.height,
+    aspectRatio: device.aspectRatio,
+    facingMode: isDesktop ? "user" : { exact: "environment" },
+  };
 
   const { capture, webcamRef, imageSrc } = useCameraAccess();
   const { mutate, isPending } = useCameraImageMutation();
