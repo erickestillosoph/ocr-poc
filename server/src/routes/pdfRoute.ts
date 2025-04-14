@@ -112,15 +112,47 @@ API_PREFIXES.forEach((prefix) => {
     async (req, res) => {
       try {
         const pdfFile = req.file as Express.Multer.File;
-        const result = await processPdf(pdfFile);
+        if (!pdfFile) {
+          return res.status(400).json({ error: "No PDF file provided" });
+        }
 
+        // Set a longer timeout for the response
+        res.setTimeout(30000, () => {
+          console.log("Response timeout reached");
+          // This will only execute if the response hasn't been sent yet
+          if (!res.headersSent) {
+            res.status(504).json({
+              error: "Gateway timeout",
+              message:
+                "The request is taking too long to process. Please try with a smaller or less complex PDF.",
+            });
+          }
+        });
+
+        const result = await processPdf(pdfFile);
         res.json({
           result,
           environment,
         });
       } catch (error) {
-        console.error("Error in processing pdf:", error);
-        res.status(500).json({ error: "Failed to process the pdf" });
+        console.error("Error in processing PDF:", error);
+        // Check if headers were already sent
+        if (!res.headersSent) {
+          // Handle timeout error specifically
+          if ((error as Error).message.includes("timeout")) {
+            return res.status(504).json({
+              error: "Gateway timeout",
+              message:
+                "The request is taking too long to process. Please try with a smaller or less complex PDF.",
+            });
+          }
+
+          // Handle other errors
+          res.status(500).json({
+            error: "Failed to process the PDF",
+            message: (error as Error).message || "Unknown error",
+          });
+        }
       }
     }
   );
@@ -142,15 +174,47 @@ router.post(
   async (req, res) => {
     try {
       const pdfFile = req.file as Express.Multer.File;
-      const result = await processPdf(pdfFile);
+      if (!pdfFile) {
+        return res.status(400).json({ error: "No PDF file provided" });
+      }
 
+      // Set a longer timeout for the response
+      res.setTimeout(30000, () => {
+        console.log("Response timeout reached");
+        // This will only execute if the response hasn't been sent yet
+        if (!res.headersSent) {
+          res.status(504).json({
+            error: "Gateway timeout",
+            message:
+              "The request is taking too long to process. Please try with a smaller or less complex PDF.",
+          });
+        }
+      });
+
+      const result = await processPdf(pdfFile);
       res.json({
         result,
         environment,
       });
     } catch (error) {
-      console.error("Error in processing pdf:", error);
-      res.status(500).json({ error: "Failed to process the pdf" });
+      console.error("Error in processing PDF:", error);
+      // Check if headers were already sent
+      if (!res.headersSent) {
+        // Handle timeout error specifically
+        if ((error as Error).message.includes("timeout")) {
+          return res.status(504).json({
+            error: "Gateway timeout",
+            message:
+              "The request is taking too long to process. Please try with a smaller or less complex PDF.",
+          });
+        }
+
+        // Handle other errors
+        res.status(500).json({
+          error: "Failed to process the PDF",
+          message: (error as Error).message || "Unknown error",
+        });
+      }
     }
   }
 );
