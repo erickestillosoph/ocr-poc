@@ -28,13 +28,18 @@ const uploadsDir =
     ? path.join("/tmp", "uploads")
     : path.join(__dirname, "..", "uploads");
 
-// Always create a src/uploads directory regardless of environment
-const srcUploadsDir = path.join(__dirname, "..", "uploads");
+// Only create src/uploads in development environment
+const srcUploadsDir =
+  isVercel || process.env.NODE_ENV === "production"
+    ? null // Don't use src/uploads in production/Vercel
+    : path.join(__dirname, "..", "uploads");
 
 console.log(`API: Uploads directory set to: ${uploadsDir}`);
-console.log(`API: Src uploads directory set to: ${srcUploadsDir}`);
+if (srcUploadsDir) {
+  console.log(`API: Src uploads directory set to: ${srcUploadsDir}`);
+}
 
-// Ensure both uploads directories exist
+// Ensure uploads directory exists
 if (!fs.existsSync(uploadsDir)) {
   console.log(`Creating uploads directory at: ${uploadsDir}`);
   try {
@@ -58,8 +63,8 @@ if (!fs.existsSync(uploadsDir)) {
   }
 }
 
-// Always create src/uploads directory regardless of environment
-if (!fs.existsSync(srcUploadsDir)) {
+// Only create src/uploads directory in development environment
+if (srcUploadsDir && !isVercel && process.env.NODE_ENV !== "production") {
   console.log(`Creating src uploads directory at: ${srcUploadsDir}`);
   try {
     fs.mkdirSync(srcUploadsDir, { recursive: true });
