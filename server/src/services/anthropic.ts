@@ -12,6 +12,8 @@ const MAX_TOKENS = 1024;
 const DEFAULT_TEMPERATURE = 0;
 // const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
 const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-7-sonnet-20250219";
+// Add timeout configuration for Anthropic API calls
+const DEFAULT_API_TIMEOUT_MS = 25000;
 
 export class AnthropicService implements IAIService {
   private aiService: Anthropic;
@@ -22,7 +24,11 @@ export class AnthropicService implements IAIService {
       throw new Error("No valid API key found for Anthropic.");
     }
     this.aiService =
-      anthropic ?? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      anthropic ??
+      new Anthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY,
+        timeout: DEFAULT_API_TIMEOUT_MS, // Set API call timeout
+      });
     this.modelName = modelName ?? DEFAULT_ANTHROPIC_MODEL_NAME;
   }
 

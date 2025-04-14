@@ -10,6 +10,9 @@ import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
 
+// Add timeout configuration
+const PROCESS_TIMEOUT = 25000; // 25 seconds (slightly below Vercel's 30s limit)
+
 console.log(`[Server] Running in ${environment} environment`);
 
 // Create __dirname equivalent for ES modules
@@ -98,8 +101,30 @@ export async function processImage(imageFile: Express.Multer.File) {
   }
 
   console.log(`Processing image at: ${filePath}`);
-  const output = await ImageFeature.imageFeature(filePath);
-  return output?.result;
+
+  // Add timeout to prevent gateway timeouts
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error("Processing timeout exceeded"));
+    }, PROCESS_TIMEOUT);
+  });
+
+  try {
+    // Race the processing against the timeout
+    const result = (await Promise.race([
+      ImageFeature.imageFeature(filePath),
+      timeoutPromise,
+    ])) as { result?: any } | undefined;
+    return result?.result;
+  } catch (error) {
+    if ((error as Error).message === "Processing timeout exceeded") {
+      console.error("Image processing timeout exceeded");
+      throw new Error(
+        "Processing timeout. The request is taking too long to complete."
+      );
+    }
+    throw error;
+  }
 }
 
 export async function processPdf(pdfFile: Express.Multer.File) {
@@ -129,8 +154,30 @@ export async function processPdf(pdfFile: Express.Multer.File) {
   }
 
   console.log(`Processing PDF at: ${filePath}`);
-  const output = await PDFFeature.pdfFeature(filePath);
-  return output?.result;
+
+  // Add timeout to prevent gateway timeouts
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error("Processing timeout exceeded"));
+    }, PROCESS_TIMEOUT);
+  });
+
+  try {
+    // Race the processing against the timeout
+    const result = (await Promise.race([
+      PDFFeature.pdfFeature(filePath),
+      timeoutPromise,
+    ])) as { result?: any } | undefined;
+    return result?.result;
+  } catch (error) {
+    if ((error as Error).message === "Processing timeout exceeded") {
+      console.error("PDF processing timeout exceeded");
+      throw new Error(
+        "Processing timeout. The request is taking too long to complete."
+      );
+    }
+    throw error;
+  }
 }
 
 // Create Express app
