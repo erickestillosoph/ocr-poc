@@ -3,11 +3,12 @@ import { useAppTheme } from "@/shared/theme";
 import Webcam from "react-webcam";
 import { useCallback, useState } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access-2";
-
+import { IoMdCamera } from "react-icons/io";
 const videoConstraints = {
   width: 365,
   height: 500,
-  facingMode: "user",
+  facingMode: { exact: "environment" },
+  // back camera phone
 };
 
 export type CameraAccessPageProps = {
@@ -43,21 +44,23 @@ export const CameraAccessPage = ({
               boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
             }}
           ></Webcam>
-          <Button
-            color={theme.colors.white}
-            backgroundColor={theme.colors.blue}
-            w="full"
-            mt="16px"
-            position="relative"
-            zIndex="1"
-            onClick={capture}
-            _hover={{
-              color: "blue.500",
-              backgroundColor: "transparent",
-            }}
-          >
-            Capture
-          </Button>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Box
+              cursor="pointer"
+              borderRadius="full"
+              mt="16px"
+              bottom="24px"
+              bgColor="white"
+              p="16px"
+              onClick={capture}
+              _hover={{
+                backgroundColor: "gray.100",
+              }}
+              transition="ease .3s"
+            >
+              <IoMdCamera size="36px" color="black" />
+            </Box>
+          </Box>
         </Box>
       ) : (
         <Button
@@ -69,6 +72,7 @@ export const CameraAccessPage = ({
             color: "blue.500",
             backgroundColor: "transparent",
           }}
+          gap="8px"
         >
           写真を撮影
         </Button>
