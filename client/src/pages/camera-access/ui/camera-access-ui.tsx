@@ -7,10 +7,28 @@ import { IoMdCamera } from "react-icons/io";
 import { useCameraImageMutation } from "../hooks/use-camera-mutation";
 import { CenterSpinner } from "@/shared";
 const isMobile = window.innerWidth < 768;
+const isTablet = window.innerWidth < 1024;
+const isDesktop = window.innerWidth > 1024;
+
+const phoneScreenWidth = window.innerWidth - 50;
+const phoneScreenHeight = window.innerHeight - 50;
+const tabletScreenWidth = window.innerWidth - 100;
+const tabletScreenHeight = window.innerHeight - 100;
+const desktopScreenWidth = window.innerWidth - 100;
+const desktopScreenHeight = window.innerHeight - 100;
 const videoConstraints = {
-  width: 365,
-  height: 500,
-  facingMode: isMobile ? { exact: "environment" } : "user",
+  width: isMobile
+    ? phoneScreenWidth
+    : isTablet
+    ? tabletScreenWidth
+    : desktopScreenWidth,
+  height: isMobile
+    ? phoneScreenHeight
+    : isTablet
+    ? tabletScreenHeight
+    : desktopScreenHeight,
+  aspectRatio: 1,
+  facingMode: isDesktop ? "user" : { exact: "environment" },
 };
 
 export type CameraAccessPageProps = {
