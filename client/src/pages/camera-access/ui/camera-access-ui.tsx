@@ -36,6 +36,7 @@ export const CameraAccessPage = ({
 
   useEffect(() => {
     if (imageSrc) {
+      setIsCameraOpen(false);
       mutate(imageSrc);
     }
   }, [imageSrc, mutate, capture]);
@@ -52,6 +53,7 @@ export const CameraAccessPage = ({
             width="100%"
             videoConstraints={videoConstraints}
             ref={webcamRef}
+            allowFullScreen={true}
             style={{
               borderRadius: "20px",
               boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
