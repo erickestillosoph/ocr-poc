@@ -4,25 +4,67 @@ import serverless from "serverless-http";
 import ImageFeature from "../services/image/imageFile.js";
 import PDFFeature from "../services/pdf/pdfFile.js";
 import fs from "fs";
+import path from "path";
 import imageRoute from "../routes/imageRoute.js";
 import pdfRoute from "../routes/pdfRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
 
 console.log(`[Server] Running in ${environment} environment`);
 
+// Ensure uploads directory exists
+const uploadsDir =
+  process.env.NODE_ENV === "production"
+    ? path.join("/tmp", "uploads")
+    : path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadsDir)) {
+  console.log(`Creating uploads directory at: ${uploadsDir}`);
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 export async function processImage(imageFile: Express.Multer.File) {
-  if (!fs.existsSync(imageFile.path)) {
-    throw new Error("The test image does not exist at the specified path.");
+  // In production environment, copy the file to the /tmp directory if needed
+  let filePath = imageFile.path;
+  if (process.env.NODE_ENV === "production" && !fs.existsSync(filePath)) {
+    const filename = path.basename(filePath);
+    const tmpPath = path.join(uploadsDir, filename);
+    // If original file exists but in wrong location, copy it
+    const originalPath = path.join(process.cwd(), "uploads", filename);
+    if (fs.existsSync(originalPath)) {
+      fs.copyFileSync(originalPath, tmpPath);
+      filePath = tmpPath;
+    }
   }
-  const output = await ImageFeature.imageFeature(imageFile.path);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(
+      `Image file does not exist at the specified path: ${filePath}`
+    );
+  }
+  const output = await ImageFeature.imageFeature(filePath);
   return output?.result;
 }
 
 export async function processPdf(pdfFile: Express.Multer.File) {
-  if (!fs.existsSync(pdfFile.path)) {
-    throw new Error("The test pdf does not exist at the specified path.");
+  // In production environment, copy the file to the /tmp directory if needed
+  let filePath = pdfFile.path;
+  if (process.env.NODE_ENV === "production" && !fs.existsSync(filePath)) {
+    const filename = path.basename(filePath);
+    const tmpPath = path.join(uploadsDir, filename);
+    // If original file exists but in wrong location, copy it
+    const originalPath = path.join(process.cwd(), "uploads", filename);
+    if (fs.existsSync(originalPath)) {
+      fs.copyFileSync(originalPath, tmpPath);
+      filePath = tmpPath;
+    }
   }
-  const output = await PDFFeature.pdfFeature(pdfFile.path);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(
+      `PDF file does not exist at the specified path: ${filePath}`
+    );
+  }
+  const output = await PDFFeature.pdfFeature(filePath);
   return output?.result;
 }
 
