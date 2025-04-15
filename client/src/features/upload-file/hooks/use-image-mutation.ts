@@ -14,7 +14,7 @@ export const useImageMutation = () => {
   const openImageRef = useRef<() => void | null>(null);
 
   const {
-    mutate,
+    mutateAsync,
     isPending,
     isError,
     isSuccess,
@@ -25,7 +25,9 @@ export const useImageMutation = () => {
       files.forEach((file) => data.append("image", file));
       return apiClient.post(IMAGE_PATH, data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setLocalStorage("imageResults", data.data);
+      setLocalStorage("imageResultsTimestamp", Date.now());
       toast({
         title: "Upload successful",
         description: `Your image has been uploaded successfully.`,
@@ -63,9 +65,9 @@ export const useImageMutation = () => {
         });
       });
 
-      mutate(acceptedFiles);
+      mutateAsync(acceptedFiles);
     },
-    [toast, mutate]
+    [toast, mutateAsync]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -80,14 +82,10 @@ export const useImageMutation = () => {
 
   openImageRef.current = open;
 
-  if (isSuccess) {
-    setLocalStorage("imageResults", imageData?.data);
-    setLocalStorage("imageResultsTimestamp", Date.now());
-  }
   return {
     getRootProps,
     getInputProps,
-    mutate,
+    mutate: mutateAsync,
     isPending,
     isError,
     isSuccess,

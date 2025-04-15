@@ -1,12 +1,12 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, VStack } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
 import Webcam from "react-webcam";
 import { useCallback, useState, useEffect } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
-import { useCameraImageMutation } from "../hooks/use-camera-mutation";
 import { CenterSpinner } from "@/shared";
 import { useDetectDevice } from "@/shared/utils/use-detect-device";
+import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
 
 export type CameraAccessPageProps = {
   isHandleCameraOpen: (isCameraOpen: boolean) => void;
@@ -27,23 +27,29 @@ export const CameraAccessPage = ({
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
-  const { capture, webcamRef, imageSrc } = useCameraAccess();
-  const { mutate, isPending } = useCameraImageMutation();
+  const { capture, webcamRef, base64ToImageFile } = useCameraAccess();
+  const {
+    mutate,
+    isPending: isCameraPending,
+    openImageRef,
+  } = useImageCaptureMutation();
+
   const handleOpenCamera = useCallback(() => {
     setIsCameraOpen(true);
     isHandleCameraOpen(true);
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
-    if (imageSrc) {
+    openImageRef.current?.();
+    if (base64ToImageFile) {
+      mutate([base64ToImageFile]);
       setIsCameraOpen(false);
-      mutate(imageSrc);
     }
-  }, [imageSrc, mutate, capture]);
+  }, [base64ToImageFile, mutate, openImageRef]);
 
   return (
-    <Box>
-      <CenterSpinner loading={isPending} />
+    <VStack height="full" w="full">
+      <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
         <Box>
           <Webcam
@@ -92,6 +98,6 @@ export const CameraAccessPage = ({
           写真を撮影
         </Button>
       )}
-    </Box>
+    </VStack>
   );
 };

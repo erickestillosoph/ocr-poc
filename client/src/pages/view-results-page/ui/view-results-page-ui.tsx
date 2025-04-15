@@ -13,38 +13,48 @@ export const ViewResultsPageUI = () => {
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
   const cameraImageResultsArray = JSON.stringify(cameraImageResults, null, 1);
 
-  // Combine all results with their timestamps
   const allResults = useMemo(() => {
     const results = [];
     if (imageResults) {
       results.push({
         title: "Image Results",
         data: imageResultsArray,
-        timestamp: getLocalStorage("imageResultsTimestamp") || Date.now(),
+        timestamp:
+          getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
       });
     }
     if (pdfResults) {
       results.push({
         title: "PDF Results",
         data: pdfResultsArray,
-        timestamp: getLocalStorage("pdfResultsTimestamp") || Date.now(),
+        timestamp:
+          getLocalStorage("pdfResultsTimestamp") || new Date().getTime(),
       });
     }
     if (cameraImageResults) {
       results.push({
         title: "Camera Image Results",
         data: cameraImageResultsArray,
-        timestamp: getLocalStorage("cameraImageResultsTimestamp") || Date.now(),
+        timestamp:
+          getLocalStorage("cameraImageResultsTimestamp") ||
+          new Date().getTime(),
       });
     }
 
     return results.sort((a, b) => b.timestamp - a.timestamp);
-  }, [imageResults, pdfResults, cameraImageResults]);
+  }, [
+    imageResults,
+    pdfResults,
+    cameraImageResults,
+    imageResultsArray,
+    pdfResultsArray,
+    cameraImageResultsArray,
+  ]);
 
   const titleCaption = (title: string, json: string) => {
     return (
-      <VStack>
-        <Text
+      <VStack key={title}>
+        <Box
           fontSize="lg"
           display="flex"
           color={theme.colors.blue}
@@ -60,7 +70,7 @@ export const ViewResultsPageUI = () => {
           >
             {title}
           </Text>
-        </Text>
+        </Box>
         <Box
           backgroundColor={theme.colors.gray[100]}
           borderRadius="10px"
@@ -96,6 +106,10 @@ export const ViewResultsPageUI = () => {
       mb="120px"
     >
       <Spacer padding="30px" />
+      {/* {imageResults && titleCaption("Image Results", imageResultsArray)}
+      {pdfResults && titleCaption("PDF Results", pdfResultsArray)}
+      {cameraImageResults &&
+        titleCaption("Camera Image Results", cameraImageResultsArray)} */}
       {allResults.map((result) => titleCaption(result.title, result.data))}
       <Spacer padding="30px" />
     </VStack>

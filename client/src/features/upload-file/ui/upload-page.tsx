@@ -22,7 +22,6 @@ export const UploadFile = () => {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
-
     isPending: isPDFPending,
   } = usePdfMutation();
   const toggleFileInput = () => {
@@ -39,6 +38,24 @@ export const UploadFile = () => {
     openPDFRef.current?.();
     setIsHidden(false);
   };
+
+  // useEffect(() => {
+  //   if (!isImagePending && imageResults) {
+  //     setLocalStorage("imageResults", imageResults);
+  //   }
+  //   if (!isPDFPending && pdfResults) {
+  //     setLocalStorage("pdfResults", pdfResults);
+  //   }
+  // }, [
+  //   imageResults,
+  //   pdfResults,
+  //   isImageSuccess,
+  //   isPDFSuccess,
+  //   isImageError,
+  //   isPDFError,
+  //   isImagePending,
+  //   isPDFPending,
+  // ]);
 
   return (
     <>
