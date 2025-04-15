@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths, setLocalStorage } from "@/shared";
+import { paths } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
@@ -80,11 +80,6 @@ export const useImageMutation = () => {
 
   openImageRef.current = open;
 
-  if (isSuccess) {
-    setLocalStorage("testPDF", "DATA");
-    setLocalStorage("imageResults", imageData?.data);
-    // setLocalStorage("imageResultsTimestamp", Date.now());
-  }
   return {
     getRootProps,
     getInputProps,

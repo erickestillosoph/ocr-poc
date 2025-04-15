@@ -50,7 +50,7 @@ export const ViewResultsPageUI = () => {
   const titleCaption = (title: string, json: string) => {
     return (
       <VStack>
-        <Text
+        <Box
           fontSize="lg"
           display="flex"
           color={theme.colors.blue}
@@ -66,7 +66,7 @@ export const ViewResultsPageUI = () => {
           >
             {title}
           </Text>
-        </Text>
+        </Box>
         <Box
           backgroundColor={theme.colors.gray[100]}
           borderRadius="10px"
