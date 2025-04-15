@@ -1,6 +1,7 @@
 import { useAppTheme } from "@/shared/theme";
 import { Code, VStack, Text, Box, Spacer } from "@chakra-ui/react";
 import { getLocalStorage } from "@/shared";
+import { useMemo } from "react";
 
 export const ViewResultsPageUI = () => {
   const { theme } = useAppTheme();
@@ -11,6 +12,34 @@ export const ViewResultsPageUI = () => {
   const imageResultsArray = JSON.stringify(imageResults, null, 1);
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
   const cameraImageResultsArray = JSON.stringify(cameraImageResults, null, 1);
+
+  // Combine all results with their timestamps
+  const allResults = useMemo(() => {
+    const results = [];
+    if (imageResults) {
+      results.push({
+        title: "Image Results",
+        data: imageResultsArray,
+        timestamp: getLocalStorage("imageResultsTimestamp") || Date.now(),
+      });
+    }
+    if (pdfResults) {
+      results.push({
+        title: "PDF Results",
+        data: pdfResultsArray,
+        timestamp: getLocalStorage("pdfResultsTimestamp") || Date.now(),
+      });
+    }
+    if (cameraImageResults) {
+      results.push({
+        title: "Camera Image Results",
+        data: cameraImageResultsArray,
+        timestamp: getLocalStorage("cameraImageResultsTimestamp") || Date.now(),
+      });
+    }
+
+    return results.sort((a, b) => b.timestamp - a.timestamp);
+  }, [imageResults, pdfResults, cameraImageResults]);
 
   const titleCaption = (title: string, json: string) => {
     return (
@@ -53,6 +82,7 @@ export const ViewResultsPageUI = () => {
       </VStack>
     );
   };
+
   return (
     <VStack
       mt="20px"
@@ -66,10 +96,7 @@ export const ViewResultsPageUI = () => {
       mb="120px"
     >
       <Spacer padding="30px" />
-      {imageResults && titleCaption("Image Results", imageResultsArray)}
-      {pdfResults && titleCaption("Pdf Results", pdfResultsArray)}
-      {cameraImageResults &&
-        titleCaption("Camera Image Results", cameraImageResultsArray)}
+      {allResults.map((result) => titleCaption(result.title, result.data))}
       <Spacer padding="30px" />
     </VStack>
   );
