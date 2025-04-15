@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppTheme } from "@/shared/theme";
 import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
 
 import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
-import { CenterSpinner } from "@/shared";
+import { CenterSpinner, setLocalStorage } from "@/shared";
 
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
@@ -17,13 +17,16 @@ export const UploadPagePage = () => {
     getInputProps: getImageInputProps,
     openImageRef,
     isPending: isImagePending,
+    isSuccess: isImageSuccess,
+    imageResults,
   } = useImageMutation();
   const {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
-
+    pdfResults,
     isPending: isPDFPending,
+    isSuccess: isPDFSuccess,
   } = usePdfMutation();
   const toggleFileInput = () => {
     setShowFileInput(true);
@@ -39,6 +42,15 @@ export const UploadPagePage = () => {
     openPDFRef.current?.();
     setIsHidden(false);
   };
+
+  useEffect(() => {
+    if (isImageSuccess) {
+      setLocalStorage("imageResults", imageResults);
+    }
+    if (isPDFSuccess) {
+      setLocalStorage("pdfResults", pdfResults);
+    }
+  }, [imageResults, pdfResults, isImageSuccess, isPDFSuccess]);
 
   return (
     <>
