@@ -48,6 +48,7 @@ export const useCameraImageMutation = () => {
 
   if (isSuccess) {
     setLocalStorage("cameraImageResults", cameraImageData?.data);
+    setLocalStorage("cameraImageResultsTimestamp", Date.now());
   }
   return {
     mutate,

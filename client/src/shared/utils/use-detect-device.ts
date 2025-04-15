@@ -12,25 +12,25 @@ export const useDetectDevice = (): DeviceInfo => {
     if (window.innerHeight === 844 || window.innerHeight === 852) {
       return {
         model: "iPhone 14/13/12",
-        width: window.innerWidth - 50,
-        height: 822,
-        aspectRatio: 0.462,
+        width: window.innerWidth - 20,
+        height: 752,
+        aspectRatio: 0.5,
       };
     }
     if (window.innerHeight === 926) {
       return {
         model: "iPhone 14/13/12 Pro Max",
-        width: window.innerWidth - 50,
-        height: 886,
-        aspectRatio: 0.462,
+        width: window.innerWidth - 20,
+        height: 792,
+        aspectRatio: 0.5,
       };
     }
     if (window.innerHeight === 812) {
       return {
         model: "iPhone 11",
-        width: window.innerWidth - 50,
-        height: 772,
-        aspectRatio: 0.462,
+        width: window.innerWidth - 20,
+        height: 872,
+        aspectRatio: 0.5,
       };
     }
   }
@@ -38,7 +38,7 @@ export const useDetectDevice = (): DeviceInfo => {
   if (userAgent.includes("pixel")) {
     return {
       model: "Google Pixel",
-      width: window.innerWidth - 50,
+      width: window.innerWidth - 20,
       height: Math.floor(window.innerWidth * 1.7),
       aspectRatio: 0.47,
     };

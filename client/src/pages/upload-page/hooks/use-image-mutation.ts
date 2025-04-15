@@ -82,6 +82,7 @@ export const useImageMutation = () => {
 
   if (isSuccess) {
     setLocalStorage("imageResults", imageData?.data);
+    setLocalStorage("imageResultsTimestamp", Date.now());
   }
   return {
     getRootProps,
