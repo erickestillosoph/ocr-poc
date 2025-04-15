@@ -88,7 +88,7 @@ export const usePdfMutation = () => {
   openPDFRef.current = open;
   if (isSuccess) {
     setLocalStorage("pdfResults", pdfData?.data);
-    setLocalStorage("pdfResultsTimestamp", Date.now());
+    // setLocalStorage("pdfResultsTimestamp", Date.now());
   }
   return {
     getRootProps,
