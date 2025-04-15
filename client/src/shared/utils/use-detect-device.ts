@@ -28,7 +28,7 @@ export const useDetectDevice = (): DeviceInfo => {
     if (window.innerHeight === 812) {
       return {
         model: "iPhone 11",
-        width: window.innerWidth - 20,
+        width: 500,
         height: 872,
         aspectRatio: 0.5,
       };
