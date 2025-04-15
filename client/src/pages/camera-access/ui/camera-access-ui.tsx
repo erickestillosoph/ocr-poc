@@ -59,7 +59,7 @@ export const CameraAccessPage = ({
 
   return (
     <VStack height="full" w="full">
-      <CenterSpinner loading={isPending} />
+      <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
         <Box>
           <Webcam
