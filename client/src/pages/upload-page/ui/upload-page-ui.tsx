@@ -16,17 +16,17 @@ export const UploadPagePage = () => {
     getRootProps: getImageRootProps,
     getInputProps: getImageInputProps,
     openImageRef,
-    isPending: isImagePending,
-    isSuccess: isImageSuccess,
     imageResults,
+    isSuccess: isImageSuccess,
+    isPending: isImagePending,
   } = useImageMutation();
   const {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
     pdfResults,
-    isPending: isPDFPending,
     isSuccess: isPDFSuccess,
+    isPending: isPDFPending,
   } = usePdfMutation();
   const toggleFileInput = () => {
     setShowFileInput(true);
@@ -44,11 +44,21 @@ export const UploadPagePage = () => {
   };
 
   useEffect(() => {
+    console.log("imageResults", imageResults);
+    console.log("pdfResults", pdfResults);
     if (isImageSuccess) {
-      setLocalStorage("imageResults", imageResults);
+      const stored = setLocalStorage("imageResults", imageResults);
+      if (!stored) {
+        console.warn("Failed to store image results in localStorage");
+        // You might want to show a user-friendly notification here
+      }
     }
     if (isPDFSuccess) {
-      setLocalStorage("pdfResults", pdfResults);
+      const stored = setLocalStorage("pdfResults", pdfResults);
+      if (!stored) {
+        console.warn("Failed to store PDF results in localStorage");
+        // You might want to show a user-friendly notification here
+      }
     }
   }, [imageResults, pdfResults, isImageSuccess, isPDFSuccess]);
 
