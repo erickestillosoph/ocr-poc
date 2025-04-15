@@ -5,7 +5,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { useCameraImageMutation } from "../hooks/use-camera-mutation";
-import { CenterSpinner } from "@/shared";
+import { CenterSpinner, setLocalStorage } from "@/shared";
 import { useDetectDevice } from "@/shared/utils/use-detect-device";
 
 export type CameraAccessPageProps = {
@@ -28,15 +28,18 @@ export const CameraAccessPage = ({
   };
 
   const { capture, webcamRef, imageSrc } = useCameraAccess();
-  const { mutate, isPending } = useCameraImageMutation();
+  const {
+    mutate,
+    isPending,
+    isSuccess: isCameraSuccess,
+    cameraImageDataResults,
+  } = useCameraImageMutation();
   const handleOpenCamera = useCallback(() => {
     setIsCameraOpen(true);
     isHandleCameraOpen(true);
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
-<<<<<<< Updated upstream
-=======
     console.log("cameraImageResults", cameraImageDataResults);
     if (isCameraSuccess) {
       setLocalStorage("cameraImageResults", cameraImageDataResults);
@@ -44,7 +47,6 @@ export const CameraAccessPage = ({
   }, [isCameraSuccess, cameraImageDataResults]);
 
   useEffect(() => {
->>>>>>> Stashed changes
     if (imageSrc) {
       setIsCameraOpen(false);
       mutate(imageSrc);

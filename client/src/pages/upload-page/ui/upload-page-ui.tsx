@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppTheme } from "@/shared/theme";
 import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
 
 import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
-import { CenterSpinner } from "@/shared";
+import { CenterSpinner, setLocalStorage } from "@/shared";
 
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
@@ -16,13 +16,16 @@ export const UploadPagePage = () => {
     getRootProps: getImageRootProps,
     getInputProps: getImageInputProps,
     openImageRef,
+    imageResults,
+    isSuccess: isImageSuccess,
     isPending: isImagePending,
   } = useImageMutation();
   const {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
-
+    pdfResults,
+    isSuccess: isPDFSuccess,
     isPending: isPDFPending,
   } = usePdfMutation();
   const toggleFileInput = () => {
@@ -40,8 +43,6 @@ export const UploadPagePage = () => {
     setIsHidden(false);
   };
 
-<<<<<<< Updated upstream
-=======
   useEffect(() => {
     console.log("imageResults", imageResults);
     console.log("pdfResults", pdfResults);
@@ -61,7 +62,6 @@ export const UploadPagePage = () => {
     }
   }, [imageResults, pdfResults, isImageSuccess, isPDFSuccess]);
 
->>>>>>> Stashed changes
   return (
     <>
       <VStack
