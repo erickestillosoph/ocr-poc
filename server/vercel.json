@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "rm -rf src/tmp/uploads/* && npm run build",
   "builds": [
     {
       "src": "src/api/index.ts",
