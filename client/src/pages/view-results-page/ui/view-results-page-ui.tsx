@@ -39,7 +39,14 @@ export const ViewResultsPageUI = () => {
     }
 
     return results.sort((a, b) => b.timestamp - a.timestamp);
-  }, [imageResults, pdfResults, cameraImageResults]);
+  }, [
+    imageResults,
+    pdfResults,
+    cameraImageResults,
+    imageResultsArray,
+    pdfResultsArray,
+    cameraImageResultsArray,
+  ]);
 
   const titleCaption = (title: string, json: string) => {
     return (
