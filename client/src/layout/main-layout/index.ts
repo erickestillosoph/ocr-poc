@@ -1,1 +1,1 @@
-export { MainLayoutContainer } from "./main-layout-container";
+export { MainLayout } from "./main-layout-ui";

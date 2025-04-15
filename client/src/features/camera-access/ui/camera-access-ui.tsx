@@ -1,4 +1,4 @@
-import { Box, Button, VStack } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
 import Webcam from "react-webcam";
 import { useCallback, useState, useEffect } from "react";
@@ -42,7 +42,7 @@ export const CameraAccessPage = ({
   }, [imageSrc, mutate, capture]);
 
   return (
-    <VStack height="full" w="full">
+    <Box>
       <CenterSpinner loading={isPending} />
       {isCameraOpen ? (
         <Box>
@@ -92,6 +92,6 @@ export const CameraAccessPage = ({
           写真を撮影
         </Button>
       )}
-    </VStack>
+    </Box>
   );
 };

@@ -7,7 +7,7 @@ import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
 
-export const UploadPagePage = () => {
+export const UploadFile = () => {
   const { theme } = useAppTheme();
   const [showFileInput, setShowFileInput] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -42,13 +42,7 @@ export const UploadPagePage = () => {
 
   return (
     <>
-      <VStack
-        display="grid"
-        alignContent="space-between"
-        height="full"
-        w="full"
-      >
-        <CenterSpinner loading={isImagePending || isPDFPending} />
+      <CenterSpinner loading={isImagePending || isPDFPending} />
 
         <VStack
           alignItems="flex-start"
@@ -79,8 +73,8 @@ export const UploadPagePage = () => {
               position="absolute"
               mt="4px"
               height="fit-content"
-              backgroundColor={theme.colors.gray[50]}
-              borderRadius="md"
+              backgroundColor={theme.colors.white}
+              boxShadow="lg"
               w="200px"
               top="14"
               right="0"
@@ -122,7 +116,7 @@ export const UploadPagePage = () => {
                 }}
                 onClick={handleImageUpload}
               >
-                <span style={{ fontSize: "10px" }}>写真ライブラリ</span>
+               写真ライブラリ
                 <FaImage color={theme.colors.blue[500]} size="14px" />
               </Button>
               <Divider color={theme.colors.gray[400]} mt="0px" mb="0px" />
@@ -140,12 +134,11 @@ export const UploadPagePage = () => {
                 }}
                 onClick={handlePDFUpload}
               >
-                <span style={{ fontSize: "10px" }}>ファイルを選択</span>
+               ファイルを選択
                 <FaFilePdf color={theme.colors.blue[500]} size="14px" />
               </Button>
             </VStack>
-          )}
-        </VStack>
+        )}
       </VStack>
     </>
   );

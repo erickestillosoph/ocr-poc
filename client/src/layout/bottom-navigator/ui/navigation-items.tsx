@@ -1,7 +1,7 @@
 import { FaRegUser, FaUsers, FaRegFile } from "react-icons/fa6";
 import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
 
-export const driverNavigationItems = [
+export const NavigationItems = [
   {
     label: PAGE_BOTTOM_TITLES.HOME,
     path: paths.cameraAccessUploadFile,
