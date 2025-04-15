@@ -23,6 +23,7 @@ export const useCameraImageMutation = () => {
     },
     onSuccess: (data) => {
       setLocalStorage("cameraImageResults", data.data);
+      setLocalStorage("cameraImageResultsTimestamp", Date.now());
       toast({
         title: "Upload successful",
         description: `Your image base64 has been uploaded successfully.`,

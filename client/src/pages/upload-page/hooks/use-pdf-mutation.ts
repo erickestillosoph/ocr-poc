@@ -26,6 +26,7 @@ export const usePdfMutation = () => {
     },
     onSuccess: (data) => {
       setLocalStorage("pdfResults", data.data);
+      setLocalStorage("pdfResultsTimestamp", Date.now());
       toast({
         title: "Upload successful",
         description: `Your pdf has been uploaded successfully.`,
