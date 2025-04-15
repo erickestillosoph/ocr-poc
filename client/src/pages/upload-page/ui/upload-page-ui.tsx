@@ -40,6 +40,28 @@ export const UploadPagePage = () => {
     setIsHidden(false);
   };
 
+<<<<<<< Updated upstream
+=======
+  useEffect(() => {
+    console.log("imageResults", imageResults);
+    console.log("pdfResults", pdfResults);
+    if (isImageSuccess) {
+      const stored = setLocalStorage("imageResults", imageResults);
+      if (!stored) {
+        console.warn("Failed to store image results in localStorage");
+        // You might want to show a user-friendly notification here
+      }
+    }
+    if (isPDFSuccess) {
+      const stored = setLocalStorage("pdfResults", pdfResults);
+      if (!stored) {
+        console.warn("Failed to store PDF results in localStorage");
+        // You might want to show a user-friendly notification here
+      }
+    }
+  }, [imageResults, pdfResults, isImageSuccess, isPDFSuccess]);
+
+>>>>>>> Stashed changes
   return (
     <>
       <VStack

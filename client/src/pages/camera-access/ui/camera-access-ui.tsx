@@ -35,6 +35,16 @@ export const CameraAccessPage = ({
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
+<<<<<<< Updated upstream
+=======
+    console.log("cameraImageResults", cameraImageDataResults);
+    if (isCameraSuccess) {
+      setLocalStorage("cameraImageResults", cameraImageDataResults);
+    }
+  }, [isCameraSuccess, cameraImageDataResults]);
+
+  useEffect(() => {
+>>>>>>> Stashed changes
     if (imageSrc) {
       setIsCameraOpen(false);
       mutate(imageSrc);
