@@ -46,27 +46,11 @@ export const UploadPagePage = () => {
   };
 
   useEffect(() => {
-    console.log("isImageSuccess", isImageSuccess);
-    console.log("isPDFSuccess", isPDFSuccess);
-    console.log("imageResults", imageResults);
-    console.log("pdfResults", pdfResults);
-    console.log("isImagePending", isImagePending);
-    console.log("isPDFPending", isPDFPending);
-    console.log("isImageError", isImageError);
-    console.log("isPDFError", isPDFError);
-    if (isImageSuccess) {
-      const stored = setLocalStorage("imageResults", imageResults);
-      if (!stored) {
-        console.warn("Failed to store image results in localStorage");
-        // You might want to show a user-friendly notification here
-      }
+    if (!isImagePending && imageResults) {
+      setLocalStorage("imageResults", imageResults);
     }
-    if (isPDFSuccess) {
-      const stored = setLocalStorage("pdfResults", pdfResults);
-      if (!stored) {
-        console.warn("Failed to store PDF results in localStorage");
-        // You might want to show a user-friendly notification here
-      }
+    if (!isPDFPending && pdfResults) {
+      setLocalStorage("pdfResults", pdfResults);
     }
   }, [
     imageResults,
