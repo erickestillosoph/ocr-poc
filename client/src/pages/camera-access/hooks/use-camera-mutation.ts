@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths, setLocalStorage } from "@/shared";
+import { paths } from "@/shared";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
@@ -46,11 +46,6 @@ export const useCameraImageMutation = () => {
     mutationKey: ["cameraImage"],
   });
 
-  if (isSuccess) {
-    setLocalStorage("testPDF", "DATA");
-    setLocalStorage("cameraImageResults", cameraImageData?.data);
-    // setLocalStorage("cameraImageResultsTimestamp", Date.now());
-  }
   return {
     mutate,
     isPending,
