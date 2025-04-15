@@ -46,8 +46,8 @@ export const useDetectDevice = (): DeviceInfo => {
 
   return {
     model: "Unknown Device",
-    width: window.innerWidth - 50,
-    height: Math.floor(window.innerWidth * 0.5),
+    width: 300,
+    height: 600,
     aspectRatio: 0.1,
   };
 };

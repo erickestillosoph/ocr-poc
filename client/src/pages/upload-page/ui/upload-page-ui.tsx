@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppTheme } from "@/shared/theme";
 import { Box, Button, Divider, Input, VStack } from "@chakra-ui/react";
 import { FaFilePdf, FaImage } from "react-icons/fa";
 
 import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
-import { CenterSpinner, setLocalStorage } from "@/shared";
+import { CenterSpinner } from "@/shared";
 
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
@@ -16,18 +16,12 @@ export const UploadPagePage = () => {
     getRootProps: getImageRootProps,
     getInputProps: getImageInputProps,
     openImageRef,
-    imageResults,
-    isError: isImageError,
-    isSuccess: isImageSuccess,
     isPending: isImagePending,
   } = useImageMutation();
   const {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
-    isError: isPDFError,
-    pdfResults,
-    isSuccess: isPDFSuccess,
     isPending: isPDFPending,
   } = usePdfMutation();
   const toggleFileInput = () => {
@@ -45,23 +39,23 @@ export const UploadPagePage = () => {
     setIsHidden(false);
   };
 
-  useEffect(() => {
-    if (!isImagePending && imageResults) {
-      setLocalStorage("imageResults", imageResults);
-    }
-    if (!isPDFPending && pdfResults) {
-      setLocalStorage("pdfResults", pdfResults);
-    }
-  }, [
-    imageResults,
-    pdfResults,
-    isImageSuccess,
-    isPDFSuccess,
-    isImageError,
-    isPDFError,
-    isImagePending,
-    isPDFPending,
-  ]);
+  // useEffect(() => {
+  //   if (!isImagePending && imageResults) {
+  //     setLocalStorage("imageResults", imageResults);
+  //   }
+  //   if (!isPDFPending && pdfResults) {
+  //     setLocalStorage("pdfResults", pdfResults);
+  //   }
+  // }, [
+  //   imageResults,
+  //   pdfResults,
+  //   isImageSuccess,
+  //   isPDFSuccess,
+  //   isImageError,
+  //   isPDFError,
+  //   isImagePending,
+  //   isPDFPending,
+  // ]);
 
   return (
     <>

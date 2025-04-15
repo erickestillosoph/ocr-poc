@@ -26,8 +26,8 @@ export const useImageMutation = () => {
       return apiClient.post(IMAGE_PATH, data);
     },
     onSuccess: (data) => {
-      console.log("data", data);
       setLocalStorage("imageResults", data.data);
+      setLocalStorage("imageResultsTimestamp", Date.now());
       toast({
         title: "Upload successful",
         description: `Your image has been uploaded successfully.`,

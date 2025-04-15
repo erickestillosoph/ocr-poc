@@ -1,36 +1,38 @@
 import { useMutation } from "@tanstack/react-query";
+import { paths, setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { paths, setLocalStorage } from "@/shared";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
 
-export const usePdfMutation = () => {
+export const useImageCaptureMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const PDF_PATH = apiPaths.uploadPdf;
-  const openPDFRef = useRef<() => void>(null);
+  const IMAGE_PATH = apiPaths.uploadImage;
+
+  const openImageRef = useRef<() => void | null>(null);
 
   const {
     mutateAsync,
     isPending,
     isError,
     isSuccess,
-    data: pdfData,
+    data: imageData,
   } = useMutation({
     mutationFn: (files: File[]) => {
       const data = new FormData();
-      files.forEach((file) => data.append("pdf", file));
-      return apiClient.post(PDF_PATH, data);
+      files.forEach((file) => data.append("image", file));
+      return apiClient.post(IMAGE_PATH, data);
     },
     onSuccess: (data) => {
-      setLocalStorage("pdfResults", data.data);
-      setLocalStorage("pdfResultsTimestamp", Date.now());
+      setLocalStorage("cameraImageResultsTimestamp", Date.now());
+      setLocalStorage("cameraImageResults", data.data);
       toast({
         title: "Upload successful",
-        description: `Your pdf has been uploaded successfully.`,
+        description: `Your image has been uploaded successfully.`,
         status: "success",
+        duration: 3000,
         isClosable: true,
         position: "top",
       });
@@ -40,15 +42,14 @@ export const usePdfMutation = () => {
       console.error("Upload error:", error);
       toast({
         title: "Upload failed",
-        description: `There was an error uploading your pdf.`,
+        description: `There was an error uploading your image.`,
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
     },
-
-    mutationKey: ["pdf"],
+    mutationKey: ["image"],
   });
 
   const onDrop = useCallback(
@@ -72,21 +73,14 @@ export const usePdfMutation = () => {
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
     accept: {
-      "application/pdf": [],
-      "application/octet-stream": [],
-      "application/x-pdf": [],
-      "application/pdf-1.5": [],
-      "application/pdf-1.4": [],
-      "application/pdf-1.3": [],
-      "application/pdf-1.2": [],
-      "application/pdf-1.1": [],
-      "application/pdf-1.0": [],
-      "application/pdf-0.4": [],
+      "image/jpeg": [],
+      "image/png": [],
+      "image/jpg": [],
     },
     maxFiles: 3,
   });
 
-  openPDFRef.current = open;
+  openImageRef.current = open;
 
   return {
     getRootProps,
@@ -95,7 +89,7 @@ export const usePdfMutation = () => {
     isPending,
     isError,
     isSuccess,
-    openPDFRef,
-    pdfResults: pdfData?.data,
+    openImageRef,
+    imageResults: imageData?.data,
   };
 };

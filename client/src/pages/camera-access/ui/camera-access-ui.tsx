@@ -4,9 +4,9 @@ import Webcam from "react-webcam";
 import { useCallback, useState, useEffect } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
-import { useCameraImageMutation } from "../hooks/use-camera-mutation";
-import { CenterSpinner, setLocalStorage } from "@/shared";
+import { CenterSpinner } from "@/shared";
 import { useDetectDevice } from "@/shared/utils/use-detect-device";
+import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
 
 export type CameraAccessPageProps = {
   isHandleCameraOpen: (isCameraOpen: boolean) => void;
@@ -27,29 +27,25 @@ export const CameraAccessPage = ({
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
-  const { capture, webcamRef, imageSrc } = useCameraAccess();
+  const { capture, webcamRef, base64ToImageFile } = useCameraAccess();
   const {
     mutate,
     isPending: isCameraPending,
-    cameraImageDataResults,
-  } = useCameraImageMutation();
+    openImageRef,
+  } = useImageCaptureMutation();
+
   const handleOpenCamera = useCallback(() => {
     setIsCameraOpen(true);
     isHandleCameraOpen(true);
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
-    if (!isCameraPending && cameraImageDataResults) {
-      setLocalStorage("cameraImageResults", cameraImageDataResults);
-    }
-  }, [cameraImageDataResults, isCameraPending]);
-
-  useEffect(() => {
-    if (imageSrc) {
+    openImageRef.current?.();
+    if (base64ToImageFile) {
+      mutate([base64ToImageFile]);
       setIsCameraOpen(false);
-      mutate(imageSrc);
     }
-  }, [imageSrc, mutate, capture]);
+  }, [base64ToImageFile, mutate, openImageRef]);
 
   return (
     <VStack height="full" w="full">
