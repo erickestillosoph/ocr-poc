@@ -41,6 +41,7 @@ export const CameraAccessPage = ({
 
   useEffect(() => {
     console.log("cameraImageResults", cameraImageDataResults);
+    console.log("isCameraSuccess", isCameraSuccess);
     if (isCameraSuccess) {
       setLocalStorage("cameraImageResults", cameraImageDataResults);
     }

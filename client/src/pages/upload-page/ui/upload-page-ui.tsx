@@ -44,6 +44,8 @@ export const UploadPagePage = () => {
   };
 
   useEffect(() => {
+    console.log("isImageSuccess", isImageSuccess);
+    console.log("isPDFSuccess", isPDFSuccess);
     console.log("imageResults", imageResults);
     console.log("pdfResults", pdfResults);
     if (isImageSuccess) {

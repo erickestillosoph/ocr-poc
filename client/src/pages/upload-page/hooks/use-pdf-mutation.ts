@@ -13,7 +13,7 @@ export const usePdfMutation = () => {
   const openPDFRef = useRef<() => void>(null);
 
   const {
-    mutate,
+    mutateAsync,
     isPending,
     isError,
     isSuccess,
@@ -62,9 +62,9 @@ export const usePdfMutation = () => {
         });
       });
 
-      mutate(acceptedFiles);
+      mutateAsync(acceptedFiles);
     },
-    [toast, mutate]
+    [toast, mutateAsync]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -89,7 +89,7 @@ export const usePdfMutation = () => {
   return {
     getRootProps,
     getInputProps,
-    mutate,
+    mutate: mutateAsync,
     isPending,
     isError,
     isSuccess,

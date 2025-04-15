@@ -14,7 +14,7 @@ export const useImageMutation = () => {
   const openImageRef = useRef<() => void | null>(null);
 
   const {
-    mutate,
+    mutateAsync,
     isPending,
     isError,
     isSuccess,
@@ -63,9 +63,9 @@ export const useImageMutation = () => {
         });
       });
 
-      mutate(acceptedFiles);
+      mutateAsync(acceptedFiles);
     },
-    [toast, mutate]
+    [toast, mutateAsync]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -83,7 +83,7 @@ export const useImageMutation = () => {
   return {
     getRootProps,
     getInputProps,
-    mutate,
+    mutate: mutateAsync,
     isPending,
     isError,
     isSuccess,

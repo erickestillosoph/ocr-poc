@@ -10,10 +10,10 @@ export const useCameraImageMutation = () => {
   const IMAGE_PATH = apiPaths.uploadCameraImage;
 
   const {
-    mutate,
     isPending,
     isError,
     isSuccess,
+    mutateAsync,
     data: cameraImageData,
   } = useMutation({
     mutationFn: (cameraImageStringBase64: string) => {
@@ -47,7 +47,7 @@ export const useCameraImageMutation = () => {
   });
 
   return {
-    mutate,
+    mutate: mutateAsync,
     isPending,
     isError,
     isSuccess,
