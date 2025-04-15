@@ -46,10 +46,10 @@ export const UploadPagePage = () => {
   };
 
   useEffect(() => {
-    if (!isImagePending) {
+    if (!isImagePending && imageResults) {
       setLocalStorage("imageResults", imageResults);
     }
-    if (!isPDFPending) {
+    if (!isPDFPending && pdfResults) {
       setLocalStorage("pdfResults", pdfResults);
     }
   }, [

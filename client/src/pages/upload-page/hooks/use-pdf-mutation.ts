@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { paths } from "@/shared";
+import { paths, setLocalStorage } from "@/shared";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
 
 export const usePdfMutation = () => {
@@ -24,7 +24,8 @@ export const usePdfMutation = () => {
       files.forEach((file) => data.append("pdf", file));
       return apiClient.post(PDF_PATH, data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setLocalStorage("pdfResults", data.data);
       toast({
         title: "Upload successful",
         description: `Your pdf has been uploaded successfully.`,

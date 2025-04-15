@@ -39,7 +39,7 @@ export const CameraAccessPage = ({
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
-    if (!isCameraPending) {
+    if (!isCameraPending && cameraImageDataResults) {
       setLocalStorage("cameraImageResults", cameraImageDataResults);
     }
   }, [cameraImageDataResults, isCameraPending]);

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths } from "@/shared";
+import { paths, setLocalStorage } from "@/shared";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
@@ -21,7 +21,8 @@ export const useCameraImageMutation = () => {
       data.append("cameraImage", cameraImageStringBase64);
       return apiClient.post(IMAGE_PATH, data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setLocalStorage("cameraImageResults", data.data);
       toast({
         title: "Upload successful",
         description: `Your image base64 has been uploaded successfully.`,

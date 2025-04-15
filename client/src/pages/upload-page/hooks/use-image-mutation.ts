@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths } from "@/shared";
+import { paths, setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
@@ -25,7 +25,9 @@ export const useImageMutation = () => {
       files.forEach((file) => data.append("image", file));
       return apiClient.post(IMAGE_PATH, data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("data", data);
+      setLocalStorage("imageResults", data.data);
       toast({
         title: "Upload successful",
         description: `Your image has been uploaded successfully.`,
