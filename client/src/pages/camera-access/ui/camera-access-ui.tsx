@@ -30,7 +30,8 @@ export const CameraAccessPage = ({
   const { capture, webcamRef, imageSrc } = useCameraAccess();
   const {
     mutate,
-    isPending,
+    isError: isCameraError,
+    isPending: isCameraPending,
     isSuccess: isCameraSuccess,
     cameraImageDataResults,
   } = useCameraImageMutation();
@@ -40,12 +41,14 @@ export const CameraAccessPage = ({
   }, [isHandleCameraOpen, setIsCameraOpen]);
 
   useEffect(() => {
+    console.log("isCameraError", isCameraError);
+    console.log("isCameraPending", isCameraPending);
     console.log("cameraImageResults", cameraImageDataResults);
     console.log("isCameraSuccess", isCameraSuccess);
     if (isCameraSuccess) {
       setLocalStorage("cameraImageResults", cameraImageDataResults);
     }
-  }, [isCameraSuccess, cameraImageDataResults]);
+  }, [isCameraSuccess, cameraImageDataResults, isCameraError, isCameraPending]);
 
   useEffect(() => {
     if (imageSrc) {

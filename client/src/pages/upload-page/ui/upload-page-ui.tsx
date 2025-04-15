@@ -17,6 +17,7 @@ export const UploadPagePage = () => {
     getInputProps: getImageInputProps,
     openImageRef,
     imageResults,
+    isError: isImageError,
     isSuccess: isImageSuccess,
     isPending: isImagePending,
   } = useImageMutation();
@@ -24,6 +25,7 @@ export const UploadPagePage = () => {
     getRootProps: getPDFRootProps,
     getInputProps: getPDFInputProps,
     openPDFRef,
+    isError: isPDFError,
     pdfResults,
     isSuccess: isPDFSuccess,
     isPending: isPDFPending,
@@ -48,6 +50,10 @@ export const UploadPagePage = () => {
     console.log("isPDFSuccess", isPDFSuccess);
     console.log("imageResults", imageResults);
     console.log("pdfResults", pdfResults);
+    console.log("isImagePending", isImagePending);
+    console.log("isPDFPending", isPDFPending);
+    console.log("isImageError", isImageError);
+    console.log("isPDFError", isPDFError);
     if (isImageSuccess) {
       const stored = setLocalStorage("imageResults", imageResults);
       if (!stored) {
@@ -62,7 +68,16 @@ export const UploadPagePage = () => {
         // You might want to show a user-friendly notification here
       }
     }
-  }, [imageResults, pdfResults, isImageSuccess, isPDFSuccess]);
+  }, [
+    imageResults,
+    pdfResults,
+    isImageSuccess,
+    isPDFSuccess,
+    isImageError,
+    isPDFError,
+    isImagePending,
+    isPDFPending,
+  ]);
 
   return (
     <>
