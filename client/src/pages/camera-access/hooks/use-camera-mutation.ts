@@ -47,6 +47,7 @@ export const useCameraImageMutation = () => {
   });
 
   if (isSuccess) {
+    setLocalStorage("testPDF", "DATA");
     setLocalStorage("cameraImageResults", cameraImageData?.data);
     // setLocalStorage("cameraImageResultsTimestamp", Date.now());
   }

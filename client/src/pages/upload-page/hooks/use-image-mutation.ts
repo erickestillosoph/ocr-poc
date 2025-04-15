@@ -81,6 +81,7 @@ export const useImageMutation = () => {
   openImageRef.current = open;
 
   if (isSuccess) {
+    setLocalStorage("testPDF", "DATA");
     setLocalStorage("imageResults", imageData?.data);
     // setLocalStorage("imageResultsTimestamp", Date.now());
   }
