@@ -17,7 +17,7 @@ export const CameraAccessPage = ({
 }: CameraAccessPageProps) => {
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const isDesktop = window.innerWidth < 1024;
+  const isDesktop = window.innerWidth > 1024;
   const device = useDetectDevice();
 
   const videoConstraints = {
