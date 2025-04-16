@@ -17,7 +17,7 @@ export const CameraAccessPage = ({
 }: CameraAccessPageProps) => {
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const isDesktop = window.innerWidth > 1024;
+  const isDesktop = window.innerWidth < 1024;
   const device = useDetectDevice();
 
   const videoConstraints = {
@@ -27,7 +27,7 @@ export const CameraAccessPage = ({
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
-  const { capture, webcamRef, base64ToImageFile } = useCameraAccess();
+  const { capture, webcamRef, imageSrcInBase64 } = useCameraAccess();
   const {
     mutate,
     isPending: isCameraPending,
@@ -41,11 +41,11 @@ export const CameraAccessPage = ({
 
   useEffect(() => {
     openImageRef.current?.();
-    if (base64ToImageFile) {
-      mutate([base64ToImageFile]);
+    if (imageSrcInBase64) {
+      mutate([imageSrcInBase64]);
       setIsCameraOpen(false);
     }
-  }, [base64ToImageFile, mutate, openImageRef]);
+  }, [mutate, openImageRef, imageSrcInBase64]);
 
   return (
     <VStack height="full" w="full">

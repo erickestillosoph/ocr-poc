@@ -4,21 +4,17 @@ import {
   IAIService,
   ImageMediaType,
   DocumentMediaType,
+  FileMediaType,
 } from "../types/types.js";
 import { z } from "zod";
 
-// Add type for text content block
-interface TextContent {
-  type: "text";
-  text: string;
-}
-
-const MAX_TOKENS = 1024;
+const MAX_TOKENS = 2024;
 const DEFAULT_TEMPERATURE = 0;
 // const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
 const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-7-sonnet-20250219";
+// const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-5-haiku-20241022";
 // Add timeout configuration for Anthropic API calls
-const DEFAULT_API_TIMEOUT_MS = 25000;
+const DEFAULT_API_TIMEOUT_MS = 15000;
 
 export class AnthropicService implements IAIService {
   private aiService: Anthropic;
@@ -32,19 +28,11 @@ export class AnthropicService implements IAIService {
       anthropic ??
       new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY,
-        timeout: DEFAULT_API_TIMEOUT_MS, // Set API call timeout
+        timeout: DEFAULT_API_TIMEOUT_MS,
       });
     this.modelName = modelName ?? DEFAULT_ANTHROPIC_MODEL_NAME;
   }
 
-  /**
-   *
-   * @param imageBase64
-   * @param prompt
-   * @param schema
-   * @param imageMediaType
-   * @returns
-   */
   async imageToJSON<T>(
     imageBase64: string,
     prompt: string,
@@ -66,6 +54,7 @@ export class AnthropicService implements IAIService {
                 media_type: imageMediaType,
                 data: imageBase64,
               },
+              cache_control: { type: "ephemeral" },
             },
             {
               type: "text",
@@ -79,21 +68,12 @@ export class AnthropicService implements IAIService {
     return this.formatResponse<T>(msg, schema);
   }
 
-  /**
-   *s
-   * @param pdfBase64
-   * @param prompt
-   * @param schema
-   * @returns
-   */
   async pdfToJSON<T>(
     pdfBase64: string,
     prompt: string,
     schema: z.ZodType<T>,
     documentMediaType: DocumentMediaType
   ): Promise<LLMResponse<T>> {
-    // Note: The current SDK version doesn't support PDF directly
-    // This implementation will need to be updated when the SDK supports PDF
     const msg = await this.aiService.messages.create({
       model: this.modelName,
       max_tokens: MAX_TOKENS,
@@ -123,13 +103,6 @@ export class AnthropicService implements IAIService {
     return this.formatResponse<T>(msg, schema);
   }
 
-  /**
-   *s
-   * @param pdfBase64
-   * @param prompt
-   * @param schema
-   * @returns
-   */
   async cameraImageToJSON<T>(
     cameraImageStringBase64: string,
     prompt: string,
@@ -155,8 +128,79 @@ export class AnthropicService implements IAIService {
     return this.formatResponse<T>(msg, schema);
   }
 
+  async base64FileToJSON<T>(
+    base64File: string,
+    prompt: string,
+    schema: z.ZodType<T>,
+    fileMediaType: FileMediaType
+  ): Promise<LLMResponse<T>> {
+    const msg = await this.aiService.messages.create({
+      model: this.modelName,
+      max_tokens: MAX_TOKENS,
+      temperature: DEFAULT_TEMPERATURE,
+
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: {
+                media_type: fileMediaType,
+                type: "base64",
+                data: base64File,
+              },
+              cache_control: { type: "ephemeral" },
+            },
+            {
+              type: "text",
+              text: prompt,
+            },
+          ],
+        },
+      ],
+    });
+
+    return this.formatResponse<T>(msg, schema);
+  }
+
+  async base64PDFToJSON<T>(
+    base64File: string,
+    prompt: string,
+    schema: z.ZodType<T>,
+    fileMediaType: DocumentMediaType
+  ): Promise<LLMResponse<T>> {
+    const msg = await this.aiService.messages.create({
+      model: this.modelName,
+      max_tokens: MAX_TOKENS,
+      temperature: DEFAULT_TEMPERATURE,
+
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "document",
+              source: {
+                media_type: fileMediaType,
+                type: "base64",
+                data: base64File,
+              },
+              cache_control: { type: "ephemeral" },
+            },
+            {
+              type: "text",
+              text: prompt,
+            },
+          ],
+        },
+      ],
+    });
+
+    return this.formatResponse<T>(msg, schema);
+  }
+
   private extractJSON(text: string): string {
-    // Try to find JSON-like content using regex
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return jsonMatch[0];
@@ -164,14 +208,7 @@ export class AnthropicService implements IAIService {
     throw new Error("No JSON object found in response");
   }
 
-  /**
-   * Format the response from the Anthropic API call
-   */
-  private formatResponse<T>(
-    msg: any, // Changed from Anthropic.Messages.Message to any
-    schema: z.ZodType<T>
-  ): LLMResponse<T> {
-    // Get the text content from the message
+  private formatResponse<T>(msg: any, schema: z.ZodType<T>): LLMResponse<T> {
     const content = msg.content[0];
     if (content.type !== "text") {
       throw new Error("Expected text content in the response");

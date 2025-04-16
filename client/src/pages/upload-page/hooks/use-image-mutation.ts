@@ -5,7 +5,7 @@ import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
-
+import { fileToBase64 } from "./file-base-64";
 export const useImageMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const useImageMutation = () => {
     isSuccess,
     data: imageData,
   } = useMutation({
-    mutationFn: (files: File[]) => {
+    mutationFn: (files: string[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("image", file));
       return apiClient.post(IMAGE_PATH, data);
@@ -53,7 +53,10 @@ export const useImageMutation = () => {
   });
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
+      const base64Files = await Promise.all(
+        acceptedFiles.map((file) => fileToBase64(file))
+      );
       acceptedFiles.forEach((file) => {
         toast({
           title: "File uploaded",
@@ -65,7 +68,7 @@ export const useImageMutation = () => {
         });
       });
 
-      mutateAsync(acceptedFiles);
+      mutateAsync(base64Files);
     },
     [toast, mutateAsync]
   );

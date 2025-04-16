@@ -13,7 +13,7 @@ export const useDetectDevice = (): DeviceInfo => {
       return {
         model: "iPhone 14/13/12",
         width: window.innerWidth - 20,
-        height: 752,
+        height: 722,
         aspectRatio: 0.5,
       };
     }
@@ -21,7 +21,7 @@ export const useDetectDevice = (): DeviceInfo => {
       return {
         model: "iPhone 14/13/12 Pro Max",
         width: window.innerWidth - 20,
-        height: 792,
+        height: 772,
         aspectRatio: 0.5,
       };
     }
@@ -30,17 +30,23 @@ export const useDetectDevice = (): DeviceInfo => {
         model: "iPhone 11",
         width: 500,
         height: 872,
-        aspectRatio: 0.1,
+        aspectRatio: 2,
       };
     }
-  }
-
-  if (userAgent.includes("pixel")) {
+  } else if (userAgent.includes("pixel")) {
     return {
       model: "Google Pixel",
       width: window.innerWidth - 20,
       height: Math.floor(window.innerWidth * 1.7),
       aspectRatio: 0.47,
+    };
+  } else if (userAgent.includes("galaxy")) {
+    return {
+      model: "Samsung Galaxy",
+      width: window.innerWidth - 20,
+      // height: Math.floor(window.innerWidth * 0.4),
+      height: 100,
+      aspectRatio: 2,
     };
   }
 

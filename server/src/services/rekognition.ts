@@ -31,7 +31,7 @@ export class RekognitionService {
       .flat()
       .filter((instance) => instance?.BoundingBox)
       .map((instance) => instance?.BoundingBox)
-      .pop(); // Assuming you want the first bounding box that matches the filter
+      .pop();
     if (boundingBox) {
       return {
         Left: boundingBox.Left ?? 0,
