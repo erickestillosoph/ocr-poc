@@ -5,7 +5,6 @@ import { useCallback, useState, useEffect } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { CenterSpinner } from "@/shared";
-import { useDetectDevice } from "@/shared/utils/use-detect-device";
 import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
 
 export type CameraAccessPageProps = {
@@ -18,12 +17,10 @@ export const CameraAccessPage = ({
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const isDesktop = window.innerWidth > 1024;
-  const device = useDetectDevice();
 
   const videoConstraints = {
-    width: device.width,
-    height: device.height,
-    aspectRatio: device.aspectRatio,
+    width: 400,
+    height: 650,
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
