@@ -16,11 +16,12 @@ export const CameraAccessPage = ({
 }: CameraAccessPageProps) => {
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const isDesktop = window.innerWidth > 1024;
+  const isDesktop = window.innerWidth < 1024;
 
   const videoConstraints = {
-    width: 400,
+    width: 350,
     height: 650,
+    aspectRatio: 0.615,
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
