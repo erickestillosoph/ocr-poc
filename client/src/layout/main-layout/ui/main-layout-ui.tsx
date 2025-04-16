@@ -9,7 +9,7 @@ type MainLayoutPageProps = {
 export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
   const { theme } = useAppTheme();
   return (
-    <VStack height="100svh" w="full" backgroundColor={theme.colors.white}>
+    <VStack height="full" w="full" backgroundColor={theme.colors.white}>
       <VStack
         alignItems="center"
         justifyContent="center"

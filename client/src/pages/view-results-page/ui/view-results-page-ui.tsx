@@ -105,7 +105,7 @@ export const ViewResultsPageUI = () => {
       w="full"
       mb="120px"
     >
-      <Spacer padding="30px" />
+      <Spacer padding="90px" />
       {/* {imageResults && titleCaption("Image Results", imageResultsArray)}
       {pdfResults && titleCaption("PDF Results", pdfResultsArray)}
       {cameraImageResults &&
