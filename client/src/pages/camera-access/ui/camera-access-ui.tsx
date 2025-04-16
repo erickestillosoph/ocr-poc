@@ -52,13 +52,14 @@ export const CameraAccessPage = ({
         <Box height="full" w="full">
           <Webcam
             audio={false}
-            height="100%"
             screenshotFormat="image/jpeg"
             width="100%"
             videoConstraints={videoConstraints}
             ref={webcamRef}
             allowFullScreen={true}
             style={{
+              height: isDesktop ? "100%" : "460px",
+              width: isDesktop ? "100%" : "300px",
               borderRadius: "20px",
               boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
             }}
