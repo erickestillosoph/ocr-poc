@@ -8,7 +8,7 @@ import {
 } from "../types/types.js";
 import { z } from "zod";
 
-const MAX_TOKENS = 2024;
+const MAX_TOKENS = 1024;
 const DEFAULT_TEMPERATURE = 0;
 // const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-opus-20240229";
 const DEFAULT_ANTHROPIC_MODEL_NAME = "claude-3-7-sonnet-20250219";
@@ -70,9 +70,7 @@ export class AnthropicService implements IAIService {
 
   async pdfToJSON<T>(
     pdfBase64: string,
-    prompt: string,
-    schema: z.ZodType<T>,
-    documentMediaType: DocumentMediaType
+    prompt: string
   ): Promise<LLMResponse<T>> {
     const msg = await this.aiService.messages.create({
       model: this.modelName,
@@ -80,6 +78,7 @@ export class AnthropicService implements IAIService {
       temperature: DEFAULT_TEMPERATURE,
       messages: [
         {
+          role: "user",
           content: [
             {
               type: "document",
@@ -95,12 +94,11 @@ export class AnthropicService implements IAIService {
               text: prompt,
             },
           ],
-          role: "user",
         },
       ],
     });
 
-    return this.formatResponse<T>(msg, schema);
+    return this.formatResponse<T>(msg);
   }
 
   async cameraImageToJSON<T>(
@@ -131,7 +129,6 @@ export class AnthropicService implements IAIService {
   async base64FileToJSON<T>(
     base64File: string,
     prompt: string,
-    schema: z.ZodType<T>,
     fileMediaType: FileMediaType
   ): Promise<LLMResponse<T>> {
     const msg = await this.aiService.messages.create({
@@ -161,7 +158,7 @@ export class AnthropicService implements IAIService {
       ],
     });
 
-    return this.formatResponse<T>(msg, schema);
+    return this.formatResponse<T>(msg);
   }
 
   async base64PDFToJSON<T>(
@@ -208,7 +205,7 @@ export class AnthropicService implements IAIService {
     throw new Error("No JSON object found in response");
   }
 
-  private formatResponse<T>(msg: any, schema: z.ZodType<T>): LLMResponse<T> {
+  private formatResponse<T>(msg: any, schema?: z.ZodType<T>): LLMResponse<T> {
     const content = msg.content[0];
     if (content.type !== "text") {
       throw new Error("Expected text content in the response");
@@ -226,7 +223,7 @@ export class AnthropicService implements IAIService {
       }
 
       try {
-        const result = schema.parse(jsonData);
+        const result = jsonData;
         return {
           result,
           id: msg.id,

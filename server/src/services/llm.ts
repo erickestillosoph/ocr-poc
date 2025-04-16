@@ -30,15 +30,9 @@ export class LLMService {
   async pdfToJSON<T>(
     pdfBase64: string,
     prompt: string,
-    schema: z.ZodType<T>,
     documentMediaType: DocumentMediaType = DocumentMediaType.PDF
   ) {
-    return this.aiService.pdfToJSON(
-      pdfBase64,
-      prompt,
-      schema,
-      documentMediaType
-    );
+    return this.aiService.pdfToJSON(pdfBase64, prompt, documentMediaType);
   }
 
   async cameraImageToJSON<T>(
@@ -55,14 +49,8 @@ export class LLMService {
   async base64FileToJSON<T>(
     base64File: string,
     prompt: string,
-    schema: z.ZodType<T>,
     fileMediaType: FileMediaType = FileMediaType.JPEG
   ) {
-    return this.aiService.base64FileToJSON(
-      base64File,
-      prompt,
-      schema,
-      fileMediaType
-    );
+    return this.aiService.base64FileToJSON(base64File, prompt, fileMediaType);
   }
 }

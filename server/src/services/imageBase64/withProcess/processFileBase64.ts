@@ -31,7 +31,7 @@ async function processFileBase64<T>(
       areaOfInterest,
       imageBuffer
     );
-    return llmService.base64FileToJSON<T>(processedImage, prompt, schema);
+    return llmService.base64FileToJSON<T>(processedImage, prompt);
   } catch (error) {
     console.error("Error detecting labels:", error);
   }

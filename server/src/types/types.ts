@@ -47,7 +47,6 @@ export type IAIService = {
   pdfToJSON<T>(
     pdfBase64: string,
     prompt: string,
-    schema: z.ZodType<T>,
     documentMediaType: DocumentMediaType
   ): Promise<LLMResponse<T>>;
 
@@ -60,7 +59,6 @@ export type IAIService = {
   base64FileToJSON<T>(
     base64File: string,
     prompt: string,
-    schema: z.ZodType<T>,
     fileMediaType: FileMediaType
   ): Promise<LLMResponse<T>>;
 };

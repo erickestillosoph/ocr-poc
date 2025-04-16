@@ -1,8 +1,6 @@
 import { createAIService } from "../../../factories/aiService.js";
 import { LLMService } from "../../llm.js";
 import { IAIService } from "../../../types/types.js";
-import { ExmaplePdfSchema } from "../pdfSchema.js";
-import { z } from "zod";
 import { simplePdfPrompt } from "../../../utils/prompts.js";
 const aiService: IAIService = createAIService();
 
@@ -18,11 +16,7 @@ export class PDFFeatureBase64DirectAi {
   static async base64DirectAi(fileBase64: string) {
     const pdfBase64 = fileBase64.toString().split(",")[1];
 
-    const output = llmService.pdfToJSON<z.infer<typeof ExmaplePdfSchema>>(
-      pdfBase64,
-      simplePdfPrompt,
-      ExmaplePdfSchema
-    );
+    const output = llmService.pdfToJSON(pdfBase64, simplePdfPrompt);
 
     return output;
   }

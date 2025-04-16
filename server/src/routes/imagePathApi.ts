@@ -26,6 +26,7 @@ API_PREFIXES.forEach((prefix) => {
         const imageMediaType = req;
         console.log("imageMediaType", imageMediaType);
 
+        // const result = await processImagePathBase64(base64Image);
         const result = await processImagePathBase64(base64Image);
 
         res.json({
