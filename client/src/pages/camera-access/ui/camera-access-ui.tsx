@@ -19,7 +19,7 @@ export const CameraAccessPage = ({
   const isDesktop = window.innerWidth > 1024;
 
   const videoConstraints = {
-    width: 350,
+    width: 400,
     height: 650,
     aspectRatio: 0.615,
     facingMode: isDesktop ? "user" : { exact: "environment" },
@@ -49,18 +49,20 @@ export const CameraAccessPage = ({
     <VStack height="full" w="full">
       <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
-        <Box height="full" w="full">
+        <Box height="100%" w="full">
           <Webcam
             audio={false}
+            height={isDesktop ? 400 : 680}
             screenshotFormat="image/jpeg"
-            width="100%"
+            width={isDesktop ? 400 : 350}
             videoConstraints={videoConstraints}
             ref={webcamRef}
             allowFullScreen={true}
             style={{
-              height: isDesktop ? "100%" : "460px",
-              width: isDesktop ? "100%" : "300px",
+              height: "486px",
+              width: "300px",
               borderRadius: "20px",
+              padding: "0px",
               boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
             }}
           ></Webcam>
