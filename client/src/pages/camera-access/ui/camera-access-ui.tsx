@@ -6,6 +6,7 @@ import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { CenterSpinner } from "@/shared";
 import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
+import { useDetectDevice } from "@/shared/utils/use-detect-device";
 
 export type CameraAccessPageProps = {
   isHandleCameraOpen: (isCameraOpen: boolean) => void;
@@ -17,12 +18,43 @@ export const CameraAccessPage = ({
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const isDesktop = window.innerWidth > 1024;
+  const device = useDetectDevice();
+  const hasDevice = !/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+  const shouldDimensionMobile = (
+    isWindowWidth: "desktop" | "mobile" | "user"
+  ) => {
+    if (isWindowWidth === "mobile") {
+      return {
+        width: 610,
+        height: 395,
+      };
+    }
+    if (isWindowWidth === "desktop") {
+      return {
+        width: 395,
+        height: 610,
+      };
+    }
+    return {
+      width: 610,
+      height: 395,
+    };
+  };
+  console.log(hasDevice);
   const videoConstraints = {
-    width: 350,
-    height: 650,
-    aspectRatio: 0.615,
-    facingMode: isDesktop ? "user" : { exact: "environment" },
+    width: hasDevice
+      ? shouldDimensionMobile("desktop").width
+      : !hasDevice
+      ? shouldDimensionMobile("mobile").width
+      : shouldDimensionMobile("user").width,
+    height: hasDevice
+      ? shouldDimensionMobile("desktop").height
+      : !hasDevice
+      ? shouldDimensionMobile("mobile").height
+      : shouldDimensionMobile("user").height,
+    aspectRatio: device.aspectRatio,
+    facingMode: isDesktop && hasDevice ? "user" : "environment",
   };
 
   const { capture, webcamRef, imageSrcInBase64 } = useCameraAccess();
@@ -46,10 +78,17 @@ export const CameraAccessPage = ({
   }, [mutate, openImageRef, imageSrcInBase64]);
 
   return (
-    <VStack height="full" w="full">
+    <VStack w="100%">
       <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
-        <Box height="full" w="full">
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          height="full"
+          w="full"
+        >
           <Webcam
             audio={false}
             screenshotFormat="image/jpeg"
@@ -86,7 +125,7 @@ export const CameraAccessPage = ({
         <Button
           color={theme.colors.white}
           backgroundColor={theme.colors.blue}
-          w="full"
+          w="fit-content"
           onClick={handleOpenCamera}
           _hover={{
             color: "blue.500",

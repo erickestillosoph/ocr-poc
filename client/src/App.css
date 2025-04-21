@@ -1,8 +1,7 @@
 #root {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  height: 100%;
 }
 
 .logo {
@@ -49,4 +48,60 @@ html {
 body {
   overflow: auto;
   height: 100%;
+  display: block;
+}
+
+/* RenderJson.module.css */
+.json-lines {
+  color: white !important; 
+  margin: 0;
+  line-height: 0.7 !important;
+  white-space: break-spaces !important;
+}
+.json-lines > li {
+  color: white !important; 
+  padding-left: 30px!important ;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+.json-mark {
+  color: white !important; 
+  line-height: 0 !important;
+}
+
+.json-key {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 0 !important;
+  color: #d53f8c !important; /* Chakra pink.500 */
+}
+
+.json-string {
+  line-height: 0 !important;
+  color: #38a169 !important; /* Chakra green.500 */
+}
+
+.json-number {
+  line-height: 0 !important;
+  color: #2b6cb0 !important; /* Chakra blue.500 */
+}
+
+.json-boolean {
+  line-height: 0 !important;
+  color: #d53f8c !important; /* Chakra pink.500 */
+}
+
+.json-null {
+  line-height: 0 !important;
+  color: #2b6cb0 !important; /* Chakra blue.500 */
+}
+
+.json-object {
+  line-height: 0 !important;
+  color: yellow !important; 
+}
+
+.json-array {
+  line-height: 0 !important;
+  color: #38a169 !important; /* Chakra green.500 */
 }
