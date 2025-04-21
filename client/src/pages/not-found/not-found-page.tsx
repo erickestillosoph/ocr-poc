@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 type Props = {
@@ -5,5 +6,14 @@ type Props = {
 };
 
 export const NotFoundPage = ({ stubSlot }: Props) => {
-  return stubSlot;
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+    >
+      {stubSlot}
+    </Box>
+  );
 };

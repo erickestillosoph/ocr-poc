@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useAppTheme } from "@/shared/theme";
-import { Button, Input, VStack } from "@chakra-ui/react";
+import { Button, Input, Box } from "@chakra-ui/react";
 import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
@@ -9,42 +9,36 @@ export const UploadPagePage = () => {
   const { theme } = useAppTheme();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const {
-    mutate: uploadImage,
-    isPending: isImagePending,
-  } = useImageMutation();
-  const {
-    mutate: uploadPDF,
-    isPending: isPDFPending,
-  } = usePdfMutation();
+  const { mutate: uploadImage, isPending: isImagePending } = useImageMutation();
+  const { mutate: uploadPDF, isPending: isPDFPending } = usePdfMutation();
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  const isPDF = file.type === "application/pdf" || file.name.endsWith(".pdf");
+    const isPDF = file.type === "application/pdf" || file.name.endsWith(".pdf");
 
-  if (isPDF) {
-    uploadPDF([file]);
-  } else {
-    uploadImage(file);
-  }
+    if (isPDF) {
+      uploadPDF([file]);
+    } else {
+      uploadImage(file);
+    }
 
-  event.target.value = "";
-};
-
+    event.target.value = "";
+  };
 
   return (
-    <VStack
-      display="grid"
+    <Box
       alignContent="space-between"
-      height="full"
       w="full"
       position="relative"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
     >
       <CenterSpinner loading={isImagePending || isPDFPending} />
 
@@ -60,7 +54,7 @@ export const UploadPagePage = () => {
         color={theme.colors.white}
         backgroundColor={theme.colors.blue}
         variant="solid"
-        w="full"
+        w="fit-content"
         zIndex="1"
         mt="12px"
         px="3"
@@ -73,6 +67,6 @@ export const UploadPagePage = () => {
       >
         ファイルを登録
       </Button>
-    </VStack>
+    </Box>
   );
 };
