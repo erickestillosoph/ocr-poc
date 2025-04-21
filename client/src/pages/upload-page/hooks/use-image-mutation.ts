@@ -22,19 +22,18 @@ export const useImageMutation = () => {
     data: imageData,
   } = useMutation({
     mutationFn: async (file: File) => {
+      // Convert the file to Base64
+      const base64File = await fileToBase64(file);
 
-  // Convert the file to Base64
-  const base64File = await fileToBase64(file);
-
-  return apiClient.post(IMAGE_PATH, {
-    image: base64File,  // Send the Base64-encoded image to the backend
-  });
-},
+      return apiClient.post(IMAGE_PATH, {
+        image: base64File, // Send the Base64-encoded image to the backend
+      });
+    },
 
     onSuccess: (data) => {
       setLocalStorage("imageResults", data.data);
       setLocalStorage("imageResultsTimestamp", Date.now());
-      setLocalStorage("lastUploadType", "image");
+
       toast({
         title: "Upload successful",
         description: `Your image has been uploaded successfully.`,
@@ -62,10 +61,10 @@ export const useImageMutation = () => {
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0]; // Get the first file, as there should only be one
-  
+
       // Proceed with the mutation
       mutateAsync(file);
-  
+
       toast({
         title: "File uploaded",
         description: file.name,
@@ -77,7 +76,6 @@ export const useImageMutation = () => {
     },
     [mutateAsync, toast]
   );
-  
 
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
@@ -102,4 +100,3 @@ export const useImageMutation = () => {
     imageResults: imageData?.data,
   };
 };
-
