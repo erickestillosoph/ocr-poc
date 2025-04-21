@@ -5,13 +5,14 @@ import { FaFilePdf, FaImage } from "react-icons/fa";
 
 import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
-import { CenterSpinner } from "@/shared";
+import { CenterSpinner, paths } from "@/shared";
+import { useNavigate } from "react-router-dom";
 
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
   const [showFileInput, setShowFileInput] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-
+  const navigate = useNavigate();
   const {
     getRootProps: getImageRootProps,
     getInputProps: getImageInputProps,
@@ -39,32 +40,8 @@ export const UploadPagePage = () => {
     setIsHidden(false);
   };
 
-  // useEffect(() => {
-  //   if (!isImagePending && imageResults) {
-  //     setLocalStorage("imageResults", imageResults);
-  //   }
-  //   if (!isPDFPending && pdfResults) {
-  //     setLocalStorage("pdfResults", pdfResults);
-  //   }
-  // }, [
-  //   imageResults,
-  //   pdfResults,
-  //   isImageSuccess,
-  //   isPDFSuccess,
-  //   isImageError,
-  //   isPDFError,
-  //   isImagePending,
-  //   isPDFPending,
-  // ]);
-
   return (
-    <VStack
-      display="grid"
-      alignContent="space-between"
-      height="full"
-      w="full"
-      position="relative"
-    >
+    <VStack px="16px" >
       <CenterSpinner loading={isImagePending || isPDFPending} />
 
       <VStack
@@ -74,30 +51,39 @@ export const UploadPagePage = () => {
         w="full"
         textAlign="center"
       >
-        <Button
-          color={theme.colors.white}
-          backgroundColor={theme.colors.blue}
-          variant="solid"
-          w="full"
+          <Button
+            color={theme.colors.white}
+            backgroundColor={theme.colors.blue}
+            w="full"
+            onClick={() => navigate(paths.cameraAccessUploadFile)}
+            _hover={{
+            color: "blue.500",
+            backgroundColor: "transparent",
+          }}
+          gap="8px"
+        >
+          写真を撮影
+        </Button>
+          <Button
+            color={theme.colors.white}
+            backgroundColor={theme.colors.blue}
+            variant="solid"
+            w="full"
           zIndex="1"
-          mt="12px"
-          px="3"
-          py="4"
           _hover={{
             color: "blue.500",
             backgroundColor: "transparent",
           }}
           onClick={() => toggleFileInput()}
         >
-          ファイルを登録
-        </Button>
+            ファイルを登録
+          </Button>
         {showFileInput && (
           <VStack
             position="absolute"
-            mt="4px"
+            mt="45px"
             height="fit-content"
-            backgroundColor={theme.colors.gray[50]}
-            borderRadius="md"
+            backgroundColor={theme.colors.white}
             w="200px"
             top="14"
             right="0"
@@ -121,7 +107,7 @@ export const UploadPagePage = () => {
               borderRadius="lg"
               textAlign="center"
               {...getPDFRootProps()}
-              cursor="pointer"
+              
             >
               <Input display="none" {...getPDFInputProps()} size="md" />
             </Box>

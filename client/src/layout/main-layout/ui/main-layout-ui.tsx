@@ -1,27 +1,35 @@
 import { BottomNavigatorContainer } from "@/layout/bottom-navigator";
+import { paths } from "@/shared";
 import { useAppTheme } from "@/shared/theme";
-import { VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 
 type MainLayoutPageProps = {
   children: React.ReactNode;
 };
 
+
 export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
   const { theme } = useAppTheme();
+  const location = useLocation();
+  const isBottomNavigatorShow = location.pathname !== paths.cameraAccessUploadFile;
   return (
-    <VStack height="full" w="full" backgroundColor={theme.colors.white}>
-      <VStack
-        alignItems="center"
-        justifyContent="center"
-        spacing="16px"
+    <Box
+      display="flex"
+      flexDirection="column"
+      w="100vw"
+      h="100svh"
+      backgroundColor={theme.colors.background}
+    >
+      <Box
+        flex="1"
         w="full"
         h="full"
-        position="relative"
-        backgroundColor={theme.colors.white}
+
       >
         {children}
-        <BottomNavigatorContainer />
-      </VStack>
-    </VStack>
+      </Box>
+      {isBottomNavigatorShow && <BottomNavigatorContainer  />}
+    </Box>
   );
 };
