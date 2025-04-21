@@ -66,7 +66,7 @@ API_PREFIXES.forEach((prefix) => {
         }
 
         // Set a longer timeout for the response
-        res.setTimeout(600000, () => {
+        res.setTimeout(7000, () => {
           console.log("Response timeout reached");
           // This will only execute if the response hasn't been sent yet
           if (!res.headersSent) {
@@ -127,7 +127,7 @@ router.post(
       }
 
       // Set a longer timeout for the response
-      res.setTimeout(600000, () => {
+      res.setTimeout(7000, () => {
         console.log("Response timeout reached");
         // This will only execute if the response hasn't been sent yet
         if (!res.headersSent) {

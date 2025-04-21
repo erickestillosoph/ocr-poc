@@ -5,7 +5,6 @@ import { useCallback, useState, useEffect } from "react";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { CenterSpinner } from "@/shared";
-import { useDetectDevice } from "@/shared/utils/use-detect-device";
 import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
 
 export type CameraAccessPageProps = {
@@ -18,16 +17,15 @@ export const CameraAccessPage = ({
   const { theme } = useAppTheme();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const isDesktop = window.innerWidth > 1024;
-  const device = useDetectDevice();
 
   const videoConstraints = {
-    width: device.width,
-    height: device.height,
-    aspectRatio: device.aspectRatio,
+    width: 350,
+    height: 650,
+    aspectRatio: 0.615,
     facingMode: isDesktop ? "user" : { exact: "environment" },
   };
 
-  const { capture, webcamRef, base64ToImageFile } = useCameraAccess();
+  const { capture, webcamRef, imageSrcInBase64 } = useCameraAccess();
   const {
     mutate,
     isPending: isCameraPending,
@@ -41,26 +39,27 @@ export const CameraAccessPage = ({
 
   useEffect(() => {
     openImageRef.current?.();
-    if (base64ToImageFile) {
-      mutate([base64ToImageFile]);
+    if (imageSrcInBase64) {
+      mutate([imageSrcInBase64]);
       setIsCameraOpen(false);
     }
-  }, [base64ToImageFile, mutate, openImageRef]);
+  }, [mutate, openImageRef, imageSrcInBase64]);
 
   return (
     <VStack height="full" w="full">
       <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
-        <Box>
+        <Box height="full" w="full">
           <Webcam
             audio={false}
-            height="100%"
             screenshotFormat="image/jpeg"
             width="100%"
             videoConstraints={videoConstraints}
             ref={webcamRef}
             allowFullScreen={true}
             style={{
+              height: isDesktop ? "100%" : "460px",
+              width: isDesktop ? "100%" : "300px",
               borderRadius: "20px",
               boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
             }}

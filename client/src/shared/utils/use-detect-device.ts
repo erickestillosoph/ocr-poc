@@ -12,35 +12,40 @@ export const useDetectDevice = (): DeviceInfo => {
     if (window.innerHeight === 844 || window.innerHeight === 852) {
       return {
         model: "iPhone 14/13/12",
-        width: window.innerWidth - 20,
-        height: 752,
-        aspectRatio: 0.5,
+        width: 300,
+        height: 600,
+        aspectRatio: 2,
       };
     }
     if (window.innerHeight === 926) {
       return {
         model: "iPhone 14/13/12 Pro Max",
-        width: window.innerWidth - 20,
-        height: 792,
-        aspectRatio: 0.5,
+        width: 300,
+        height: 600,
+        aspectRatio: 2,
       };
     }
     if (window.innerHeight === 812) {
       return {
         model: "iPhone 11",
-        width: window.innerWidth - 20,
-        height: 872,
-        aspectRatio: 0.5,
+        width: 300,
+        height: 600,
+        aspectRatio: 2,
       };
     }
-  }
-
-  if (userAgent.includes("pixel")) {
+  } else if (userAgent.includes("pixel")) {
     return {
       model: "Google Pixel",
-      width: window.innerWidth - 20,
-      height: Math.floor(window.innerWidth * 1.7),
-      aspectRatio: 0.47,
+      width: 300,
+      height: 600,
+      aspectRatio: 2,
+    };
+  } else if (userAgent.includes("galaxy")) {
+    return {
+      model: "Samsung Galaxy",
+      width: 300,
+      height: 600,
+      aspectRatio: 2,
     };
   }
 

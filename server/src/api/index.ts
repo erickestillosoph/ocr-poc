@@ -1,23 +1,22 @@
 import express from "express";
 import cors from "cors";
 import serverless from "serverless-http";
-import ImageFeature from "../services/image/imageFile.js";
+import ImageFeatureAsBase64 from "../services/imageBase64/withProcess/imageFileAsBase64.js";
 import PDFFeature from "../services/pdf/pdfFile.js";
-import CameraImageFeature from "../services/image/cameraImage.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import imageRoute from "../routes/imageRoute.js";
-import pdfRoute from "../routes/pdfRoute.js";
-import cameraImageRoute from "../routes/cameraImageRoute.js";
 import { API_PREFIXES, environment } from "../config/api-config.js";
 import {
   uploadsDir,
   initializeUploadDirectories,
 } from "../config/upload-config.js";
-
+import imagePathApi from "../routes/imagePathApi.js";
+import pdfPathApi from "../routes/pdfPathApi.js";
+import ImageFeatureBase64DirectAi from "../services/imageBase64/noProcess/imageBase64DirectAi.js";
+import PDFFeatureBase64DirectAi from "../services/pdf/noProcess/pdfBase64DirectAi.js";
 // Add timeout configuration
-const PROCESS_TIMEOUT = 25000;
+const PROCESS_TIMEOUT = 20000;
 
 console.log(`[Server] Running in ${environment} environment`);
 
@@ -65,9 +64,8 @@ export async function processImage(imageFile: Express.Multer.File) {
   });
 
   try {
-    // Race the processing against the timeout
     const result = (await Promise.race([
-      ImageFeature.imageFeature(filePath),
+      ImageFeatureAsBase64.imageFeature(filePath),
       timeoutPromise,
     ])) as { result?: any } | undefined;
     return result?.result;
@@ -77,6 +75,46 @@ export async function processImage(imageFile: Express.Multer.File) {
       throw new Error(
         "Processing timeout. The request is taking too long to complete."
       );
+    }
+    throw error;
+  }
+}
+
+export async function processImagePathBase64(imagePathBase64: string) {
+  if (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") {
+    console.log(
+      `Adjusting path for serverless environment: ${imagePathBase64}`
+    );
+  }
+
+  try {
+    const result = (await Promise.race([
+      ImageFeatureBase64DirectAi.imageBase64DirectAi(imagePathBase64),
+    ])) as { result?: any } | undefined;
+    return result?.result;
+  } catch (error) {
+    if (error as Error) {
+      console.error(error);
+      throw new Error(`${error}`);
+    }
+    throw error;
+  }
+}
+
+export async function processPDFPathBase64(pdfPathBase64: string) {
+  if (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") {
+    console.log(`Adjusting path for serverless environment: ${pdfPathBase64}`);
+  }
+
+  try {
+    const result = (await Promise.race([
+      PDFFeatureBase64DirectAi.base64DirectAi(pdfPathBase64),
+    ])) as { result?: any } | undefined;
+    return result?.result;
+  } catch (error) {
+    if (error as Error) {
+      console.error(error);
+      throw new Error(`${error}`);
     }
     throw error;
   }
@@ -127,24 +165,6 @@ export async function processPdf(pdfFile: Express.Multer.File) {
   } catch (error) {
     if ((error as Error).message === "Processing timeout exceeded") {
       console.error("PDF processing timeout exceeded");
-      throw new Error(
-        "Processing timeout. The request is taking too long to complete."
-      );
-    }
-    throw error;
-  }
-}
-
-export async function processCameraImage(cameraImageStringBase64: string) {
-  try {
-    // Race the processing against the timeout
-    const result = (await Promise.race([
-      CameraImageFeature.cameraImageFeature(cameraImageStringBase64),
-    ])) as { result?: any } | undefined;
-    return result?.result;
-  } catch (error) {
-    if ((error as Error).message === "Processing timeout exceeded") {
-      console.error("String base64 image processing timeout exceeded");
       throw new Error(
         "Processing timeout. The request is taking too long to complete."
       );
@@ -228,9 +248,8 @@ API_PREFIXES.forEach((prefix) => {
   });
 });
 
-app.use(imageRoute);
-app.use(cameraImageRoute);
-app.use(pdfRoute);
+app.use(imagePathApi);
+app.use(pdfPathApi);
 // Start server if not in production (serverless) environment
 if (process.env.NODE_ENV !== "production") {
   const port = process.env.PORT || 3000;

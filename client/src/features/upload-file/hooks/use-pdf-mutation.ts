@@ -5,6 +5,7 @@ import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths, setLocalStorage } from "@/shared";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
+import { fileToBase64 } from "./file-base-64";
 
 export const usePdfMutation = () => {
   const toast = useToast();
@@ -19,7 +20,7 @@ export const usePdfMutation = () => {
     isSuccess,
     data: pdfData,
   } = useMutation({
-    mutationFn: (files: File[]) => {
+    mutationFn: (files: string[]) => {
       const data = new FormData();
       files.forEach((file) => data.append("pdf", file));
       return apiClient.post(PDF_PATH, data);
@@ -52,7 +53,10 @@ export const usePdfMutation = () => {
   });
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
+      const base64Files = await Promise.all(
+        acceptedFiles.map((file) => fileToBase64(file))
+      );
       acceptedFiles.forEach((file) => {
         toast({
           title: "File uploaded",
@@ -64,7 +68,7 @@ export const usePdfMutation = () => {
         });
       });
 
-      mutateAsync(acceptedFiles);
+      mutateAsync(base64Files);
     },
     [toast, mutateAsync]
   );
