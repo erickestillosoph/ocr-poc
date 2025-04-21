@@ -1,4 +1,5 @@
 import { BottomNavigatorContainer } from "@/layout/bottom-navigator";
+import { Header } from "@/layout/header";
 import { paths } from "@/shared";
 import { useAppTheme } from "@/shared/theme";
 import { Box } from "@chakra-ui/react";
@@ -21,6 +22,7 @@ export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
       h="100svh"
       backgroundColor={theme.colors.background}
     >
+      <Header />
       <Box
         flex="1"
         w="full"
