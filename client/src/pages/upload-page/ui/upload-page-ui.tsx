@@ -39,46 +39,30 @@ export const UploadPagePage = () => {
     setIsHidden(false);
   };
 
-  // useEffect(() => {
-  //   if (!isImagePending && imageResults) {
-  //     setLocalStorage("imageResults", imageResults);
-  //   }
-  //   if (!isPDFPending && pdfResults) {
-  //     setLocalStorage("pdfResults", pdfResults);
-  //   }
-  // }, [
-  //   imageResults,
-  //   pdfResults,
-  //   isImageSuccess,
-  //   isPDFSuccess,
-  //   isImageError,
-  //   isPDFError,
-  //   isImagePending,
-  //   isPDFPending,
-  // ]);
-
   return (
-    <VStack
-      display="grid"
+    <Box
       alignContent="space-between"
-      height="full"
       w="full"
       position="relative"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
     >
       <CenterSpinner loading={isImagePending || isPDFPending} />
 
       <VStack
-        alignItems="flex-start"
+        alignItems="center"
         spacing="16px"
         position="relative"
         w="full"
+        height="full"
         textAlign="center"
       >
         <Button
           color={theme.colors.white}
           backgroundColor={theme.colors.blue}
           variant="solid"
-          w="full"
+          w="fit-content"
           zIndex="1"
           mt="12px"
           px="3"
@@ -163,6 +147,6 @@ export const UploadPagePage = () => {
           </VStack>
         )}
       </VStack>
-    </VStack>
+    </Box>
   );
 };

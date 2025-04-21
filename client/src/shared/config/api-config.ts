@@ -10,12 +10,15 @@ export const API_KEY = import.meta.env.VITE_API_KEY || "dev-api-key-1234";
 
 const isProduction = window.location.hostname !== "localhost";
 export const baseApiUrl = isProduction ? API_URL_PROD : API_URL;
+// export const baseApiUrl = API_URL;
 // export const baseApiVersion = isProduction ? "" : API_VERSION;
 
 export const apiClient = axios.create({
   headers: {
     "Content-Type": "multipart/form-data",
   },
+  maxContentLength: Infinity,
+  maxBodyLength: Infinity,
 });
 
 // apiClient.interceptors.request.use((config) => {

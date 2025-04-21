@@ -10,10 +10,13 @@ export const UploadCameraContainer = () => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
       width="100%"
       backgroundColor={theme.colors.white}
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
     >
       <CameraAccessContainer
         isHandleCameraOpen={(isCameraOpen) => setIsCameraOpen(isCameraOpen)}
