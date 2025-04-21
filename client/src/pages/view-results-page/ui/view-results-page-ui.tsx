@@ -8,6 +8,7 @@ export const ViewResultsPageUI = () => {
   const imageResults = getLocalStorage("imageResults");
   const pdfResults = getLocalStorage("pdfResults");
   const cameraImageResults = getLocalStorage("cameraImageResults");
+  const lastUploadType = getLocalStorage("lastUploadType");
 
   const imageResultsArray = JSON.stringify(imageResults, null, 1);
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
@@ -15,7 +16,7 @@ export const ViewResultsPageUI = () => {
 
   const allResults = useMemo(() => {
     const results = [];
-    if (imageResults) {
+    if (lastUploadType === "image" && imageResults) {
       results.push({
         title: "Image Results",
         data: imageResultsArray,
@@ -23,7 +24,7 @@ export const ViewResultsPageUI = () => {
           getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
       });
     }
-    if (pdfResults) {
+    if (lastUploadType === "pdf" && pdfResults) {
       results.push({
         title: "PDF Results",
         data: pdfResultsArray,
@@ -42,14 +43,7 @@ export const ViewResultsPageUI = () => {
     }
 
     return results.sort((a, b) => b.timestamp - a.timestamp);
-  }, [
-    imageResults,
-    pdfResults,
-    cameraImageResults,
-    imageResultsArray,
-    pdfResultsArray,
-    cameraImageResultsArray,
-  ]);
+  }, [lastUploadType, imageResults, pdfResults, cameraImageResults, imageResultsArray, pdfResultsArray, cameraImageResultsArray]);
 
   const titleCaption = (title: string, json: string) => {
     return (

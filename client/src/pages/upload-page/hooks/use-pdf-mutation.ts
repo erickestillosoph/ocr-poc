@@ -20,14 +20,19 @@ export const usePdfMutation = () => {
     isSuccess,
     data: pdfData,
   } = useMutation({
-    mutationFn: (files: string[]) => {
-      const data = new FormData();
-      files.forEach((file) => data.append("pdf", file));
-      return apiClient.post(PDF_PATH, data);
+    mutationFn: async (files: File[]) => {
+      const base64Files = await Promise.all(
+        files.map((file) => fileToBase64(file))
+      );
+    
+      return apiClient.post(PDF_PATH, {
+        pdf: base64Files[0],
+      });
     },
     onSuccess: (data) => {
       setLocalStorage("pdfResults", data.data);
       setLocalStorage("pdfResultsTimestamp", Date.now());
+      setLocalStorage("lastUploadType", "pdf");
       toast({
         title: "Upload successful",
         description: `Your pdf has been uploaded successfully.`,
@@ -54,9 +59,6 @@ export const usePdfMutation = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      const base64Files = await Promise.all(
-        acceptedFiles.map((file) => fileToBase64(file))
-      );
       acceptedFiles.forEach((file) => {
         toast({
           title: "File uploaded",
@@ -67,11 +69,11 @@ export const usePdfMutation = () => {
           position: "top",
         });
       });
-
-      mutateAsync(base64Files);
+  
+      mutateAsync(acceptedFiles); 
     },
     [toast, mutateAsync]
-  );
+  );  
 
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
