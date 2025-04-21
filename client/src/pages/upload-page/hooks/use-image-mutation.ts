@@ -6,6 +6,7 @@ import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
 import { fileToBase64 } from "./file-base-64";
+
 export const useImageMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -20,14 +21,19 @@ export const useImageMutation = () => {
     isSuccess,
     data: imageData,
   } = useMutation({
-    mutationFn: (files: string[]) => {
-      const data = new FormData();
-      files.forEach((file) => data.append("image", file));
-      return apiClient.post(IMAGE_PATH, data);
+    mutationFn: async (file: File) => {
+      // Convert the file to Base64
+      const base64File = await fileToBase64(file);
+
+      return apiClient.post(IMAGE_PATH, {
+        image: base64File, // Send the Base64-encoded image to the backend
+      });
     },
+
     onSuccess: (data) => {
       setLocalStorage("imageResults", data.data);
       setLocalStorage("imageResultsTimestamp", Date.now());
+
       toast({
         title: "Upload successful",
         description: `Your image has been uploaded successfully.`,
@@ -54,23 +60,21 @@ export const useImageMutation = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      const base64Files = await Promise.all(
-        acceptedFiles.map((file) => fileToBase64(file))
-      );
-      acceptedFiles.forEach((file) => {
-        toast({
-          title: "File uploaded",
-          description: file.name,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-      });
+      const file = acceptedFiles[0]; // Get the first file, as there should only be one
 
-      mutateAsync(base64Files);
+      // Proceed with the mutation
+      mutateAsync(file);
+
+      toast({
+        title: "File uploaded",
+        description: file.name,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
     },
-    [toast, mutateAsync]
+    [mutateAsync, toast]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
