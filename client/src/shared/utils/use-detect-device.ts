@@ -50,7 +50,7 @@ export const useDetectDevice = (): DeviceInfo => {
   }
 
   return {
-    model: "iPhone 11",
+    model: "Unknown",
     width: 610,
     height: 395,
     aspectRatio: 0.1,

@@ -19,12 +19,42 @@ export const CameraAccessPage = ({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const isDesktop = window.innerWidth > 1024;
   const device = useDetectDevice();
+  const hasDevice = !/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+  const shouldDimensionMobile = (
+    isWindowWidth: "desktop" | "mobile" | "user"
+  ) => {
+    if (isWindowWidth === "mobile") {
+      return {
+        width: 610,
+        height: 395,
+      };
+    }
+    if (isWindowWidth === "desktop") {
+      return {
+        width: 395,
+        height: 610,
+      };
+    }
+    return {
+      width: 610,
+      height: 395,
+    };
+  };
+  console.log(hasDevice);
   const videoConstraints = {
-    width: device.width,
-    height: device.height,
+    width: hasDevice
+      ? shouldDimensionMobile("desktop").width
+      : !hasDevice
+      ? shouldDimensionMobile("mobile").width
+      : shouldDimensionMobile("user").width,
+    height: hasDevice
+      ? shouldDimensionMobile("desktop").height
+      : !hasDevice
+      ? shouldDimensionMobile("mobile").height
+      : shouldDimensionMobile("user").height,
     aspectRatio: device.aspectRatio,
-    facingMode: isDesktop ? "user" : "environment",
+    facingMode: isDesktop && hasDevice ? "user" : "environment",
   };
 
   const { capture, webcamRef, imageSrcInBase64 } = useCameraAccess();
