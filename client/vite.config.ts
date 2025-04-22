@@ -5,9 +5,28 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// const API_URL_NETWORK =
+//   process.env.VITE_API_URL_NETWORK || "https://8ead45c93317d7.lhr.life";
+// const API_URL_LOCAL = process.env.VITE_API_URL_LOCAL || "";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: true,
+    allowedHosts: [".lhr.life", "localhost", "*"],
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "Access-Control-Allow-Origin",
+        "Accept",
+      ],
+      credentials: false,
+    },
+  },
   base: "/",
   build: {
     outDir: "./dist",

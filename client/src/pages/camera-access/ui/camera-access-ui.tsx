@@ -8,7 +8,6 @@ import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
 
 export const CameraAccessPage = () => {
   const isDesktop = window.innerWidth > 1024;
-
   const videoConstraints = {
     width: 350,
     height: 650,
@@ -70,7 +69,7 @@ export const CameraAccessPage = () => {
   >
     <IoMdCamera size="36px" color="black" />
   </Box>
-</VStack>
+  </VStack>
 
   )  
 };

@@ -42,7 +42,7 @@ export const useImageCaptureMutation = () => {
         position: "top",
       });
     },
-    mutationKey: ["image"],
+    mutationKey: ["captureImage"],
   });
 
   return {
