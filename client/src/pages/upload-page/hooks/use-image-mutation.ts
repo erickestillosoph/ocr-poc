@@ -47,8 +47,8 @@ export const useImageMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "「画像のアップロード中にエラーが発生しました。」",
-        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
+        title: "エラー",
+        description: `アップロードに失敗しました.`,
         status: "error",
         duration: 3000,
         isClosable: true,

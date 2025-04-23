@@ -34,8 +34,8 @@ export const useImageCaptureMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your image.`,
+        title: "エラー",
+        description: `アップロードに失敗しました.`,
         status: "error",
         duration: 3000,
         isClosable: true,
