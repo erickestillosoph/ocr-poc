@@ -1,6 +1,5 @@
 import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
-import { AiOutlineFileSearch } from "react-icons/ai";
-import { FaRegCircleUser } from "react-icons/fa6";
+import { AiOutlineFileSearch, AiOutlineFileDone } from "react-icons/ai";
 export const driverNavigationItems = [
   {
     label: PAGE_BOTTOM_TITLES.UPLOAD,
@@ -10,6 +9,6 @@ export const driverNavigationItems = [
   {
     label: PAGE_BOTTOM_TITLES.MY_PAGE,
     path: paths.viewResultsPage,
-    icon: FaRegCircleUser,
+    icon: AiOutlineFileDone,
   },
 ];
