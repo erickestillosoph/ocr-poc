@@ -14,7 +14,7 @@ export const CenterSpinner = ({ loading }: Props) => {
     >
       <ModalOverlay zIndex={2000}>
         <Flex height="100svh" justifyContent="center" alignItems="center" flexDirection="column" gap={4}>
-          <Text>
+          <Text fontSize="xs" bg="white" color="blue.500" p="4px 8px" borderRadius="4px" >
             読み取り中です (10秒程度かかります)
           </Text>
           <Spinner
