@@ -27,7 +27,7 @@ export const ViewResultsPageUI = () => {
     }
     if (pdfResults) {
       results.push({
-        title: "PDF Results",
+        title: "読み取り結果",
         data: pdfResultsArray,
         timestamp:
           getLocalStorage("pdfResultsTimestamp") || new Date().getTime(),
