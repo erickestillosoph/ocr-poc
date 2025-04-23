@@ -5,6 +5,8 @@ import { useImageMutation } from "../hooks/use-image-mutation";
 import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
 
+//TODO: add a timer to the upload page
+
 export const UploadPagePage = () => {
   const { theme } = useAppTheme();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -39,6 +41,8 @@ export const UploadPagePage = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
+      px="16px"
+
     >
       <CenterSpinner loading={isImagePending || isPDFPending} />
 
@@ -54,7 +58,7 @@ export const UploadPagePage = () => {
         color={theme.colors.white}
         backgroundColor={theme.colors.blue}
         variant="solid"
-        w="fit-content"
+        w="full"
         zIndex="1"
         mt="12px"
         px="3"

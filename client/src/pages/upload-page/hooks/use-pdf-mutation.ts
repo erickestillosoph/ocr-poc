@@ -34,7 +34,7 @@ export const usePdfMutation = () => {
       setLocalStorage("pdfResultsTimestamp", Date.now());
 
       toast({
-        title: "Upload successful",
+        title: "アップロード成功.",
         description: `Your pdf has been uploaded successfully.`,
         status: "success",
         isClosable: true,
@@ -61,7 +61,7 @@ export const usePdfMutation = () => {
     async (acceptedFiles: File[]) => {
       acceptedFiles.forEach((file) => {
         toast({
-          title: "File uploaded",
+          title: "アップロード成功.",
           description: file.name,
           status: "success",
           duration: 3000,
