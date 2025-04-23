@@ -10,9 +10,9 @@ export const UploadCameraContainer = () => {
 
   return (
     <Box
-      width="100%"
+      w="100%"
+      h="100%"
       backgroundColor={theme.colors.white}
-      height="100%"
       display="flex"
       flexDirection="column"
       alignItems="center"
