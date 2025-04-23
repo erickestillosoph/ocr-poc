@@ -26,7 +26,7 @@ export const useImageMutation = () => {
       const base64File = await fileToBase64(file);
 
       return apiClient.post(IMAGE_PATH, {
-        image: base64File, // Send the Base64-encoded image to the backend
+        image: base64File,
       });
     },
 
@@ -36,7 +36,7 @@ export const useImageMutation = () => {
 
       toast({
         title: "アップロード成功.",
-        description: `Your image has been uploaded successfully.`,
+        description: `「お客様の画像が正常にアップロードされました。」`,
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -47,8 +47,8 @@ export const useImageMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your image.`,
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
         status: "error",
         duration: 3000,
         isClosable: true,
