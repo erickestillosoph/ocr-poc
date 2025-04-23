@@ -19,7 +19,7 @@ export const ViewResultsPageUI = () => {
     const results = [];
     if (imageResults) {
       results.push({
-        title: "「画像の結果」",
+        title: "読み取り結果",
         data: imageResultsArray,
         timestamp:
           getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
@@ -35,7 +35,7 @@ export const ViewResultsPageUI = () => {
     }
     if (cameraImageResults) {
       results.push({
-        title: "「カメラ画像の結果」",
+        title: "読み取り結果",
         data: cameraImageResultsArray,
         timestamp:
           getLocalStorage("cameraImageResultsTimestamp") ||

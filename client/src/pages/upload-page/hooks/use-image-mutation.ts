@@ -35,8 +35,8 @@ export const useImageMutation = () => {
       setLocalStorage("imageResultsTimestamp", Date.now());
 
       toast({
-        title: "アップロード成功.",
-        description: `「お客様の画像が正常にアップロードされました。」`,
+        title: "成功",
+        description: "正常にアップロードされました",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -66,8 +66,8 @@ export const useImageMutation = () => {
       mutateAsync(file);
 
       toast({
-        title: "アップロード成功.",
-        description: file.name,
+        title: "成功",
+        description: "正常にアップロードされました",
         status: "success",
         duration: 3000,
         isClosable: true,
