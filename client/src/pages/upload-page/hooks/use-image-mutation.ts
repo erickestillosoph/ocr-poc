@@ -35,7 +35,7 @@ export const useImageMutation = () => {
       setLocalStorage("imageResultsTimestamp", Date.now());
 
       toast({
-        title: "Upload successful",
+        title: "アップロード成功.",
         description: `Your image has been uploaded successfully.`,
         status: "success",
         duration: 3000,
@@ -66,7 +66,7 @@ export const useImageMutation = () => {
       mutateAsync(file);
 
       toast({
-        title: "File uploaded",
+        title: "アップロード成功.",
         description: file.name,
         status: "success",
         duration: 3000,

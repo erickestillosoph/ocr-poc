@@ -22,7 +22,7 @@ export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        w="full"
+        w="100%"
         h="100%"
         position="relative"
         backgroundColor={theme.colors.white}

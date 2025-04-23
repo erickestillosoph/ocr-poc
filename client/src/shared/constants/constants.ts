@@ -1,6 +1,4 @@
 export const PAGE_BOTTOM_TITLES = {
-  SEARCH: "さがす",
-  HOME: "ホーム",
-  PEOPLE: "ユーザー",
-  USER: "マイページ",
+  UPLOAD: "アップロード",
+  MY_PAGE: "結果",
 };

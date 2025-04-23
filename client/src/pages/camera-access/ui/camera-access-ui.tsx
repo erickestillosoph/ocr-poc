@@ -78,7 +78,7 @@ export const CameraAccessPage = ({
   }, [mutate, openImageRef, imageSrcInBase64]);
 
   return (
-    <VStack w="100%">
+    <VStack w="100%" >
       <CenterSpinner loading={isCameraPending} />
       {isCameraOpen ? (
         <Box
@@ -92,7 +92,6 @@ export const CameraAccessPage = ({
           <Webcam
             audio={false}
             screenshotFormat="image/jpeg"
-            width="100%"
             videoConstraints={videoConstraints}
             ref={webcamRef}
             allowFullScreen={true}
@@ -122,19 +121,21 @@ export const CameraAccessPage = ({
           </Box>
         </Box>
       ) : (
-        <Button
-          color={theme.colors.white}
-          backgroundColor={theme.colors.blue}
-          w="fit-content"
-          onClick={handleOpenCamera}
+        <Box px="16px" w="full">
+          <Button
+            w="full"
+            color={theme.colors.white}
+            backgroundColor={theme.colors.blue}
+            onClick={handleOpenCamera}
           _hover={{
             color: "blue.500",
             backgroundColor: "transparent",
           }}
           gap="8px"
         >
-          写真を撮影
-        </Button>
+            写真を撮影
+          </Button>
+        </Box>
       )}
     </VStack>
   );

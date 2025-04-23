@@ -1,20 +1,15 @@
-import { FaRegUser, FaUsers, FaRegFile } from "react-icons/fa6";
 import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
-
+import { AiOutlineFileSearch } from "react-icons/ai";
+import { FaRegCircleUser } from "react-icons/fa6";
 export const driverNavigationItems = [
   {
-    label: PAGE_BOTTOM_TITLES.HOME,
+    label: PAGE_BOTTOM_TITLES.UPLOAD,
     path: paths.cameraAccessUploadFile,
-    icon: FaRegFile,
+    icon: AiOutlineFileSearch,
   },
   {
-    label: PAGE_BOTTOM_TITLES.SEARCH,
-    path: paths.search,
-    icon: FaUsers,
-  },
-  {
-    label: PAGE_BOTTOM_TITLES.USER,
+    label: PAGE_BOTTOM_TITLES.MY_PAGE,
     path: paths.viewResultsPage,
-    icon: FaRegUser,
+    icon: FaRegCircleUser,
   },
 ];

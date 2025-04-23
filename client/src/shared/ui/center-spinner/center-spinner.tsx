@@ -1,4 +1,4 @@
-import { Flex, Modal, ModalOverlay, Spinner } from "@chakra-ui/react";
+import { Flex, Modal, ModalOverlay, Spinner, Text } from "@chakra-ui/react";
 
 type Props = {
   loading: boolean;
@@ -13,7 +13,10 @@ export const CenterSpinner = ({ loading }: Props) => {
       size="xl"
     >
       <ModalOverlay zIndex={2000}>
-        <Flex height="100svh" justifyContent="center" alignItems="center">
+        <Flex height="100svh" justifyContent="center" alignItems="center" flexDirection="column" gap={4}>
+          <Text>
+            読み取り中です (10秒程度かかります)
+          </Text>
           <Spinner
             thickness="4px"
             size="xl"
