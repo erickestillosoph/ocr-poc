@@ -1,142 +1,59 @@
 import { Box, Button, VStack } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
-import Webcam from "react-webcam";
-import { useCallback, useState, useEffect } from "react";
-import { useCameraAccess } from "../hooks/use-camera-access";
-import { IoMdCamera } from "react-icons/io";
+import { useCallback } from "react";
 import { CenterSpinner } from "@/shared";
 import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
-import { useDetectDevice } from "@/shared/utils/use-detect-device";
 
-export type CameraAccessPageProps = {
-  isHandleCameraOpen: (isCameraOpen: boolean) => void;
-};
 
-export const CameraAccessPage = ({
-  isHandleCameraOpen,
-}: CameraAccessPageProps) => {
+
+export const CameraAccessPage = () => {
   const { theme } = useAppTheme();
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const isDesktop = window.innerWidth > 1024;
-  const device = useDetectDevice();
-  const hasDevice = !/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  const shouldDimensionMobile = (
-    isWindowWidth: "desktop" | "mobile" | "user"
-  ) => {
-    if (isWindowWidth === "mobile") {
-      return {
-        width: 610,
-        height: 395,
-      };
-    }
-    if (isWindowWidth === "desktop") {
-      return {
-        width: 395,
-        height: 610,
-      };
-    }
-    return {
-      width: 610,
-      height: 395,
-    };
-  };
-  console.log(hasDevice);
-  const videoConstraints = {
-    width: hasDevice
-      ? shouldDimensionMobile("desktop").width
-      : !hasDevice
-      ? shouldDimensionMobile("mobile").width
-      : shouldDimensionMobile("user").width,
-    height: hasDevice
-      ? shouldDimensionMobile("desktop").height
-      : !hasDevice
-      ? shouldDimensionMobile("mobile").height
-      : shouldDimensionMobile("user").height,
-    aspectRatio: device.aspectRatio,
-    facingMode: isDesktop && hasDevice ? "user" : "environment",
-  };
-
-  const { capture, webcamRef, imageSrcInBase64 } = useCameraAccess();
   const {
     mutate,
     isPending: isCameraPending,
-    openImageRef,
   } = useImageCaptureMutation();
 
   const handleOpenCamera = useCallback(() => {
-    setIsCameraOpen(true);
-    isHandleCameraOpen(true);
-  }, [isHandleCameraOpen, setIsCameraOpen]);
-
-  useEffect(() => {
-    openImageRef.current?.();
-    if (imageSrcInBase64) {
-      mutate([imageSrcInBase64]);
-      setIsCameraOpen(false);
-    }
-  }, [mutate, openImageRef, imageSrcInBase64]);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.capture = 'environment';
+    
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64 = event.target?.result as string;
+          if (base64) {
+            mutate([base64]);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    
+    input.click();
+  }, [mutate]);
 
   return (
-    <VStack w="100%" >
+    <VStack w="100%">
       <CenterSpinner loading={isCameraPending} />
-      {isCameraOpen ? (
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          height="full"
+      <Box px="16px" w="full">
+        <Button
           w="full"
-        >
-          <Webcam
-            audio={false}
-            screenshotFormat="image/jpeg"
-            videoConstraints={videoConstraints}
-            ref={webcamRef}
-            allowFullScreen={true}
-            style={{
-              height: isDesktop ? "100%" : "460px",
-              width: isDesktop ? "100%" : "300px",
-              borderRadius: "20px",
-              boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.1)",
-            }}
-          ></Webcam>
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <Box
-              cursor="pointer"
-              borderRadius="full"
-              mt="16px"
-              bottom="24px"
-              bgColor="white"
-              p="16px"
-              onClick={capture}
-              _hover={{
-                backgroundColor: "gray.100",
-              }}
-              transition="ease .3s"
-            >
-              <IoMdCamera size="36px" color="black" />
-            </Box>
-          </Box>
-        </Box>
-      ) : (
-        <Box px="16px" w="full">
-          <Button
-            w="full"
-            color={theme.colors.white}
-            backgroundColor={theme.colors.blue}
-            onClick={handleOpenCamera}
+          color={theme.colors.white}
+          backgroundColor={theme.colors.blue}
+          onClick={handleOpenCamera}
           _hover={{
             color: "blue.500",
             backgroundColor: "transparent",
           }}
           gap="8px"
         >
-            写真を撮影
-          </Button>
-        </Box>
-      )}
+          写真を撮影
+        </Button>
+      </Box>
     </VStack>
   );
 };
