@@ -3,6 +3,11 @@ client-start:
 	@echo "🌱 Starting client..."
 	cd client && npm run dev:start
 
+.PHONY: mobile-test	
+mobile-test:
+	@echo "🌱 Starting client..."
+	cd client && npm run dev:mobile:network
+
 .PHONY: server-start
 server-start:
 	@echo "🌱 Starting server..."

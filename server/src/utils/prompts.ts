@@ -1,7 +1,15 @@
 export const simpleImagePrompt =
-  "添付ファイルは日本語で構成された請求書データです。" +
-  "他システムと連携するためのテキストデータを正確に抽出し、JSON形式で出力してください。" +
-  "読み取りが難しいものについては、自動補正は行わないようにお願いします。";
+  "<instructions>" +
+  "添付画像の請求書データからすべての情報を抽出し、JSONフォーマットのみで返答してください。" +
+  "説明文や補足は一切含めないでください。" +
+  "読み取れない情報は空欄のままにし、推測による補完は行わないでください。" +
+  "</instructions>" +
+  "<output_format>" +
+  "JSON形式でのみ返答してください。他の文章は一切含めないでください。" +
+  "</output_format>" +
+  "<example>" +
+  "{'請求書情報': { // 抽出されたデータ }}" +
+  "</example>";
 
 export const complexImagePrompt =
   "SYSTEM: You are a receipt parser that ONLY outputs valid JSON.  If you cannot parse the receipt completely, still return a valid JSON with the fields you can identify.\n\n" +

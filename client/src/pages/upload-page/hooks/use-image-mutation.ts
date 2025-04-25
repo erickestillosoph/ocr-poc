@@ -5,7 +5,7 @@ import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
-import { fileToBase64 } from "./file-base-64";
+import { fileToBase64 } from "@/shared";
 
 export const useImageMutation = () => {
   const toast = useToast();
