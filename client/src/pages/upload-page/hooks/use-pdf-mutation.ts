@@ -35,8 +35,8 @@ export const usePdfMutation = () => {
 
       toast({
         title: "アップロード成功.",
-        description: `Your pdf has been uploaded successfully.`,
         status: "success",
+        description: `「PDFのアップロードが成功しました。」`,
         isClosable: true,
         position: "top",
       });
@@ -45,8 +45,8 @@ export const usePdfMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your pdf.`,
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様のPDFのアップロード中にエラーが発生いたしました。」`,
         status: "error",
         duration: 3000,
         isClosable: true,

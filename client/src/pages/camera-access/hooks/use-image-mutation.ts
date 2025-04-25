@@ -43,10 +43,10 @@ export const useImageMutation = () => {
 
       navigate(paths.viewResultsPage);
     },
-    onError: (error) => {
+    onError: () => {
       toast({
-        title: `「画像のアップロード中にエラーが発生しました。`,
-        description: `${error.message} ${error.stack} ${error.name}`,
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
         status: "error",
         duration: Infinity,
         isClosable: true,
@@ -73,8 +73,8 @@ export const useImageMutation = () => {
     maxSize: 1024 * 1024 * 5,
     onDropRejected: () => {
       toast({
-        title: "画像のアップロードに失敗しました。",
-        description: "画像のサイズが大きすぎるか、形式が正しくありません。",
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
         status: "error",
         duration: 3000,
       });

@@ -19,7 +19,7 @@ export const ViewResultsPageUI = () => {
     const results = [];
     if (imageResults) {
       results.push({
-        title: "画像結果",
+        title: "「画像の結果」",
         data: imageResultsArray,
         timestamp:
           getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
@@ -35,7 +35,7 @@ export const ViewResultsPageUI = () => {
     }
     if (cameraImageResults) {
       results.push({
-        title: "カメラ画像の結果",
+        title: "「カメラ画像の結果」",
         data: cameraImageResultsArray,
         timestamp:
           getLocalStorage("cameraImageResultsTimestamp") ||
@@ -106,7 +106,7 @@ export const ViewResultsPageUI = () => {
             fontSize="10px"
             color={isCurrent ? theme.colors.green[500] : theme.colors.red[500]}
           >
-            {isCurrent ? "現在" : "前の"}
+            {isCurrent ? "現在" : "以前の"}
           </Text>
         </Box>
         <Box
