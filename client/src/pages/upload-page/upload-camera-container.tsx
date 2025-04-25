@@ -19,9 +19,10 @@ export const UploadCameraContainer = () => {
       justifyContent="center"
     >
       <CameraAccessContainer
+        isImageCapture={isCameraOpen}
         isHandleCameraOpen={(isCameraOpen) => setIsCameraOpen(isCameraOpen)}
       />
-      {!isCameraOpen && <UploadPageContainer />}
+      <UploadPageContainer />
     </Box>
   );
 };
