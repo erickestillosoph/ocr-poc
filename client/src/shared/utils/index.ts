@@ -3,3 +3,4 @@ export * from "./use-native-camera";
 export * from "./use-detect-device";
 export * from "./use-compression-data";
 export * from "./file-base-64";
+export * from "./base-64-image";

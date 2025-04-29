@@ -9,6 +9,7 @@ import {
 import { NotFoundGuard } from "./not-found-guard";
 import { paths } from "@/shared";
 import { FileUploadContainer } from "@/components/upload-file/file-upload-container";
+import { UploadCameraDifyContainer } from "@/pages/upload-page-dify";
 
 export const routes: RouteObject[] = [
   {
@@ -27,6 +28,10 @@ export const routes: RouteObject[] = [
           {
             element: <UploadPageContainer />,
             path: paths.uploadPage,
+          },
+          {
+            element: <UploadCameraDifyContainer />,
+            path: paths.cameraAccessUploadFileDify,
           },
           {
             element: <ViewResultsPageContainer />,
