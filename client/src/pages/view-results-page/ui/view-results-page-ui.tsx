@@ -12,14 +12,25 @@ export const ViewResultsPageUI = () => {
   const cameraImageResults = getLocalStorage("cameraImageResults");
   const pdfResultsDify = getLocalStorage("pdfResultsDify");
   const imageResultsDify = getLocalStorage("imageResultsDify");
-  const cameraImageResultsDify = getLocalStorage("cameraImageResultsDify");
+
+  const cameraImageDesktopResultsDify = getLocalStorage(
+    "cameraImageDesktopResultsDify"
+  );
+  const cameraImageMobileResultsDify = getLocalStorage(
+    "cameraImageMobileResultsDify"
+  );
 
   const imageResultsArray = JSON.stringify(imageResults, null, 1);
   const imageResultsArrayDify = imageResultsDify?.outputs.response;
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
   const pdfResultsArrayDify = pdfResultsDify?.outputs.response;
   const cameraImageResultsArray = JSON.stringify(cameraImageResults, null, 1);
-  const cameraImageResultsArrayDify = cameraImageResultsDify?.outputs.response;
+
+  const cameraImageDesktopResultsArrayDify =
+    cameraImageDesktopResultsDify?.outputs.response;
+  const cameraImageMobileResultsArrayDify =
+    cameraImageMobileResultsDify?.outputs.response;
+
   const copyImageResults = () =>
     navigator.clipboard.writeText(imageResultsArray);
   const copyPdfResults = () => navigator.clipboard.writeText(pdfResultsArray);
@@ -27,10 +38,12 @@ export const ViewResultsPageUI = () => {
     navigator.clipboard.writeText(cameraImageResultsArray);
   const copyPdfResultsDify = () =>
     navigator.clipboard.writeText(pdfResultsArrayDify);
-  const copyCameraImageResultsDify = () =>
-    navigator.clipboard.writeText(cameraImageResultsArrayDify);
   const copyImageResultsDify = () =>
     navigator.clipboard.writeText(imageResultsArrayDify);
+  const copyCameraImageDesktopResultsDify = () =>
+    navigator.clipboard.writeText(cameraImageDesktopResultsArrayDify);
+  const copyCameraImageMobileResultsDify = () =>
+    navigator.clipboard.writeText(cameraImageMobileResultsArrayDify);
 
   const innerWidth = window.innerWidth;
   const isDesktop = window.innerWidth > 1024;
@@ -76,16 +89,23 @@ export const ViewResultsPageUI = () => {
           new Date().getTime(),
       });
     }
-    if (cameraImageResultsDify) {
+
+    if (cameraImageDesktopResultsDify) {
       results.push({
         title: "「カメラ画像の結果」 Dify",
-        data: cameraImageResultsArrayDify,
-        isDify: getLocalStorage("cameraImageResultsTimestampDify")
+        data: cameraImageDesktopResultsArrayDify,
+        isDify: getLocalStorage("cameraImageDesktopResultsTimestampDify")
           ? true
           : false,
-        timestamp:
-          getLocalStorage("cameraImageResultsTimestampDify") ||
-          new Date().getTime(),
+      });
+    }
+    if (cameraImageMobileResultsDify) {
+      results.push({
+        title: "「カメラ画像の結果」 Dify",
+        data: cameraImageMobileResultsArrayDify,
+        isDify: getLocalStorage("cameraImageMobileResultsTimestampDify")
+          ? true
+          : false,
       });
     }
     if (imageResultsDify) {
@@ -101,9 +121,7 @@ export const ViewResultsPageUI = () => {
     return results.sort((a, b) => b.timestamp - a.timestamp);
   }, [
     imageResultsDify,
-    cameraImageResultsDify,
     imageResultsArrayDify,
-    cameraImageResultsArrayDify,
     imageResults,
     pdfResults,
     cameraImageResults,
@@ -112,6 +130,10 @@ export const ViewResultsPageUI = () => {
     cameraImageResultsArray,
     pdfResultsArrayDify,
     pdfResultsDify,
+    cameraImageDesktopResultsDify,
+    cameraImageMobileResultsDify,
+    cameraImageDesktopResultsArrayDify,
+    cameraImageMobileResultsArrayDify,
   ]);
 
   const titleCaption = (title: string, json: string, index: number) => {
@@ -207,9 +229,15 @@ export const ViewResultsPageUI = () => {
             <Button onClick={copyImageResultsDify}>コピー image</Button>
           )}
           {title === "「カメラ画像の結果」 Dify" && isClipboard && (
-            <Button onClick={copyCameraImageResultsDify}>コピー camera</Button>
+            <>
+              <Button onClick={copyCameraImageDesktopResultsDify}>
+                コピー camera desktop
+              </Button>
+              <Button onClick={copyCameraImageMobileResultsDify}>
+                コピー camera mobile
+              </Button>
+            </>
           )}
-
           <Box
             pl="30px"
             textAlign="left"
