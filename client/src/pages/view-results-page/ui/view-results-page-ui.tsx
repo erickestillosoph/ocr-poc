@@ -50,7 +50,7 @@ export const ViewResultsPageUI = () => {
     }
     if (pdfResults) {
       results.push({
-        title: "読み取り結果",
+        title: "「読み取り結果」",
         data: pdfResultsArray,
         isDify: getLocalStorage("pdfResultsTimestamp") ? false : true,
         timestamp:
@@ -59,7 +59,7 @@ export const ViewResultsPageUI = () => {
     }
     if (pdfResultsDify) {
       results.push({
-        title: "読み取り結果 Dify",
+        title: "「読み取り結果」 Dify",
         data: pdfResultsArrayDify,
         isDify: getLocalStorage("pdfResultsTimestampDify") ? true : false,
         timestamp:
@@ -125,10 +125,17 @@ export const ViewResultsPageUI = () => {
     };
 
     const parsedJsonResults = (data: string) => {
+      // const parsedData = JSON.parse(data);
       const jsonString = data.replace(/```json|```/g, "").trim();
       const jsonObject = JSON.parse(jsonString);
-
       return prettyPrintJson.toHtml(jsonObject, options);
+      // if (isDify) {
+      //   const jsonString = data.replace(/```json|```/g, "").trim();
+      //   const jsonObject = JSON.parse(jsonString);
+      //   return prettyPrintJson.toHtml(jsonObject, options);
+      // }
+
+      // return prettyPrintJson.toHtml(parsedData, options);
     };
 
     const isCurrent = index === 0;
@@ -187,13 +194,13 @@ export const ViewResultsPageUI = () => {
           {title === "「画像の結果」" && isClipboard && (
             <Button onClick={copyImageResults}>コピー image</Button>
           )}
-          {title === "読み取り結果" && isClipboard && (
+          {title === "「読み取り結果」" && isClipboard && (
             <Button onClick={copyPdfResults}>コピー pdf</Button>
           )}
           {title === "「カメラ画像の結果」" && isClipboard && (
             <Button onClick={copyCameraImageResults}>コピー camera</Button>
           )}
-          {title === "読み取り結果 Dify" && isClipboard && (
+          {title === "「読み取り結果」 Dify" && isClipboard && (
             <Button onClick={copyPdfResultsDify}>コピー pdf</Button>
           )}
           {title === "「画像の結果」 Dify" && isClipboard && (
