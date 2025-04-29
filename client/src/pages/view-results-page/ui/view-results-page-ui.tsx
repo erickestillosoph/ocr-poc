@@ -54,6 +54,7 @@ export const ViewResultsPageUI = () => {
     const results = [];
     if (imageResults) {
       results.push({
+        key: "imageResults",
         title: "「画像の結果」",
         data: imageResultsArray,
         timestamp:
@@ -62,6 +63,7 @@ export const ViewResultsPageUI = () => {
     }
     if (pdfResults) {
       results.push({
+        key: "pdfResults",
         title: "「読み取り結果」",
         data: pdfResultsArray,
         timestamp:
@@ -70,6 +72,7 @@ export const ViewResultsPageUI = () => {
     }
     if (pdfResultsDify) {
       results.push({
+        key: "pdfResultsDify",
         title: "「読み取り結果」 Dify",
         data: pdfResultsArrayDify,
         timestamp:
@@ -78,6 +81,7 @@ export const ViewResultsPageUI = () => {
     }
     if (cameraImageResults) {
       results.push({
+        key: "cameraImageResults",
         title: "「カメラ画像の結果」",
         data: cameraImageResultsArray,
         timestamp:
@@ -88,6 +92,7 @@ export const ViewResultsPageUI = () => {
 
     if (cameraImageDesktopResultsDify) {
       results.push({
+        key: "cameraImageDesktopResultsDify",
         title: "「カメラ画像の結果」 Dify",
         data: cameraImageDesktopResultsArrayDify,
         timeStamp:
@@ -97,6 +102,7 @@ export const ViewResultsPageUI = () => {
     }
     if (cameraImageMobileResultsDify) {
       results.push({
+        key: "cameraImageMobileResultsDify",
         title: "「カメラ画像の結果」 Dify",
         data: cameraImageMobileResultsArrayDify,
         timeStamp:
@@ -106,6 +112,7 @@ export const ViewResultsPageUI = () => {
     }
     if (imageResultsDify) {
       results.push({
+        key: "imageResultsDify",
         title: "「画像の結果」 Dify",
         data: imageResultsArrayDify,
         timestamp:
@@ -131,7 +138,12 @@ export const ViewResultsPageUI = () => {
     cameraImageMobileResultsArrayDify,
   ]);
 
-  const titleCaption = (title: string, json: string, index: number) => {
+  const titleCaption = (
+    key: string,
+    title: string,
+    json: string,
+    index: number
+  ) => {
     const options: FormatOptions = {
       indent: 6,
       linksNewTab: true,
@@ -140,25 +152,27 @@ export const ViewResultsPageUI = () => {
       lineNumbers: true,
       linkUrls: true,
     };
+    const jsonString = json.replace(/```json|```/g, "").trim();
+    const jsonObject = JSON.parse(jsonString);
+    const parsedJsonResults = prettyPrintJson.toHtml(jsonObject, options);
+    // const parsedJsonResults = (data: string) => {
+    //   // const parsedData = JSON.parse(data);
+    //   const jsonString = data.replace(/```json|```/g, "").trim();
+    //   const jsonObject = JSON.parse(jsonString);
+    //   return prettyPrintJson.toHtml(jsonObject, options);
+    //   // if (isDify) {
+    //   //   const jsonString = data.replace(/```json|```/g, "").trim();
+    //   //   const jsonObject = JSON.parse(jsonString);
+    //   //   return prettyPrintJson.toHtml(jsonObject, options);
+    //   // }
 
-    const parsedJsonResults = (data: string) => {
-      // const parsedData = JSON.parse(data);
-      const jsonString = data.replace(/```json|```/g, "").trim();
-      const jsonObject = JSON.parse(jsonString);
-      return prettyPrintJson.toHtml(jsonObject, options);
-      // if (isDify) {
-      //   const jsonString = data.replace(/```json|```/g, "").trim();
-      //   const jsonObject = JSON.parse(jsonString);
-      //   return prettyPrintJson.toHtml(jsonObject, options);
-      // }
-
-      // return prettyPrintJson.toHtml(parsedData, options);
-    };
+    //   // return prettyPrintJson.toHtml(parsedData, options);
+    // };
 
     const isCurrent = index === 0;
     return (
       <Box
-        key={title}
+        key={key}
         width="100%"
         gap="20px"
         display="flex"
@@ -208,31 +222,33 @@ export const ViewResultsPageUI = () => {
           borderColor={isCurrent ? theme.colors.green[300] : "transparent"}
           style={{ overflow: "auto" }}
         >
-          {title === "「画像の結果」" && isClipboard && (
+          {key === "imageResults" && isClipboard && (
             <Button onClick={copyImageResults}>コピー image</Button>
           )}
-          {title === "「読み取り結果」" && isClipboard && (
+          {key === "pdfResults" && isClipboard && (
             <Button onClick={copyPdfResults}>コピー pdf</Button>
           )}
-          {title === "「カメラ画像の結果」" && isClipboard && (
+          {key === "cameraImageResults" && isClipboard && (
             <Button onClick={copyCameraImageResults}>コピー camera</Button>
           )}
-          {title === "「読み取り結果」 Dify" && isClipboard && (
+          {key === "pdfResultsDify" && isClipboard && (
             <Button onClick={copyPdfResultsDify}>コピー pdf</Button>
           )}
-          {title === "「画像の結果」 Dify" && isClipboard && (
+          {key === "imageResultsDify" && isClipboard && (
             <Button onClick={copyImageResultsDify}>コピー image</Button>
           )}
-          {title === "「カメラ画像の結果」 Dify" && isClipboard && (
-            <>
-              <Button onClick={copyCameraImageDesktopResultsDify}>
-                コピー camera desktop
-              </Button>
-              <Button onClick={copyCameraImageMobileResultsDify}>
-                コピー camera mobile
-              </Button>
-            </>
-          )}
+          {(key === "cameraImageDesktopResultsDify" ||
+            key === "cameraImageMobileResultsDify") &&
+            isClipboard && (
+              <>
+                <Button onClick={copyCameraImageDesktopResultsDify}>
+                  コピー camera desktop
+                </Button>
+                <Button onClick={copyCameraImageMobileResultsDify}>
+                  コピー camera mobile
+                </Button>
+              </>
+            )}
           <Box
             pl="30px"
             textAlign="left"
@@ -240,7 +256,7 @@ export const ViewResultsPageUI = () => {
             height="100%"
             whiteSpace="pre-wrap"
             dangerouslySetInnerHTML={{
-              __html: parsedJsonResults(json),
+              __html: parsedJsonResults,
             }}
           />
         </Box>
@@ -252,7 +268,7 @@ export const ViewResultsPageUI = () => {
     <VStack height="100vh" width="100%" gap="20px" alignContent="space-between">
       <Spacer padding="10px" />
       {allResults.map((result, index) =>
-        titleCaption(result.title, result.data, index)
+        titleCaption(result.key, result.title, result.data, index)
       )}
       <Spacer padding="60px" />
     </VStack>
