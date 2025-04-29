@@ -94,25 +94,24 @@ export const ViewResultsPageUI = () => {
       results.push({
         title: "「カメラ画像の結果」 Dify",
         data: cameraImageDesktopResultsArrayDify,
-        isDify: getLocalStorage("cameraImageDesktopResultsTimestampDify")
-          ? true
-          : false,
+        timeStamp:
+          getLocalStorage("cameraImageDesktopResultsTimestampDify") ||
+          new Date().getTime(),
       });
     }
     if (cameraImageMobileResultsDify) {
       results.push({
         title: "「カメラ画像の結果」 Dify",
         data: cameraImageMobileResultsArrayDify,
-        isDify: getLocalStorage("cameraImageMobileResultsTimestampDify")
-          ? true
-          : false,
+        timeStamp:
+          getLocalStorage("cameraImageMobileResultsTimestampDify") ||
+          new Date().getTime(),
       });
     }
     if (imageResultsDify) {
       results.push({
         title: "「画像の結果」 Dify",
         data: imageResultsArrayDify,
-        isDify: getLocalStorage("imageResultsTimestampDify") ? true : false,
         timestamp:
           getLocalStorage("imageResultsTimestampDify") || new Date().getTime(),
       });
