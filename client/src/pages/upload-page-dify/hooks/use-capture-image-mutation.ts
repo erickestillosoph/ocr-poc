@@ -52,8 +52,8 @@ export const useCameraCaptureMutation = () => {
       await difyApiClientWorkflow
         .post(WORKFLOW_PATH, workflowPayload)
         .then((res) => {
-          setLocalStorage("captureImageResults", res.data.data);
-          setLocalStorage("captureImageResultsTimestamp", Date.now());
+          setLocalStorage("cameraImageMobileResultsDify", res.data.data);
+          setLocalStorage("cameraImageMobileResultsTimestampDify", Date.now());
         });
 
       toast({
