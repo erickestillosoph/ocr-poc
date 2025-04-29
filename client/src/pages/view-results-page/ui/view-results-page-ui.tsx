@@ -21,11 +21,11 @@ export const ViewResultsPageUI = () => {
   );
 
   const imageResultsArray = JSON.stringify(imageResults, null, 1);
-  const imageResultsArrayDify = imageResultsDify?.outputs.response;
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
-  const pdfResultsArrayDify = pdfResultsDify?.outputs.response;
   const cameraImageResultsArray = JSON.stringify(cameraImageResults, null, 1);
 
+  const imageResultsArrayDify = imageResultsDify?.outputs.response;
+  const pdfResultsArrayDify = pdfResultsDify?.outputs.response;
   const cameraImageDesktopResultsArrayDify =
     cameraImageDesktopResultsDify?.outputs.response;
   const cameraImageMobileResultsArrayDify =
@@ -56,7 +56,6 @@ export const ViewResultsPageUI = () => {
       results.push({
         title: "「画像の結果」",
         data: imageResultsArray,
-        isDify: getLocalStorage("imageResultsTimestamp") ? false : true,
         timestamp:
           getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
       });
@@ -65,7 +64,6 @@ export const ViewResultsPageUI = () => {
       results.push({
         title: "「読み取り結果」",
         data: pdfResultsArray,
-        isDify: getLocalStorage("pdfResultsTimestamp") ? false : true,
         timestamp:
           getLocalStorage("pdfResultsTimestamp") || new Date().getTime(),
       });
@@ -74,7 +72,6 @@ export const ViewResultsPageUI = () => {
       results.push({
         title: "「読み取り結果」 Dify",
         data: pdfResultsArrayDify,
-        isDify: getLocalStorage("pdfResultsTimestampDify") ? true : false,
         timestamp:
           getLocalStorage("pdfResultsTimestampDify") || new Date().getTime(),
       });
@@ -83,7 +80,6 @@ export const ViewResultsPageUI = () => {
       results.push({
         title: "「カメラ画像の結果」",
         data: cameraImageResultsArray,
-        isDify: getLocalStorage("cameraImageResultsTimestamp") ? false : true,
         timestamp:
           getLocalStorage("cameraImageResultsTimestamp") ||
           new Date().getTime(),
