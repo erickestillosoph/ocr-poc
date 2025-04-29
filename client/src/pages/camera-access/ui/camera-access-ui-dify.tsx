@@ -188,7 +188,7 @@ export const CameraAccessPageDify = ({
               }}
               gap="8px"
             >
-              写真を撮影 2
+              写真を撮影
             </Button>
           </Box>
         )
