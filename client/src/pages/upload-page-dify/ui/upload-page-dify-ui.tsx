@@ -10,13 +10,16 @@ export const UploadPageDifyPage = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { mutate: uploadPDF, isPending: isPDFPending } = usePdfMutation();
+
   const { isPending: isCameraCapturePending, onDrop } =
     useCameraCaptureMutation();
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
 
     if (!file) return;

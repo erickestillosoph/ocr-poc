@@ -60,8 +60,8 @@ export const useImageDifyMutation = () => {
       await difyApiClientWorkflow
         .post(WORKFLOW_PATH, workflowPayload)
         .then((res) => {
-          setLocalStorage("cameraImageMobileResultsDify", res.data.data);
-          setLocalStorage("cameraImageMobileResultsTimestampDify", Date.now());
+          setLocalStorage("cameraImageResultsDify", res.data.data);
+          setLocalStorage("cameraImageResultsTimestampDify", Date.now());
         });
 
       toast({
@@ -87,7 +87,7 @@ export const useImageDifyMutation = () => {
       });
       reset();
     },
-    mutationKey: ["cameraImage"],
+    mutationKey: ["captureImage"],
   });
   const accept: Accept = {
     "image/jpeg": [],

@@ -1,5 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths, setLocalStorage } from "@/shared";
+import {
+  base64ToFile,
+  compressImage,
+  fileToBase64,
+  paths,
+  setLocalStorage,
+} from "@/shared";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,13 +25,12 @@ export const useCameraCaptureMutation = () => {
   const openImageRef = useRef<() => void | null>(null);
   const inputRefFile = useRef<HTMLInputElement | null>(null);
   const {
-    mutate,
+    // mutate,
     mutateAsync,
     isPending,
     isError,
     isSuccess,
     data: imageData,
-    reset,
   } = useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
@@ -52,8 +57,8 @@ export const useCameraCaptureMutation = () => {
       await difyApiClientWorkflow
         .post(WORKFLOW_PATH, workflowPayload)
         .then((res) => {
-          setLocalStorage("cameraImageMobileResultsDify", res.data.data);
-          setLocalStorage("cameraImageMobileResultsTimestampDify", Date.now());
+          setLocalStorage("imageResultsDify", res.data.data);
+          setLocalStorage("imageResultsTimestampDify", Date.now());
         });
 
       toast({
@@ -64,7 +69,7 @@ export const useCameraCaptureMutation = () => {
         isClosable: true,
         position: "top",
       });
-      reset();
+
       navigate(paths.viewResultsPage);
     },
     onError: () => {
@@ -76,16 +81,20 @@ export const useCameraCaptureMutation = () => {
         isClosable: true,
         position: "top",
       });
-      reset();
     },
     mutationKey: ["image"],
   });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
+      const base64Files = await Promise.all(
+        acceptedFiles.map((file) => fileToBase64(file))
+      );
+      const stringyFiedBase64Files = base64Files[0].toString();
+      const compressedImage = await compressImage(stringyFiedBase64Files);
+      const baseToImage = await base64ToFile(compressedImage, "image.jpg");
 
-      mutate(file);
+      await mutateAsync(baseToImage);
 
       toast({
         title: "アップロード成功.",
@@ -96,7 +105,7 @@ export const useCameraCaptureMutation = () => {
         position: "top",
       });
     },
-    [mutate, toast]
+    [mutateAsync, toast]
   );
   const accept: Accept = {
     "image/jpeg": [],
@@ -108,6 +117,13 @@ export const useCameraCaptureMutation = () => {
     "image/heic-sequence": [],
     "image/heif-sequence": [],
     "image/hevc-sequence": [],
+    ".jpg": [],
+    ".png": [],
+    ".jpeg": [],
+    ".heic": [],
+    ".heif": [],
+    ".hevc": [],
+    ".heic-sequence": [],
   };
   const options: DropzoneOptions = {
     onDrop,
@@ -125,6 +141,7 @@ export const useCameraCaptureMutation = () => {
     multiple: false,
     noClick: true,
     noKeyboard: true,
+    autoFocus: true,
   };
 
   const { getRootProps, getInputProps, open, inputRef } = useDropzone(options);

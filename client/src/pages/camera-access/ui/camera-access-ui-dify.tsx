@@ -99,7 +99,7 @@ export const CameraAccessPageDify = ({
   return (
     <VStack w="100%">
       <CenterSpinner loading={isCameraPending || isPendingImageCapture} />
-      {!isCameraOpen && !isDesktop && !hasMobileDevice && (
+      {!isCameraOpen && !isDesktop && (
         <Input
           display="none"
           {...getInputProps({
@@ -114,7 +114,7 @@ export const CameraAccessPageDify = ({
         />
       )}
 
-      {!isCameraOpen && !isDesktop && !hasMobileDevice && (
+      {!isCameraOpen && !isDesktop && (
         <Box px="16px" w="full">
           <Button
             w="full"
