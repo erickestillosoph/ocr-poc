@@ -6,30 +6,41 @@ import {
   paths,
   setLocalStorage,
 } from "@/shared";
+import { Accept, DropzoneOptions, useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   apiPaths,
   difyApiClient,
   difyApiClientWorkflow,
 } from "@/shared/config/api-config";
-import { useDropzone } from "react-dropzone";
 
-export const useImageCaptureDifyMutation = () => {
+export const useImageDifyMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const IMAGE_PATH = apiPaths.uploadImageDify;
   const WORKFLOW_PATH = apiPaths.uploadWorkflowDify;
+
   const openImageRef = useRef<() => void | null>(null);
 
-  const { mutateAsync, isPending, isError, isSuccess, reset } = useMutation({
-    mutationFn: async (file: File) => {
+  const {
+    mutateAsync,
+    isPending,
+    isError,
+    error,
+    isSuccess,
+    reset,
+    data: imageData,
+  } = useMutation({
+    mutationFn: async (files: File) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", files);
       formData.append("user", "sample-user");
+
       return await difyApiClient.post(IMAGE_PATH, formData);
     },
+
     onSuccess: async (data) => {
       const fileId = data.data.id;
 
@@ -48,25 +59,26 @@ export const useImageCaptureDifyMutation = () => {
       await difyApiClientWorkflow
         .post(WORKFLOW_PATH, workflowPayload)
         .then((res) => {
-          setLocalStorage("cameraImageResultsDify", res.data.data);
-          setLocalStorage("cameraImageResultsTimestampDify", Date.now());
+          setLocalStorage("cameraImageMobileResultsDify", res.data.data);
+          setLocalStorage("cameraImageMobileResultsTimestampDify", Date.now());
         });
+
       toast({
-        title: "Upload successful",
-        description: `Your image has been uploaded successfully.`,
+        title: "アップロード成功.",
+        description: `「お客様の画像が正常にアップロードされました。」`,
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-      reset();
       navigate(paths.viewResultsPage);
+      reset();
     },
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your image.`,
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -74,12 +86,36 @@ export const useImageCaptureDifyMutation = () => {
       });
       reset();
     },
-    mutationKey: ["captureImage"],
+    mutationKey: ["cameraImage"],
   });
-
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
+  const accept: Accept = {
+    "image/jpeg": [],
+    "image/png": [],
+    "image/jpg": [],
+    "image/heic": [],
+    "image/heif": [],
+    "image/hevc": [],
+    "image/heic-sequence": [],
+    "image/heif-sequence": [],
+    "image/hevc-sequence": [],
+  };
+  const onDrop = (acceptedFiles: File[]) => {
+    console.log(acceptedFiles);
+  };
+  const options: DropzoneOptions = {
+    onDrop,
+    accept,
+    maxFiles: 1,
+    maxSize: 1024 * 1024 * 5,
+    onDropRejected: () => {
+      toast({
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
+        status: "error",
+        duration: 3000,
+      });
+    },
+    onDropAccepted: async (acceptedFiles) => {
       const base64Files = await Promise.all(
         acceptedFiles.map((file) => fileToBase64(file))
       );
@@ -87,54 +123,25 @@ export const useImageCaptureDifyMutation = () => {
       const compressedImage = await compressImage(stringyFiedBase64Files);
       const baseToImage = await base64ToFile(compressedImage, "image.jpg");
 
-      await mutateAsync(baseToImage);
-      // mutateAsync(file);
-
-      toast({
-        title: "アップロード成功.",
-        description: file.name,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
+      mutateAsync(baseToImage);
     },
-    [mutateAsync, toast]
-  );
-
-  const { getRootProps, getInputProps, open } = useDropzone({
-    onDrop,
-    accept: {
-      "image/jpeg": [],
-      "image/png": [],
-      "image/jpg": [],
-      "image/heic": [],
-      "image/heif": [],
-      "image/hevc": [],
-      "image/heic-sequence": [],
-      "image/heif-sequence": [],
-      "image/hevc-sequence": [],
-      ".jpg": [],
-      ".png": [],
-      ".jpeg": [],
-      ".heic": [],
-      ".heif": [],
-      ".hevc": [],
-      ".heic-sequence": [],
-    },
-    maxFiles: 3,
-  });
-
+    multiple: false,
+    noClick: true,
+    noKeyboard: true,
+  };
+  const { getRootProps, getInputProps, open } = useDropzone(options);
   openImageRef.current = open;
 
   return {
-    mutate: mutateAsync,
     getRootProps,
     getInputProps,
-    onDrop,
+    mutate: mutateAsync,
     isPending,
     isError,
+    error,
     isSuccess,
     openImageRef,
+    imageResults: imageData?.data,
+    onDrop,
   };
 };

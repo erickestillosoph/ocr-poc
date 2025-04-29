@@ -13,12 +13,7 @@ export const ViewResultsPageUI = () => {
   const pdfResultsDify = getLocalStorage("pdfResultsDify");
   const imageResultsDify = getLocalStorage("imageResultsDify");
 
-  const cameraImageDesktopResultsDify = getLocalStorage(
-    "cameraImageDesktopResultsDify"
-  );
-  const cameraImageMobileResultsDify = getLocalStorage(
-    "cameraImageMobileResultsDify"
-  );
+  const cameraImageResultsDify = getLocalStorage("cameraImageResultsDify");
 
   const imageResultsArray = JSON.stringify(imageResults, null, 1);
   const pdfResultsArray = JSON.stringify(pdfResults, null, 1);
@@ -26,10 +21,8 @@ export const ViewResultsPageUI = () => {
 
   const imageResultsArrayDify = imageResultsDify?.outputs.response;
   const pdfResultsArrayDify = pdfResultsDify?.outputs.response;
-  const cameraImageDesktopResultsArrayDify =
-    cameraImageDesktopResultsDify?.outputs.response;
-  const cameraImageMobileResultsArrayDify =
-    cameraImageMobileResultsDify?.outputs.response;
+
+  const cameraImageResultsArrayDify = cameraImageResultsDify?.outputs.response;
 
   const copyImageResults = () =>
     navigator.clipboard.writeText(imageResultsArray);
@@ -40,10 +33,9 @@ export const ViewResultsPageUI = () => {
     navigator.clipboard.writeText(pdfResultsArrayDify);
   const copyImageResultsDify = () =>
     navigator.clipboard.writeText(imageResultsArrayDify);
-  const copyCameraImageDesktopResultsDify = () =>
-    navigator.clipboard.writeText(cameraImageDesktopResultsArrayDify);
-  const copyCameraImageMobileResultsDify = () =>
-    navigator.clipboard.writeText(cameraImageMobileResultsArrayDify);
+
+  const copyCameraImageResultsDify = () =>
+    navigator.clipboard.writeText(cameraImageResultsArrayDify);
 
   const innerWidth = window.innerWidth;
   const isDesktop = window.innerWidth > 1024;
@@ -57,6 +49,7 @@ export const ViewResultsPageUI = () => {
         key: "imageResults",
         title: "「画像の結果」",
         data: imageResultsArray,
+        isDify: false,
         timestamp:
           getLocalStorage("imageResultsTimestamp") || new Date().getTime(),
       });
@@ -66,8 +59,44 @@ export const ViewResultsPageUI = () => {
         key: "pdfResults",
         title: "「読み取り結果」",
         data: pdfResultsArray,
+        isDify: false,
         timestamp:
           getLocalStorage("pdfResultsTimestamp") || new Date().getTime(),
+      });
+    }
+
+    if (cameraImageResults) {
+      results.push({
+        key: "cameraImageResults",
+        title: "「カメラ画像の結果」",
+        data: cameraImageResultsArray,
+        isDify: false,
+        timestamp:
+          getLocalStorage("cameraImageResultsTimestamp") ||
+          new Date().getTime(),
+      });
+    }
+
+    if (imageResultsDify) {
+      results.push({
+        key: "imageResultsDify",
+        title: "「画像の結果」 Dify",
+        data: imageResultsArrayDify,
+        isDify: true,
+        timestamp:
+          getLocalStorage("imageResultsTimestampDify") || new Date().getTime(),
+      });
+    }
+
+    if (cameraImageResultsDify) {
+      results.push({
+        key: "cameraImageResultsDify",
+        title: "「カメラ画像の結果」 Dify",
+        data: cameraImageResultsArrayDify,
+        isDify: true,
+        timeStamp:
+          getLocalStorage("cameraImageResultsTimestampDify") ||
+          new Date().getTime(),
       });
     }
     if (pdfResultsDify) {
@@ -75,51 +104,11 @@ export const ViewResultsPageUI = () => {
         key: "pdfResultsDify",
         title: "「読み取り結果」 Dify",
         data: pdfResultsArrayDify,
+        isDify: true,
         timestamp:
           getLocalStorage("pdfResultsTimestampDify") || new Date().getTime(),
       });
     }
-    if (cameraImageResults) {
-      results.push({
-        key: "cameraImageResults",
-        title: "「カメラ画像の結果」",
-        data: cameraImageResultsArray,
-        timestamp:
-          getLocalStorage("cameraImageResultsTimestamp") ||
-          new Date().getTime(),
-      });
-    }
-
-    if (cameraImageDesktopResultsDify) {
-      results.push({
-        key: "cameraImageDesktopResultsDify",
-        title: "「カメラ画像の結果」 Dify",
-        data: cameraImageDesktopResultsArrayDify,
-        timeStamp:
-          getLocalStorage("cameraImageDesktopResultsTimestampDify") ||
-          new Date().getTime(),
-      });
-    }
-    if (cameraImageMobileResultsDify) {
-      results.push({
-        key: "cameraImageMobileResultsDify",
-        title: "「カメラ画像の結果」 Dify",
-        data: cameraImageMobileResultsArrayDify,
-        timeStamp:
-          getLocalStorage("cameraImageMobileResultsTimestampDify") ||
-          new Date().getTime(),
-      });
-    }
-    if (imageResultsDify) {
-      results.push({
-        key: "imageResultsDify",
-        title: "「画像の結果」 Dify",
-        data: imageResultsArrayDify,
-        timestamp:
-          getLocalStorage("imageResultsTimestampDify") || new Date().getTime(),
-      });
-    }
-
     return results.sort((a, b) => b.timestamp - a.timestamp);
   }, [
     imageResultsDify,
@@ -132,16 +121,15 @@ export const ViewResultsPageUI = () => {
     cameraImageResultsArray,
     pdfResultsArrayDify,
     pdfResultsDify,
-    cameraImageDesktopResultsDify,
-    cameraImageMobileResultsDify,
-    cameraImageDesktopResultsArrayDify,
-    cameraImageMobileResultsArrayDify,
+    cameraImageResultsDify,
+    cameraImageResultsArrayDify,
   ]);
 
   const titleCaption = (
     key: string,
     title: string,
     json: string,
+    isDify: boolean,
     index: number
   ) => {
     const options: FormatOptions = {
@@ -152,22 +140,21 @@ export const ViewResultsPageUI = () => {
       lineNumbers: true,
       linkUrls: true,
     };
-    const jsonString = json.replace(/```json|```/g, "").trim();
-    const jsonObject = JSON.parse(jsonString);
-    const parsedJsonResults = prettyPrintJson.toHtml(jsonObject, options);
-    // const parsedJsonResults = (data: string) => {
-    //   // const parsedData = JSON.parse(data);
-    //   const jsonString = data.replace(/```json|```/g, "").trim();
-    //   const jsonObject = JSON.parse(jsonString);
-    //   return prettyPrintJson.toHtml(jsonObject, options);
-    //   // if (isDify) {
-    //   //   const jsonString = data.replace(/```json|```/g, "").trim();
-    //   //   const jsonObject = JSON.parse(jsonString);
-    //   //   return prettyPrintJson.toHtml(jsonObject, options);
-    //   // }
-
-    //   // return prettyPrintJson.toHtml(parsedData, options);
-    // };
+    // const jsonString = json.replace(/```json|```/g, "").trim();
+    // const jsonObject = JSON.parse(jsonString);
+    // const parsedJsonResults = prettyPrintJson.toHtml(jsonObject, options);
+    const parsedJsonResults = () => {
+      if (isDify) {
+        console.log(isDify, title, key);
+        const jsonString = json.replace(/```json|```/g, "");
+        const jsonObject = JSON.parse(jsonString);
+        return prettyPrintJson.toHtml(jsonObject, options);
+      } else {
+        console.log(isDify, title, key);
+        const jsonParsed = JSON.parse(json);
+        return prettyPrintJson.toHtml(jsonParsed, options);
+      }
+    };
 
     const isCurrent = index === 0;
     return (
@@ -237,18 +224,9 @@ export const ViewResultsPageUI = () => {
           {key === "imageResultsDify" && isClipboard && (
             <Button onClick={copyImageResultsDify}>コピー image</Button>
           )}
-          {(key === "cameraImageDesktopResultsDify" ||
-            key === "cameraImageMobileResultsDify") &&
-            isClipboard && (
-              <>
-                <Button onClick={copyCameraImageDesktopResultsDify}>
-                  コピー camera desktop
-                </Button>
-                <Button onClick={copyCameraImageMobileResultsDify}>
-                  コピー camera mobile
-                </Button>
-              </>
-            )}
+          {key === "cameraImageResultsDify" && isClipboard && (
+            <Button onClick={copyCameraImageResultsDify}>コピー camera</Button>
+          )}
           <Box
             pl="30px"
             textAlign="left"
@@ -256,7 +234,7 @@ export const ViewResultsPageUI = () => {
             height="100%"
             whiteSpace="pre-wrap"
             dangerouslySetInnerHTML={{
-              __html: parsedJsonResults,
+              __html: parsedJsonResults(),
             }}
           />
         </Box>
@@ -268,7 +246,13 @@ export const ViewResultsPageUI = () => {
     <VStack height="100vh" width="100%" gap="20px" alignContent="space-between">
       <Spacer padding="10px" />
       {allResults.map((result, index) =>
-        titleCaption(result.key, result.title, result.data, index)
+        titleCaption(
+          result.key,
+          result.title,
+          result.data,
+          result.isDify,
+          index
+        )
       )}
       <Spacer padding="60px" />
     </VStack>
