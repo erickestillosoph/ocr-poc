@@ -109,7 +109,7 @@ export const ViewResultsPageUI = () => {
           getLocalStorage("pdfResultsTimestampDify") || new Date().getTime(),
       });
     }
-    return results;
+    return results.sort((a, b) => b.timestamp - a.timestamp);
   }, [
     imageResultsDify,
     imageResultsArrayDify,
