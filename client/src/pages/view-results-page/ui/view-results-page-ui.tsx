@@ -137,7 +137,7 @@ export const ViewResultsPageUI = () => {
       linksNewTab: true,
       quoteKeys: true,
       trailingCommas: true,
-      lineNumbers: true,
+      lineNumbers: false,
       linkUrls: true,
     };
     // const jsonString = json.replace(/```json|```/g, "").trim();
@@ -201,12 +201,12 @@ export const ViewResultsPageUI = () => {
           </Text>
         </Box>
         <Box
-          backgroundColor={theme.colors.gray[900]}
+          backgroundColor={theme.colors.gray[200]}
           borderRadius="10px"
           p="20px 20px"
           border="1px solid"
           width={isDesktop ? "100%" : innerWidth - 30}
-          borderColor={isCurrent ? theme.colors.green[300] : "transparent"}
+          borderColor={isCurrent ? theme.colors.gray[200] : "transparent"}
           style={{ overflow: "auto" }}
         >
           {key === "imageResults" && isClipboard && (

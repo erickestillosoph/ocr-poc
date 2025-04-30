@@ -114,7 +114,7 @@ export const CameraAccessPageDify = ({
         />
       )}
 
-      {!isCameraOpen && !isDesktop && (
+      {!isCameraOpen && !isDesktop && !hasMobileDevice &&(
         <Box px="16px" w="full">
           <Button
             w="full"
