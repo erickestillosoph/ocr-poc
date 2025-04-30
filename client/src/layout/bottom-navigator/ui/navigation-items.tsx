@@ -10,7 +10,7 @@ export const driverNavigationItems = [
   //   icon: AiOutlineFileSearch,
   // },
   {
-    label: PAGE_BOTTOM_TITLES.UPLOAD_DIFY,
+    label: PAGE_BOTTOM_TITLES.UPLOAD,
     path: paths.cameraAccessUploadFileDify,
     icon: AiOutlineFileSearch,
   },

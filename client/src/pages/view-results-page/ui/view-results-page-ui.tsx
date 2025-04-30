@@ -102,7 +102,7 @@ export const ViewResultsPageUI = () => {
     if (pdfResultsDify) {
       results.push({
         key: "pdfResultsDify",
-        title: "「読み取り結果」 Dify",
+        title: "「読み取り結果」",
         data: pdfResultsArrayDify,
         isDify: true,
         timestamp:
