@@ -109,7 +109,7 @@ export const ViewResultsPageUI = () => {
           getLocalStorage("pdfResultsTimestampDify") || new Date().getTime(),
       });
     }
-    return results.sort((a, b) => b.timestamp - a.timestamp);
+    return results;
   }, [
     imageResultsDify,
     imageResultsArrayDify,
@@ -145,12 +145,10 @@ export const ViewResultsPageUI = () => {
     // const parsedJsonResults = prettyPrintJson.toHtml(jsonObject, options);
     const parsedJsonResults = () => {
       if (isDify) {
-        console.log(isDify, title, key);
         const jsonString = json.replace(/```json|```/g, "");
         const jsonObject = JSON.parse(jsonString);
         return prettyPrintJson.toHtml(jsonObject, options);
       } else {
-        console.log(isDify, title, key);
         const jsonParsed = JSON.parse(json);
         return prettyPrintJson.toHtml(jsonParsed, options);
       }
@@ -165,79 +163,87 @@ export const ViewResultsPageUI = () => {
         display="flex"
         flexDirection="column"
       >
-        <Box
-          fontSize="lg"
-          display="flex"
-          color={theme.colors.blue}
-          textAlign="left"
-          textTransform="uppercase"
-          fontWeight="bold"
-          justifyContent="space-between"
-          w="full"
-        >
-          <Text
-            p="12px 20px"
-            borderRadius="10px"
-            fontSize="10px"
-            backgroundColor={theme.colors.gray[200]}
-          >
-            {title}
-          </Text>
-          <Text
-            height="fit-content"
-            p="8px"
-            borderRadius="10px"
-            border="1px solid"
-            borderColor={
-              isCurrent ? theme.colors.green[500] : theme.colors.red[500]
-            }
-            backgroundColor={
-              isCurrent ? theme.colors.green[50] : theme.colors.red[50]
-            }
-            fontSize="10px"
-            color={isCurrent ? theme.colors.green[500] : theme.colors.red[500]}
-          >
-            {isCurrent ? "現在" : "以前の"}
-          </Text>
-        </Box>
-        <Box
-          backgroundColor={theme.colors.gray[200]}
-          borderRadius="10px"
-          p="20px 20px"
-          border="1px solid"
-          width={isDesktop ? "100%" : innerWidth - 30}
-          borderColor={isCurrent ? theme.colors.gray[200] : "transparent"}
-          style={{ overflow: "auto" }}
-        >
-          {key === "imageResults" && isClipboard && (
-            <Button onClick={copyImageResults}>コピー image</Button>
-          )}
-          {key === "pdfResults" && isClipboard && (
-            <Button onClick={copyPdfResults}>コピー pdf</Button>
-          )}
-          {key === "cameraImageResults" && isClipboard && (
-            <Button onClick={copyCameraImageResults}>コピー camera</Button>
-          )}
-          {key === "pdfResultsDify" && isClipboard && (
-            <Button onClick={copyPdfResultsDify}>コピー pdf</Button>
-          )}
-          {key === "imageResultsDify" && isClipboard && (
-            <Button onClick={copyImageResultsDify}>コピー image</Button>
-          )}
-          {key === "cameraImageResultsDify" && isClipboard && (
-            <Button onClick={copyCameraImageResultsDify}>コピー camera</Button>
-          )}
+        {isCurrent && (
           <Box
-            pl="30px"
+            fontSize="lg"
+            display="flex"
+            color={theme.colors.blue}
             textAlign="left"
-            width={isDesktop ? "100%" : "800px"}
-            height="100%"
-            whiteSpace="pre-wrap"
-            dangerouslySetInnerHTML={{
-              __html: parsedJsonResults(),
-            }}
-          />
-        </Box>
+            textTransform="uppercase"
+            fontWeight="bold"
+            justifyContent="space-between"
+            w="full"
+          >
+            <Text
+              p="12px 20px"
+              borderRadius="10px"
+              fontSize="10px"
+              backgroundColor={theme.colors.gray[200]}
+            >
+              {title}
+            </Text>
+            {/* <Text
+              height="fit-content"
+              p="8px"
+              borderRadius="10px"
+              border="1px solid"
+              borderColor={
+                isCurrent ? theme.colors.green[500] : theme.colors.red[500]
+              }
+              backgroundColor={
+                isCurrent ? theme.colors.green[50] : theme.colors.red[50]
+              }
+              fontSize="10px"
+              color={
+                isCurrent ? theme.colors.green[500] : theme.colors.red[500]
+              }
+            >
+              {isCurrent ? "現在" : "以前の"}
+            </Text> */}
+          </Box>
+        )}
+        {isCurrent && (
+          <Box
+            backgroundColor={theme.colors.gray[200]}
+            borderRadius="10px"
+            p="20px 20px"
+            border="1px solid"
+            width={isDesktop ? "100%" : innerWidth - 30}
+            borderColor={isCurrent ? theme.colors.gray[200] : "transparent"}
+            style={{ overflow: "auto" }}
+          >
+            {key === "imageResults" && isClipboard && (
+              <Button onClick={copyImageResults}>コピー image</Button>
+            )}
+            {key === "pdfResults" && isClipboard && (
+              <Button onClick={copyPdfResults}>コピー pdf</Button>
+            )}
+            {key === "cameraImageResults" && isClipboard && (
+              <Button onClick={copyCameraImageResults}>コピー camera</Button>
+            )}
+            {key === "pdfResultsDify" && isClipboard && (
+              <Button onClick={copyPdfResultsDify}>コピー pdf</Button>
+            )}
+            {key === "imageResultsDify" && isClipboard && (
+              <Button onClick={copyImageResultsDify}>コピー image</Button>
+            )}
+            {key === "cameraImageResultsDify" && isClipboard && (
+              <Button onClick={copyCameraImageResultsDify}>
+                コピー camera
+              </Button>
+            )}
+            <Box
+              pl="5px"
+              textAlign="left"
+              width="100%"
+              height="100%"
+              whiteSpace="pre-wrap"
+              dangerouslySetInnerHTML={{
+                __html: parsedJsonResults(),
+              }}
+            />
+          </Box>
+        )}
       </Box>
     );
   };
@@ -254,7 +260,7 @@ export const ViewResultsPageUI = () => {
           index
         )
       )}
-      <Spacer padding="60px" />
+      <Spacer padding="10px" />
     </VStack>
   );
 };

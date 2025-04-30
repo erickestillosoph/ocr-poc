@@ -1,12 +1,12 @@
 export const paths = {
   home: "/",
   notFound: "/404",
-  uploadPage: "/upload",
+  uploadPage: "/upload-page",
   uploadPageDify: "/dify-upload",
-  viewResultsPage: "/view-results",
+  viewResultsPage: "/results",
   cameraAccess: "/camera-access",
   cameraAccessUploadFile: "/camera-access-upload-file",
-  cameraAccessUploadFileDify: "/dify-upload-camera-access",
+  cameraAccessUploadFileDify: "/upload",
   search: "/search",
   oldUiUpload: "/old-ui-upload",
 };
