@@ -4,6 +4,8 @@ import {
   AiOutlineFileDone,
   AiOutlineFileAdd,
 } from "react-icons/ai";
+
+//TODO:  Hide the first tab previous implementation
 export const driverNavigationItems = [
   {
     label: PAGE_BOTTOM_TITLES.UPLOAD,
