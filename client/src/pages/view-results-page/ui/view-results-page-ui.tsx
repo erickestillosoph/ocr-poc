@@ -80,7 +80,7 @@ export const ViewResultsPageUI = () => {
     if (imageResultsDify) {
       results.push({
         key: "imageResultsDify",
-        title: "「画像の結果」 Dify",
+        title: "「画像の結果」",
         data: imageResultsArrayDify,
         isDify: true,
         timestamp:
@@ -91,7 +91,7 @@ export const ViewResultsPageUI = () => {
     if (cameraImageResultsDify) {
       results.push({
         key: "cameraImageResultsDify",
-        title: "「カメラ画像の結果」 Dify",
+        title: "「カメラ画像の結果」",
         data: cameraImageResultsArrayDify,
         isDify: true,
         timeStamp:
