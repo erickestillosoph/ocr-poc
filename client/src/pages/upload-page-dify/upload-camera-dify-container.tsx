@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export const UploadCameraDifyContainer = () => {
   const { theme } = useAppTheme();
+  //TODO: Hide this block of code
   const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   return (
@@ -18,6 +19,7 @@ export const UploadCameraDifyContainer = () => {
       alignItems="center"
       justifyContent="center"
     >
+      //TODO: Hide this block of code
       <CameraAccessDifyContainer
         isImageCapture={isCameraOpen}
         isHandleCameraOpen={(isCameraOpen) => setIsCameraOpen(isCameraOpen)}
