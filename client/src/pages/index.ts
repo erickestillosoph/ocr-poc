@@ -4,3 +4,4 @@ export { NotFoundPageContainer } from "./not-found/not-found-container";
 export { CameraAccessContainer } from "./camera-access";
 export { UploadCameraContainer } from "./upload-page/upload-camera-container";
 export { UploadPageDifyContainer } from "./upload-page-dify";
+export { UploadCameraDifyContainer } from "./upload-page-dify/upload-camera-dify-container";
