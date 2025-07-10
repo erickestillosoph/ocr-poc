@@ -12,4 +12,8 @@ export const paths = {
   cameraAccessUploadFile: "/camera-access-upload-file",
   cameraAccessUploadFileDify: "/upload",
   search: "/search",
+  oldUiUpload: "/old-ui-upload",
+  read: "/read",
+  employeeManagement: "/employee-management",
+  myPage: "/my-page",
 };

@@ -1,4 +1,4 @@
-import { Outlet, RouteObject } from "react-router-dom";
+import { Outlet, type RouteObject } from "react-router-dom";
 
 import {
   NotFoundPageContainer,
@@ -9,7 +9,7 @@ import {
 >>>>>>> master
   UploadPageContainer,
   ViewResultsPageContainer,
-} from "@/pages";
+} from "@/pages"
 import { NotFoundGuard } from "./not-found-guard";
 import { paths } from "@/shared";
 
@@ -37,7 +37,7 @@ export const routes: RouteObject[] = [
           },
           {
             element: <ViewResultsPageContainer />,
-            path: paths.viewResultsPage,
+            path: paths.myPage,
           },
          
         ],
