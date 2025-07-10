@@ -43,6 +43,7 @@
 html {
   overflow: hidden;
   height: 100%;
+  width: 100%;
 }
 
 body {
@@ -53,19 +54,19 @@ body {
 
 /* RenderJson.module.css */
 .json-lines {
-  color: white !important; 
+  color: rgb(26, 24, 24) !important; 
   margin: 0;
   line-height: 0.7 !important;
   white-space: break-spaces !important;
 }
 .json-lines > li {
-  color: white !important; 
+  color: rgb(22, 6, 6) !important; 
   padding-left: 30px!important ;
   margin: 0 !important;
   line-height: 1 !important;
 }
 .json-mark {
-  color: white !important; 
+  color: rgb(51, 44, 44) !important; 
   line-height: 0 !important;
 }
 

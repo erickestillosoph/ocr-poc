@@ -1,8 +1,8 @@
-import { Outlet, RouteObject } from "react-router-dom";
+import { Outlet, type RouteObject } from "react-router-dom";
 
 import {
   NotFoundPageContainer,
-  UploadCameraContainer,
+  UploadCameraDifyContainer,
   UploadPageContainer,
   ViewResultsPageContainer,
 } from "@/pages";
@@ -17,16 +17,16 @@ export const routes: RouteObject[] = [
         element: <Outlet />,
         children: [
           {
-            element: <UploadCameraContainer />,
+            element: <UploadCameraDifyContainer />,
             path: "/",
-          },
-          {
-            element: <UploadCameraContainer />,
-            path: paths.cameraAccessUploadFile,
           },
           {
             element: <UploadPageContainer />,
             path: paths.uploadPage,
+          },
+          {
+            element: <UploadCameraDifyContainer />,
+            path: paths.cameraAccessUploadFileDify,
           },
           {
             element: <ViewResultsPageContainer />,

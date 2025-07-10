@@ -1,12 +1,12 @@
 import { Box } from "@chakra-ui/react";
-import { CameraAccessContainer } from "../camera-access";
+// import { CameraAccessDifyContainer } from "../camera-access";
 import { useAppTheme } from "@/shared/theme";
-import { UploadPageContainer } from "./upload-page-container";
-import { useState } from "react";
+import { UploadPageDifyContainer } from "./upload-page-dify-container";
+// import { useState } from "react";
 
-export const UploadCameraContainer = () => {
+export const UploadCameraDifyContainer = () => {
   const { theme } = useAppTheme();
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  // const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   return (
     <Box
@@ -18,10 +18,11 @@ export const UploadCameraContainer = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <CameraAccessContainer
+      {/* <CameraAccessDifyContainer
+        isImageCapture={isCameraOpen}
         isHandleCameraOpen={(isCameraOpen) => setIsCameraOpen(isCameraOpen)}
-      />
-      {!isCameraOpen && <UploadPageContainer />}
+      /> */}
+      <UploadPageDifyContainer />
     </Box>
   );
 };
