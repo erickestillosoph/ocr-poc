@@ -1,39 +1,36 @@
 import { useMutation } from "@tanstack/react-query";
-import { paths, setLocalStorage } from "@/shared";
-import { useDropzone } from "react-dropzone";
+import { compressImage, paths, setLocalStorage, fileToBase64 } from "@/shared";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient, apiPaths } from "@/shared/config/api-config";
-import { fileToBase64 } from "@/shared";
+import { useDropzone, DropzoneOptions, Accept } from "react-dropzone";
 
-export const useImageMutation = () => {
+export const useCameraCaptureMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const IMAGE_PATH = apiPaths.uploadImage;
 
   const openImageRef = useRef<() => void | null>(null);
-
+  const inputRefFile = useRef<HTMLInputElement | null>(null);
   const {
+    mutate,
     mutateAsync,
     isPending,
     isError,
     isSuccess,
     data: imageData,
   } = useMutation({
-    mutationFn: async (file: File) => {
-      // Convert the file to Base64
-      const base64File = await fileToBase64(file);
-
-      return apiClient.post(IMAGE_PATH, {
-        image: base64File,
+    mutationFn: async (files: string) => {
+      const response = await apiClient.post(IMAGE_PATH, {
+        image: files,
       });
-    },
 
+      return response;
+    },
     onSuccess: (data) => {
       setLocalStorage("imageResults", data.data);
       setLocalStorage("imageResultsTimestamp", Date.now());
-
       toast({
         title: "アップロード成功.",
         description: `「お客様の画像が正常にアップロードされました。」`,
@@ -42,15 +39,15 @@ export const useImageMutation = () => {
         isClosable: true,
         position: "top",
       });
+
       navigate(paths.viewResultsPage);
     },
-    onError: (error) => {
-      console.error("Upload error:", error);
+    onError: () => {
       toast({
         title: "「画像のアップロード中にエラーが発生しました。」",
         description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
         status: "error",
-        duration: 3000,
+        duration: Infinity,
         isClosable: true,
         position: "top",
       });
@@ -60,35 +57,56 @@ export const useImageMutation = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0]; // Get the first file, as there should only be one
-
-      // Proceed with the mutation
-      mutateAsync(file);
+      const base64Files = await Promise.all(
+        acceptedFiles.map((file) => fileToBase64(file))
+      );
+      const stringyFiedBase64Files = base64Files[0].toString();
+      const compressedImage = await compressImage(stringyFiedBase64Files);
+      mutate(compressedImage);
 
       toast({
         title: "アップロード成功.",
-        description: file.name,
+        description: acceptedFiles[0].name,
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
     },
-    [mutateAsync, toast]
+    [mutate, toast]
   );
-
-  const { getRootProps, getInputProps, open } = useDropzone({
+  const accept: Accept = {
+    "image/jpeg": [],
+    "image/png": [],
+    "image/jpg": [],
+    "image/heic": [],
+    "image/heif": [],
+    "image/hevc": [],
+    "image/heic-sequence": [],
+    "image/heif-sequence": [],
+    "image/hevc-sequence": [],
+  };
+  const options: DropzoneOptions = {
     onDrop,
-    accept: {
-      "image/jpeg": [],
-      "image/png": [],
-      "image/jpg": [],
+    accept,
+    maxFiles: 1,
+    maxSize: 1024 * 1024 * 5,
+    onDropRejected: () => {
+      toast({
+        title: "「画像のアップロード中にエラーが発生しました。」",
+        description: `「お客様の画像のアップロード中にエラーが発生いたしました。」`,
+        status: "error",
+        duration: 3000,
+      });
     },
-    maxFiles: 3,
-  });
+    multiple: false,
+    noClick: true,
+    noKeyboard: true,
+  };
 
+  const { getRootProps, getInputProps, open, inputRef } = useDropzone(options);
   openImageRef.current = open;
-
+  inputRefFile.current = inputRef.current;
   return {
     getRootProps,
     getInputProps,
@@ -97,6 +115,8 @@ export const useImageMutation = () => {
     isError,
     isSuccess,
     openImageRef,
-    imageResults: imageData?.data,
+    imageResults: imageData,
+    inputRefFile,
+    onDrop,
   };
 };

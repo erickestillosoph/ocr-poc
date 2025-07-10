@@ -9,11 +9,11 @@ type MainLayoutPageProps = {
   children: React.ReactNode;
 };
 
-
 export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
   const { theme } = useAppTheme();
   const location = useLocation();
-  const isBottomNavigatorShow = location.pathname !== paths.cameraAccessUploadFile;
+  const isBottomNavigatorShow =
+    location.pathname !== paths.cameraAccessUploadFile;
   return (
     <Box
       display="flex"
@@ -23,15 +23,10 @@ export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
       backgroundColor={theme.colors.background}
     >
       <Header />
-      <Box
-        flex="1"
-        w="full"
-        h="full"
-
-      >
+      <Box flex="1" w="full" h="full">
         {children}
       </Box>
-      {isBottomNavigatorShow && <BottomNavigatorContainer  />}
+      {isBottomNavigatorShow && <BottomNavigatorContainer />}
     </Box>
   );
 };

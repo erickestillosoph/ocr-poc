@@ -1,7 +1,8 @@
 export const PAGE_BOTTOM_TITLES = {
-  UPLOAD: "読み取り",
-  PEOPLE: "社員管理",
-  MY_PAGE: "マイページ",
+  SEARCH: "さがす",
+  HOME: "ホーム",
+  PEOPLE: "ユーザー",
+  USER: "マイページ",
 };
 
 export const PAGE_HEADER_TITLES = {
@@ -9,4 +10,3 @@ export const PAGE_HEADER_TITLES = {
   CAMERA: "写真撮影",
   VIEW_RESULTS: "データ登録",
 };
-

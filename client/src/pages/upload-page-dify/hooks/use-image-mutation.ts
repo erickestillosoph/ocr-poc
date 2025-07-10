@@ -4,13 +4,17 @@ import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiClient, apiPaths } from "@/shared/config/api-config";
-import { fileToBase64 } from "@/shared";
+import {
+  apiPaths,
+  difyApiClient,
+  difyApiClientWorkflow,
+} from "@/shared/config/api-config";
 
 export const useImageMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const IMAGE_PATH = apiPaths.uploadImage;
+  const IMAGE_PATH = apiPaths.uploadImageDify;
+  const WORKFLOW_PATH = apiPaths.uploadWorkflowDify;
 
   const openImageRef = useRef<() => void | null>(null);
 
@@ -22,17 +26,34 @@ export const useImageMutation = () => {
     data: imageData,
   } = useMutation({
     mutationFn: async (file: File) => {
-      // Convert the file to Base64
-      const base64File = await fileToBase64(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("user", "sample-user");
 
-      return apiClient.post(IMAGE_PATH, {
-        image: base64File,
-      });
+      return await difyApiClient.post(IMAGE_PATH, formData);
     },
 
-    onSuccess: (data) => {
-      setLocalStorage("imageResults", data.data);
-      setLocalStorage("imageResultsTimestamp", Date.now());
+    onSuccess: async (data) => {
+      const fileId = data.data.id;
+
+      const workflowPayload = {
+        inputs: {
+          file: {
+            transfer_method: "local_file",
+            upload_file_id: `${fileId}`,
+            type: "image",
+          },
+        },
+        response_mode: "blocking",
+        user: "sample-user",
+      };
+
+      await difyApiClientWorkflow
+        .post(WORKFLOW_PATH, workflowPayload)
+        .then((res) => {
+          setLocalStorage("imageResultsDify", res.data.data);
+          setLocalStorage("imageResultsTimestampDify", Date.now());
+        });
 
       toast({
         title: "アップロード成功.",
@@ -98,5 +119,6 @@ export const useImageMutation = () => {
     isSuccess,
     openImageRef,
     imageResults: imageData?.data,
+    onDrop,
   };
 };

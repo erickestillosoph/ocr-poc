@@ -4,13 +4,17 @@ import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths, setLocalStorage } from "@/shared";
-import { apiClient, apiPaths } from "@/shared/config/api-config";
-import { fileToBase64 } from "@/shared";
+import {
+  apiPaths,
+  difyApiClient,
+  difyApiClientWorkflow,
+} from "@/shared/config/api-config";
 
 export const usePdfMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const PDF_PATH = apiPaths.uploadPdf;
+  const PDF_PATH = apiPaths.uploadPdfDify;
+  const WORKFLOW_PATH = apiPaths.uploadWorkflowDify;
   const openPDFRef = useRef<() => void>(null);
 
   const {
@@ -19,19 +23,36 @@ export const usePdfMutation = () => {
     isError,
     isSuccess,
     data: pdfData,
+    reset,
   } = useMutation({
     mutationFn: async (files: File[]) => {
-      const base64Files = await Promise.all(
-        files.map((file) => fileToBase64(file))
-      );
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("user", "sample-user");
 
-      return apiClient.post(PDF_PATH, {
-        pdf: base64Files[0],
-      });
+      return await difyApiClient.post(PDF_PATH, formData);
     },
-    onSuccess: (data) => {
-      setLocalStorage("pdfResults", data.data);
-      setLocalStorage("pdfResultsTimestamp", Date.now());
+    onSuccess: async (data) => {
+      const fileId = data.data.id;
+
+      const workflowPayload = {
+        inputs: {
+          file: {
+            transfer_method: "local_file",
+            upload_file_id: `${fileId}`,
+            type: "document",
+          },
+        },
+        response_mode: "blocking",
+        user: "sample-user",
+      };
+
+      await difyApiClientWorkflow
+        .post(WORKFLOW_PATH, workflowPayload)
+        .then((res) => {
+          setLocalStorage("pdfResultsDify", res.data.data);
+          setLocalStorage("pdfResultsTimestampDify", Date.now());
+        });
 
       toast({
         title: "アップロード成功.",
@@ -40,6 +61,7 @@ export const usePdfMutation = () => {
         isClosable: true,
         position: "top",
       });
+      reset();
       navigate(paths.viewResultsPage);
     },
     onError: (error) => {
@@ -52,6 +74,7 @@ export const usePdfMutation = () => {
         isClosable: true,
         position: "top",
       });
+      reset();
     },
 
     mutationKey: ["pdf"],

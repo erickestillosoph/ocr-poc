@@ -1,5 +1,16 @@
-import { CameraAccessPage } from "./ui/camera-access-ui";
+import {
+  CameraAccessPage,
+  type CameraAccessPageProps,
+} from "./ui/camera-access-ui";
 
-export const CameraAccessContainer = () => {
-  return <CameraAccessPage />;
+export const CameraAccessContainer = ({
+  isHandleCameraOpen,
+  isImageCapture,
+}: CameraAccessPageProps) => {
+  return (
+    <CameraAccessPage
+      isHandleCameraOpen={isHandleCameraOpen}
+      isImageCapture={isImageCapture}
+    />
+  );
 };
