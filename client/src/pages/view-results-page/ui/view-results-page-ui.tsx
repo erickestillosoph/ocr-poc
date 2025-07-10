@@ -2,7 +2,7 @@ import { useAppTheme } from "@/shared/theme";
 import { VStack, Text, Box, Spacer, Button } from "@chakra-ui/react";
 import { getLocalStorage } from "@/shared";
 import { useMemo } from "react";
-import { FormatOptions, prettyPrintJson } from "pretty-print-json";
+import { type FormatOptions, prettyPrintJson } from "pretty-print-json";
 import { useSearchParams } from "react-router-dom";
 
 export const ViewResultsPageUI = () => {
@@ -46,8 +46,7 @@ export const ViewResultsPageUI = () => {
     const results = [];
     if (imageResults) {
       results.push({
-        key: "imageResults",
-        title: "「画像の結果」",
+        title: "読み取り結果",
         data: imageResultsArray,
         isDify: false,
         timestamp:
@@ -67,8 +66,7 @@ export const ViewResultsPageUI = () => {
 
     if (cameraImageResults) {
       results.push({
-        key: "cameraImageResults",
-        title: "「カメラ画像の結果」",
+        title: "読み取り結果",
         data: cameraImageResultsArray,
         isDify: false,
         timestamp:

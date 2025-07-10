@@ -34,9 +34,9 @@ export const usePdfMutation = () => {
       setLocalStorage("pdfResultsTimestamp", Date.now());
 
       toast({
-        title: "アップロード成功.",
+        title: "成功",
+        description: "正常にアップロードされました",
         status: "success",
-        description: `「PDFのアップロードが成功しました。」`,
         isClosable: true,
         position: "top",
       });
@@ -45,8 +45,8 @@ export const usePdfMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "「画像のアップロード中にエラーが発生しました。」",
-        description: `「お客様のPDFのアップロード中にエラーが発生いたしました。」`,
+        title: "エラー",
+        description: `アップロードに失敗しました.`,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -61,7 +61,7 @@ export const usePdfMutation = () => {
     async (acceptedFiles: File[]) => {
       acceptedFiles.forEach((file) => {
         toast({
-          title: "アップロード成功.",
+          title: "成功.",
           description: file.name,
           status: "success",
           duration: 3000,
