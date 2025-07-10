@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:start": "npm run dev",
-    "dev:mobile:network": "ssh -R 80:localhost:5173 localhost.run"
+    "dev:mobile:network": "ssh -R 80:localhost:5173 localhost.run -i ~/.ssh/id_ed25519"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.10.7",

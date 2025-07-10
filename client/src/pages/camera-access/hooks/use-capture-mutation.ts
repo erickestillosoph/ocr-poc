@@ -22,8 +22,8 @@ export const useImageCaptureMutation = () => {
       setLocalStorage("cameraImageResultsTimestamp", Date.now());
       setLocalStorage("cameraImageResults", data.data);
       toast({
-        title: "Upload successful",
-        description: `Your image has been uploaded successfully.`,
+        title: "アップロード成功",
+        description: "アップロード成功.",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -34,8 +34,8 @@ export const useImageCaptureMutation = () => {
     onError: (error) => {
       console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your image.`,
+        title: "アップロードに失敗しました",
+        description: `アップロードに失敗しました`,
         status: "error",
         duration: 3000,
         isClosable: true,

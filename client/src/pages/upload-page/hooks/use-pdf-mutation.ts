@@ -35,6 +35,7 @@ export const usePdfMutation = () => {
 
       toast({
         title: "アップロード成功.",
+        description: "アップロード成功.",
         status: "success",
         description: `「PDFのアップロードが成功しました。」`,
         isClosable: true,

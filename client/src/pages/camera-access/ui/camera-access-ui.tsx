@@ -1,12 +1,14 @@
 import { Box, Button, Input, Spacer, VStack } from "@chakra-ui/react";
 import { useAppTheme } from "@/shared/theme";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { CenterSpinner } from "@/shared";
+import { useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import { useCameraAccess } from "../hooks/use-camera-access";
 import { IoMdCamera } from "react-icons/io";
 import { useDetectDevice } from "@/shared/utils/use-detect-device";
 import { useImageCaptureMutation } from "../hooks/use-capture-mutation";
+
 import { useImageMutation } from "../hooks/use-image-mutation";
 export type CameraAccessPageProps = {
   isHandleCameraOpen: (isCameraOpen: boolean) => void;
