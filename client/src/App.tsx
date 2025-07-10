@@ -1,8 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import "./App.css";
 import { AppProvider, AppRoute, JotaiProvider } from "./providers";
-import { MainLayoutContainer } from "./layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MainLayout } from "./layout";
 const queryClient = new QueryClient();
 
 function App() {
@@ -11,9 +11,9 @@ function App() {
       <AppProvider>
         <JotaiProvider>
           <ChakraProvider>
-            <MainLayoutContainer>
+            <MainLayout>
               <AppRoute />
-            </MainLayoutContainer>
+            </MainLayout>
           </ChakraProvider>
         </JotaiProvider>
       </AppProvider>
