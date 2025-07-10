@@ -36,3 +36,12 @@ dist-ssr
 
 # sst
 .sst
+
+# api
+/api
+
+# dist
+/dist
+
+#apia
+/apia

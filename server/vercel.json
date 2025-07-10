@@ -1,42 +1,26 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "rm -rf src/tmp/uploads/* && npm run build",
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "src/api/index.ts",
       "use": "@vercel/node",
       "config": {
-        "maxLambdaSize": "50mb"
+        "build": {
+          "commands": [
+            "mkdir -p src/tmp/uploads",
+            "rm -rf src/tmp/uploads/*",
+            "npm run build"
+          ]
+        },
+        "cache": false
       }
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
     }
   ],
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "dist/index.js" },
-    { "source": "/api/v1/:path*", "destination": "dist/index.js" },
-    { "source": "/app/:path*", "destination": "dist/index.js" },
-    { "source": "/app/v1/:path*", "destination": "dist/index.js" },
-    { "source": "/(.*)", "destination": "dist/index.js" }
-  ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "src/api/index.ts"
     }
   ]
 }

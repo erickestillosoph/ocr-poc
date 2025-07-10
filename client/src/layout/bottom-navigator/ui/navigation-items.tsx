@@ -1,21 +1,21 @@
-import { FaRegCircleUser } from "react-icons/fa6";
 import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
-import { AiOutlineFileSearch } from "react-icons/ai";
-import { MdPeopleOutline } from "react-icons/md";
+import { AiOutlineFileSearch, AiOutlineFileDone } from "react-icons/ai";
+
+//TODO:  Hide the first tab previous implementation
 export const driverNavigationItems = [
   {
-    label: PAGE_BOTTOM_TITLES.READ,
-    path: paths.read,
+    label: PAGE_BOTTOM_TITLES.UPLOAD,
+    path: paths.cameraAccessUploadFileDify,
     icon: AiOutlineFileSearch,
   },
   {
-    label: PAGE_BOTTOM_TITLES.EMPLOYEE_MANAGEMENT,
-    path: paths.employeeManagement,
-    icon: MdPeopleOutline,
-  },
-  {
     label: PAGE_BOTTOM_TITLES.MY_PAGE,
-    path: paths.myPage,
-    icon: FaRegCircleUser,
+    path: paths.viewResultsPage,
+    icon: AiOutlineFileDone,
   },
 ];
+// {
+//   label: PAGE_BOTTOM_TITLES.UPLOAD,
+//   path: paths.cameraAccessUploadFile,
+//   icon: AiOutlineFileSearch,
+// },

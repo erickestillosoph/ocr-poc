@@ -3,25 +3,7 @@ import { register } from "node:module";
 import { pathToFileURL } from "node:url";
 const require = createRequire(import.meta.url);
 
-(async () => {
-  // Register ts-node with ES module support
-  await import("ts-node").then((tsNode) =>
-    tsNode.register({
-      transpileOnly: true,
-      compilerOptions: {
-        module: "ESNext",
-      },
-    })
-  );
-
-  // Import and start the server
-  const { default: app } = await import("./src/index.ts");
-  const port = 3001;
-  app.listen(port, () => {
-    console.log(`🚀 Server running locally at http://localhost:${port}`);
-  });
-})();
-
+// Load environment variables first
 if (process.env.NODE_ENV !== "production") {
   try {
     await import("dotenv/config");
@@ -32,11 +14,20 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 try {
+  // Register ts-node for TypeScript support
   register("ts-node/esm", pathToFileURL("./"), {
     project: "./tsconfig.json",
   });
-  const mainFileUrl = pathToFileURL("./src/index.ts").href;
-  await import(mainFileUrl);
+
+  // Import the main application
+  const { default: app } = await import("./src/api/index.ts");
+
+  // Start the development servers
+  const port = 3002;
+  app.listen(port, () => {
+    console.log(`🚀 Server running locally at http://localhost:${port}`);
+  });
 } catch (err) {
-  console.error("Failed to import main file:", err);
+  console.error("Failed to start development server:", err);
+  process.exit(1);
 }

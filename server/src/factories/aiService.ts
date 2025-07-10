@@ -1,5 +1,5 @@
 import { AnthropicService } from "../services/anthropic.js";
-import { IAIService } from "../types.js";
+import { IAIService } from "../types/types.js";
 
 export function createAIService(): IAIService {
   if (process.env.ANTHROPIC_API_KEY) {

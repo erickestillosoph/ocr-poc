@@ -1,8 +1,8 @@
 export const PAGE_BOTTOM_TITLES = {
-  READ: "読み取り",
-  EMPLOYEE_MANAGEMENT: "社員管理",
-  MY_PAGE: "マイページ",
+  UPLOAD: "アップロード",
+  UPLOAD_DIFY: "「読み取り結果」",
+  MY_PAGE: "結果",
 };
- export const PAGE_HEADER_TITLES = {
+export const PAGE_HEADER_TITLES = {
   READ: "領収書管理",
 } as const;

@@ -1,7 +1,7 @@
 import { BottomNavigatorContainer } from "@/layout/bottom-navigator";
 import { useAppTheme } from "@/shared/theme";
-import { VStack } from "@chakra-ui/react";
-import { Header } from "./header";
+import { Box } from "@chakra-ui/react";
+
 type MainLayoutPageProps = {
   children: React.ReactNode;
 };
@@ -9,20 +9,28 @@ type MainLayoutPageProps = {
 export const MainLayoutPage = ({ children }: MainLayoutPageProps) => {
   const { theme } = useAppTheme();
   return (
-    <VStack height="100svh" w="full" backgroundColor={theme.colors.white}>
-      <Header />
-      <VStack
+    <Box
+      style={{
+        margin: "0",
+        padding: "12px",
+      }}
+      height="100%"
+      backgroundColor={theme.colors.white}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        spacing="16px"
-        w="full"
-        h="full"
+        w="100%"
+        h="100%"
         position="relative"
         backgroundColor={theme.colors.white}
       >
         {children}
+
         <BottomNavigatorContainer />
-      </VStack>
-    </VStack>
+      </Box>
+    </Box>
   );
 };

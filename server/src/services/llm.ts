@@ -1,4 +1,9 @@
-import { ImageMediaType, IAIService, DocumentMediaType } from "../types.js";
+import {
+  ImageMediaType,
+  IAIService,
+  DocumentMediaType,
+  FileMediaType,
+} from "../types/types.js";
 import { z } from "zod";
 
 export class LLMService {
@@ -25,14 +30,27 @@ export class LLMService {
   async pdfToJSON<T>(
     pdfBase64: string,
     prompt: string,
-    schema: z.ZodType<T>,
     documentMediaType: DocumentMediaType = DocumentMediaType.PDF
   ) {
-    return this.aiService.pdfToJSON(
-      pdfBase64,
+    return this.aiService.pdfToJSON(pdfBase64, prompt, documentMediaType);
+  }
+
+  async cameraImageToJSON<T>(
+    cameraImageStringBase64: string,
+    prompt: string,
+    schema: z.ZodType<T>
+  ) {
+    return this.aiService.cameraImageToJSON(
+      cameraImageStringBase64,
       prompt,
-      schema,
-      documentMediaType
+      schema
     );
+  }
+  async base64FileToJSON<T>(
+    base64File: string,
+    prompt: string,
+    fileMediaType: FileMediaType = FileMediaType.JPEG
+  ) {
+    return this.aiService.base64FileToJSON(base64File, prompt, fileMediaType);
   }
 }

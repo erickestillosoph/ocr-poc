@@ -1,56 +1,52 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { api, setLocalStorage } from "@/shared";
 import { useDropzone } from "react-dropzone";
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { paths } from "@/shared";
-
-const API_URL = import.meta.env.VITE_API_URL;
-const API_VERSION = import.meta.env.VITE_API_VERSION;
+import { paths, setLocalStorage } from "@/shared";
+import { apiClient, apiPaths } from "@/shared/config/api-config";
+import { fileToBase64 } from "@/shared";
 
 export const usePdfMutation = () => {
   const toast = useToast();
   const navigate = useNavigate();
-  const PDF_PATH = api.uploadPdf;
+  const PDF_PATH = apiPaths.uploadPdf;
   const openPDFRef = useRef<() => void>(null);
 
-  // Determine the base API URL based on environment
-  const isProduction = window.location.hostname !== "localhost";
-  const baseApiUrl = isProduction ? "" : API_URL;
-  const baseApiVersion = isProduction ? "" : API_VERSION;
-
   const {
-    mutate,
+    mutateAsync,
     isPending,
     isError,
     isSuccess,
     data: pdfData,
   } = useMutation({
-    mutationFn: (files: File[]) => {
-      const data = new FormData();
-      files.forEach((file) => data.append("pdf", file));
-      return axios.post(`${baseApiUrl}${baseApiVersion}${PDF_PATH}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    mutationFn: async (files: File[]) => {
+      const base64Files = await Promise.all(
+        files.map((file) => fileToBase64(file))
+      );
+
+      return apiClient.post(PDF_PATH, {
+        pdf: base64Files[0],
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setLocalStorage("pdfResults", data.data);
+      setLocalStorage("pdfResultsTimestamp", Date.now());
+
       toast({
-        title: "Upload successful",
-        description: `Your pdf has been uploaded successfully.`,
+        title: "成功",
+        description: "正常にアップロードされました",
         status: "success",
         isClosable: true,
         position: "top",
       });
       navigate(paths.viewResultsPage);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Upload error:", error);
       toast({
-        title: "Upload failed",
-        description: `There was an error uploading your pdf.`,
+        title: "エラー",
+        description: `アップロードに失敗しました.`,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -62,10 +58,10 @@ export const usePdfMutation = () => {
   });
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       acceptedFiles.forEach((file) => {
         toast({
-          title: "File uploaded",
+          title: "成功.",
           description: file.name,
           status: "success",
           duration: 3000,
@@ -74,9 +70,9 @@ export const usePdfMutation = () => {
         });
       });
 
-      mutate(acceptedFiles);
+      mutateAsync(acceptedFiles);
     },
-    [toast, mutate]
+    [toast, mutateAsync]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -97,13 +93,11 @@ export const usePdfMutation = () => {
   });
 
   openPDFRef.current = open;
-  if (isSuccess) {
-    setLocalStorage("pdfResults", pdfData?.data);
-  }
+
   return {
     getRootProps,
     getInputProps,
-    mutate,
+    mutate: mutateAsync,
     isPending,
     isError,
     isSuccess,
