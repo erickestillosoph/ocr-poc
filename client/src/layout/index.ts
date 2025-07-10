@@ -1,2 +1,2 @@
-export { BottomNavigatorContainer } from "./bottom-navigator";
-export { MainLayoutContainer } from "./main-layout";
+export { MainLayout } from "./main-layout";
+export { BottomNavigationBar } from "./bottom-navigator";

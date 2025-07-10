@@ -5,7 +5,7 @@ import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
 import { useCameraCaptureMutation } from "../hooks/use-capture-image-mutation";
 
-export const UploadPagePage = () => {
+export const UploadFile = () => {
   const { theme } = useAppTheme();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 

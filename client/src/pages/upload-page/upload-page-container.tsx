@@ -1,5 +1,19 @@
-import { UploadPagePage } from "./ui/upload-page-ui";
+import { CameraAccessContainer } from "@/features/camera-access";
+import { UploadFileContainer } from "@/features/upload-file";
+import { PageWrapper } from "@/shared/ui/page-wrapper/page-wrapper";
+import { useState } from "react";
 
 export const UploadPageContainer = () => {
-  return <UploadPagePage />;
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+
+  const onHandleCameraOpen = (isCameraOpen: boolean) => {
+    setIsCameraOpen(isCameraOpen);
+  };
+
+  return (
+    <PageWrapper>
+      <CameraAccessContainer isHandleCameraOpen={onHandleCameraOpen} />
+      {!isCameraOpen && <UploadFileContainer />}
+    </PageWrapper>
+  );
 };
