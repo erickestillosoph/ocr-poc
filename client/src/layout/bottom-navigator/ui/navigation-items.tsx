@@ -1,20 +1,25 @@
-import { FaRegUser, FaUsers, FaRegFile } from "react-icons/fa6";
 import { PAGE_BOTTOM_TITLES, paths } from "@/shared";
+import { AiOutlineFileSearch, AiOutlineFileDone } from "react-icons/ai";
 
+<<<<<<< HEAD
 export const NavigationItems = [
+=======
+//TODO:  Hide the first tab previous implementation
+export const driverNavigationItems = [
+>>>>>>> master
   {
-    label: PAGE_BOTTOM_TITLES.HOME,
-    path: paths.cameraAccessUploadFile,
-    icon: FaRegFile,
+    label: PAGE_BOTTOM_TITLES.UPLOAD,
+    path: paths.cameraAccessUploadFileDify,
+    icon: AiOutlineFileSearch,
   },
   {
-    label: PAGE_BOTTOM_TITLES.SEARCH,
-    path: paths.search,
-    icon: FaUsers,
-  },
-  {
-    label: PAGE_BOTTOM_TITLES.USER,
+    label: PAGE_BOTTOM_TITLES.MY_PAGE,
     path: paths.viewResultsPage,
-    icon: FaRegUser,
+    icon: AiOutlineFileDone,
   },
 ];
+// {
+//   label: PAGE_BOTTOM_TITLES.UPLOAD,
+//   path: paths.cameraAccessUploadFile,
+//   icon: AiOutlineFileSearch,
+// },

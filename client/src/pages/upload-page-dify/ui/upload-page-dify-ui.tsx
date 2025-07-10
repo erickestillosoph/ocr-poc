@@ -5,24 +5,21 @@ import { usePdfMutation } from "../hooks/use-pdf-mutation";
 import { CenterSpinner } from "@/shared";
 import { useCameraCaptureMutation } from "../hooks/use-capture-image-mutation";
 
-export const UploadFile = () => {
+export const UploadPageDifyPage = () => {
   const { theme } = useAppTheme();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { mutate: uploadPDF, isPending: isPDFPending } = usePdfMutation();
+
   const { isPending: isCameraCapturePending, onDrop } =
     useCameraCaptureMutation();
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  // const isLikelyNewCameraPhoto = (file: File): boolean => {
-  //   const now = Date.now();
-  //   const fileTime = file.lastModified;
-  //   return now - fileTime < 30 * 1000;
-  // };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -57,18 +54,6 @@ export const UploadFile = () => {
         display="none"
         onChange={handleFileChange}
       />
-      {/* <Input
-        display="none"
-        {...getInputProps({
-          id: "image",
-          name: "image",
-          capture: "environment",
-          type: "file",
-          accept: "image/*",
-          multiple: false,
-        })}
-        size="md"
-      /> */}
 
       <Button
         color={theme.colors.white}

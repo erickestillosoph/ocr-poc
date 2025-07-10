@@ -2,6 +2,11 @@ import { Outlet, RouteObject } from "react-router-dom";
 
 import {
   NotFoundPageContainer,
+<<<<<<< HEAD
+=======
+  UploadCameraContainer,
+  UploadCameraDifyContainer,
+>>>>>>> master
   UploadPageContainer,
   ViewResultsPageContainer,
 } from "@/pages";
@@ -15,12 +20,20 @@ export const routes: RouteObject[] = [
         element: <Outlet />,
         children: [
           {
+<<<<<<< HEAD
             element: <UploadPageContainer />,
+=======
+            element: <UploadCameraDifyContainer />,
+>>>>>>> master
             path: "/",
           },
           {
             element: <UploadPageContainer />,
             path: paths.cameraAccessUploadFile,
+          },
+          {
+            element: <UploadCameraDifyContainer />,
+            path: paths.cameraAccessUploadFileDify,
           },
           {
             element: <ViewResultsPageContainer />,
