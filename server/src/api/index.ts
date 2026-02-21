@@ -179,7 +179,28 @@ const app = express();
 // Configure CORS
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+
+      // Define allowed origins
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        process.env.FRONTEND_URL_PROD,
+      ].filter(Boolean);
+
+      // For development, allow all origins if no specific origins are set
+      if (allowedOrigins.length === 0 && environment === "local") {
+        return callback(null, true);
+      }
+
+      // Check if the origin is allowed
+      if (allowedOrigins.indexOf(origin) !== -1 || environment === "local") {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -191,7 +212,28 @@ app.use(express.json());
 app.options(
   "*",
   cors({
-    origin: "*",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+
+      // Define allowed origins
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        process.env.FRONTEND_URL_PROD,
+      ].filter(Boolean);
+
+      // For development, allow all origins if no specific origins are set
+      if (allowedOrigins.length === 0 && environment === "local") {
+        return callback(null, true);
+      }
+
+      // Check if the origin is allowed
+      if (allowedOrigins.indexOf(origin) !== -1 || environment === "local") {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -205,6 +247,13 @@ app.use((req, res, next) => {
     "Content-Security-Policy",
     "default-src 'self' * data: blob: filesystem:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; connect-src 'self' *;"
   );
+
+  // Add CORS debug header to help identify allowed origins
+  res.setHeader(
+    "X-CORS-Debug",
+    `Allowed origins: ${process.env.FRONTEND_URL}, ${process.env.FRONTEND_URL_PROD}`
+  );
+
   next();
 });
 
